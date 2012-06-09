@@ -1,0 +1,25 @@
+[object File]
+[94mINFO[0m: [object File]
+
+[94mINFO[0m: false
+
+[94mINFO[0m: false
+
+mode:undefined
+uid:-1
+gid:-1
+size:-1
+lastAccessDate:null
+lastModifiedDate:null
+isFile:false
+isDir:false
+isSymLink:false
+getLastModifiedDate:null
+lastModifiedDate:null
+{"path":"./build.sh","name":"build.sh","exists":false,"uid":-1,"gid":-1,"size":-1,"lastAccessDate":null,"lastModifiedDate":null}
+{"path":"/","name":"/","mode":16749,"uid":1000,"gid":0,"size":4096,"lastAccessDate":"2012-06-06T19:14:38.000Z","lastModifiedDate":"2012-06-03T15:37:45.000Z","exists":true}
+{"path":"./","name":".","mode":16877,"uid":1000,"gid":1001,"size":4096,"lastAccessDate":"2012-06-07T23:45:11.000Z","lastModifiedDate":"2012-06-07T23:45:00.000Z","exists":true}
+{"path":"../","name":"..","mode":16893,"uid":1000,"gid":1000,"size":4096,"lastAccessDate":"2012-06-07T23:26:53.000Z","lastModifiedDate":"2012-06-04T22:10:21.000Z","exists":true}
+{"path":"foo/","name":"foo","exists":false,"uid":-1,"gid":-1,"size":-1,"lastAccessDate":null,"lastModifiedDate":null}
+{"path":"/bar","name":"bar","exists":false,"uid":-1,"gid":-1,"size":-1,"lastAccessDate":null,"lastModifiedDate":null}
+{"path":"/foo/bar/quxx","name":"quxx","exists":false,"uid":-1,"gid":-1,"size":-1,"lastAccessDate":null,"lastModifiedDate":null}

@@ -1,0 +1,11 @@
+#!/bin/js
+#
+#  See hos wsome bash vars work
+#
+
+
+echo hello world
+
+echo "\$?=$? is not in the environment, it must be internal to bash"
+
+$.println("last ret code: " + $.bold( $.getEnv("$?") ));

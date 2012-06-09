@@ -1,0 +1,14 @@
+#!/bin/js
+#
+# My First Script
+#
+
+var i;
+for (i = 0 ; i <  10; i++ ) {
+
+    echo Printed with Bash 4.2
+
+     $.println("Printed with Google v8", true);
+
+}
+

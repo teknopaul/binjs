@@ -1,0 +1,41 @@
+#!/bin/js
+#
+#  The File object
+#
+
+var file = new File("./build.sh");
+
+binjs_println("" + file);
+
+$.info( 0, null, file.toString() );
+$.info( 0, null, file.exists );
+$.info( 0, null, file.stat().exists );
+
+
+// attributes
+$.println( "mode:" + file.mode ); // file | dir | symlink etc
+$.println( "uid:" + file.uid );
+$.println( "gid:" + file.gid );
+$.println( "size:" + file.size );
+$.println( "lastAccessDate:" + file.lastAccessDate );
+$.println( "lastModifiedDate:" + file.lastModifiedDate );
+
+// functions
+$.println( "isFile:" + file.isFile() );
+$.println( "isDir:" + file.isDir() );
+$.println( "isSymLink:" + file.isSymLink() );
+$.println( "getLastModifiedDate:" + file.stat().lastModifiedDate );
+$.println( "lastModifiedDate:" + file.lastModifiedDate );
+
+
+
+$.println(JSON.stringify(file));
+
+
+$.println(JSON.stringify(new File("/")));
+$.println(JSON.stringify(new File("./")));
+$.println(JSON.stringify(new File("../")));
+$.println(JSON.stringify(new File("foo/")));
+$.println(JSON.stringify(new File("/bar")));
+$.println(JSON.stringify(new File("/foo/bar/quxx")));
+

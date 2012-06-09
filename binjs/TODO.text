@@ -1,0 +1,26 @@
+# TODO LIST #
+
+#### Environment
+
+ * Copy bash env to JavaScript in a $.env = {}  object
+ * Syncronize PWD acorss JS and bash,  not just env variable but actaul CD according to C, JavaScript and C++  (can this be done?)
+ * binjs_export("var")  to expjort  vars to bash
+
+### Build 
+
+install.sh  lots of colours and check for sudo etc  make it clean
+curl github.com/teknopaul/binjs/install.sh | bash style script
+Find way to apply patches to bash
+Use correct Ubuntu / Fedora versions of bash
+
+### Libs
+
+Check out how to use npm wihtout messing up 
+
+### Documentation
+
+JSDoc
+Doxygen
+fiddle with preparser to output HTML for example scripts
+README.md
+

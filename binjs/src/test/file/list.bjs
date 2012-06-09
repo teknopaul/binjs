@@ -1,0 +1,11 @@
+#!/bin/js
+#
+#  Testinf File.list()
+#
+
+$.println("Listing ./", true);
+$.println( new File(".").list().join("\n") );
+
+$.println("Listing as File objects ./", true);
+$.println( new File(".").listFiles().join("\n") );
+

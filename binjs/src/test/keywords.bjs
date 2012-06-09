@@ -1,0 +1,82 @@
+#!/bin/js
+#
+#  keywords mark the line as JavaScript
+#
+
+if(true) {
+	echo true
+}
+
+var i = 0;
+while(i++ < 5)  {
+	$.println(i);
+}
+
+var opt = 3;
+switch(opt){
+	case 1 : 
+		$.println(opt);
+		break;
+	case 2 : 
+		$.println(opt);
+		break;
+	case 3 : 
+		$.println(opt);
+		break;
+	default: 
+		echo default
+		break;
+}
+
+var j = 0;
+
+for(j=0 ; j < 5 ; j++ ) {
+	echo oioi
+	continue;
+}
+
+j = 0; // var recognition
+do{
+	$.println($.color('red', "j=" +  j));
+}while(j++ < 5);
+
+do
+{
+	$.println($.color('red', "j=" +  j));
+}
+while(j++ < 5);
+
+try {
+
+	echo ready to barf
+	throw "up";
+}
+catch(barf) 
+{
+	$.println("barfed" + $.color('orange', barf));
+} 
+
+function loop(){
+	echo dont loop;
+	return 23;
+}
+
+loop();
+
+var MyObject = function() {
+	this.xxx = 234;
+}
+
+var myObj = new MyObject();
+
+MyObject();  // should not go wrong MyObject is after all just a function
+
+new MyObject();
+
+echo these should be still treated as bash and fail
+thisification "foo"
+barbaric "bar"
+superlify that
+
+binjs_println("text");
+

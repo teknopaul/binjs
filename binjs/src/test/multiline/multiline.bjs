@@ -1,0 +1,15 @@
+#!/bin/js
+
+function loop() {
+
+	var i = 0;
+	for( i = 0 ; i < 10 ; i++) {
+		echo This comment is going to be too \
+			long so it spans a few lines \
+			and is separated by the bash stylee \
+			line continuation trick.
+	}
+
+}
+
+loop();

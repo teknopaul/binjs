@@ -1,0 +1,6 @@
+#!/bin/js
+
+
+binjs_import("./dep.js");
+binjs_import("./otherdep.js");
+

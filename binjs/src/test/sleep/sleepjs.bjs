@@ -1,0 +1,18 @@
+#!/bin/js
+#
+#  
+#
+
+function yoyo() {
+	echo sleeping for 2 seconds
+	$.sleep(2000);
+	echo done
+}
+
+
+yoyo();
+
+
+
+
+

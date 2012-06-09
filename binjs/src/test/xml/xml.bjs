@@ -1,0 +1,18 @@
+#!/bin/js
+binjs_import("~lib/xml.js");
+#
+# XML parser is included because not all scripting jobs can be achieved with 
+# adept use of awk these days.
+#
+
+cd `dirname $0`
+
+var parser = new DomJS();
+
+var text = new File("./doc.xml").read();
+var rootElement = parser.parse(text);
+
+$.println(JSON.stringify(rootElement));
+
+
+

@@ -1,0 +1,15 @@
+#!/bin/js
+
+
+$.println(". = " + JSON.stringify(new File(".").getAbsoluteFile()));
+
+$.println(". = " + JSON.stringify(new File("/").getAbsoluteFile()));
+
+$.println(". = " + JSON.stringify(new File("..").getAbsoluteFile()));
+
+
+try {
+	$.println(". = " + JSON.stringify(new File("/..").getAbsoluteFile()));
+} catch(err) {
+	$.info(0,"invalid_path_expected", err);
+}

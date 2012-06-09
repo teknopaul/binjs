@@ -1,0 +1,59 @@
+Error messages Ideas
+¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+
+Some nice error message thing that looks funky in english and leads to easy i18n later.
+
+________________________________________________________________________________________-
+
+$.error(23, "File not found", "Could not find the file %s", fileName);
+
+prints
+
+ERROR_23:File_not_found: Could not find the file /etc/foobar
+________________________________________________________________________________________-
+
+$.exit(23, "File not found", "Could not find the file %s", fileName);
+
+prints the same message and exits with ret code 23
+________________________________________________________________________________________-
+
+$.error(23, "", "File not found", fileName);
+
+If the underscores really annoy you
+________________________________________________________________________________________-
+
+if a lang file errors_es_ES is provided
+
+File_not_found=El archivo %s no se puede encontrar
+
+$.error(23, "File not found", "File not found %s", fileName);
+
+prints
+
+ERROR_23:File_not_found: El archivo /etc/foobar no se puede encontrar
+________________________________________________________________________________________-
+
+$.error(23, "File not found");   
+
+is sufficient, can add errors_en_US later with more english text
+
+File_not_found=Could not find the file
+________________________________________________________________________________________-
+
+$.error(23);   
+
+would just print 
+
+ERROR_23:
+________________________________________________________________________________________-
+
+
+Some global flags for printing errors in colour on Linux
+Subsitutions in color too.
+provide $.warn() $.info() $.fatal()  $.debug()  as well
+Global options to turn these on and off
+
+perhaps binjs_error()  would be better
+perhaps both ?	
+
+

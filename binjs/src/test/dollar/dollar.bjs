@@ -1,0 +1,32 @@
+#!/bin/js
+#
+# Tester for the $. functions
+#
+
+
+$.println("text");
+$.println("bold text", true);
+$.println("red text", 'red');
+$.error(23,"Something bad happened");
+
+$.info(0,"Var from environment", $.env.HOME);
+
+var format = "";
+$.println(typeof format);
+
+$.println("Last set = " + $.getEnv("_"));
+
+var someVar = 0;  // unwatched
+
+echo "some unwatched var=$someVar";
+
+$.watch.push("someVar");
+
+someVar = 2;
+echo "some watched var=$someVar";
+
+delete $.watch;
+
+someVar=3;
+echo "some unwatched var=$someVar";
+

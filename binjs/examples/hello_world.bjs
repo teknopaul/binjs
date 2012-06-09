@@ -1,0 +1,7 @@
+#!/bin/js
+#
+# Yer tipical hello world example
+#
+
+echo Hello World
+

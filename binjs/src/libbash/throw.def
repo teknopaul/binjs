@@ -1,0 +1,87 @@
+TODO Implement this
+This file is throw.def, from which is created throw.c.
+It implements the builtin "throw" in libbash.
+
+$PRODUCES throw.c
+
+$BUILTIN throw
+$FUNCTION throw_builtin
+$SHORT_DOC throw throw an exception in JavaScript land
+TODO not implemented, but some how it would be good to throw exceptions 
+from bash.
+
+Ideally syntax would be mv file newfile || throw "cant move file"
+
+Options:
+	none
+
+Exit Status:
+The return code is the return code of the previous command
+$END
+
+#include <config.h>
+
+#include "bashtypes.h"
+#include "posixstat.h"
+
+#include <stdio.h>
+
+#include "bashansi.h"
+
+#if defined (HAVE_UNISTD_H)
+#  include <unistd.h>
+#endif
+
+#include <signal.h>
+#include <errno.h>
+
+#ifdef __CYGWIN__
+#  include <fcntl.h>
+#  include <io.h>
+#endif
+
+#include "../bashintl.h"
+
+#include "../shell.h"
+#include "common.h"
+
+#include <shtty.h>
+
+#if defined (READLINE)
+#include "../bashline.h"
+#include <readline/readline.h>
+#endif
+
+#if defined (BUFFERED_INPUT)
+#  include "input.h"
+#endif
+
+#if !defined(errno)
+extern int errno;
+#endif
+
+
+static sighandler
+sigalrm (s)
+     int s;
+{
+  longjmp (alrmbuf, 1);
+}
+
+
+/* Die, JavaScript stylee. */
+int
+throw_builtin (list)
+     WORD_LIST *list;
+{
+  
+#if defined (ARRAY_VARS)
+  WORD_LIST *alist;
+#endif
+
+  // TODO something like this needed
+  runjs_throw_exception("");
+  return last_ext_value;
+
+}
+

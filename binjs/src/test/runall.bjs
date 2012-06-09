@@ -1,0 +1,42 @@
+#!/bin/js
+#
+# Script to run all the bjs scripts.
+#
+# This is a hacktasic example of the wonders of /bin/js, it does actually serve a purpose!
+#
+cd `dirname $0`
+
+DIRS=`ls -1`
+
+var dirs = $.getEnv("DIRS").split("\n"); //  could have called new File(".").list()
+
+for (var i = 0; i < dirs.length ; i++ ) {
+
+	var dir = dirs[i];
+	var file = new File("./" + dir);
+	
+//	$.println(file.name);
+	if ( file.isDir() ) {
+	
+		// notice inlined functions work but must on one line to avoid confusing the preparser
+		
+		var files = file.listFiles( function(name) { return name.indexOf(".bjs") == name.length - 4; } );
+		
+		for(var f = 0 ; f < files.length ; f++) {
+		
+			$.println(files[f].path, true);
+			
+			// could execute the file with
+			// binsjs_exec("./" + files[f].path );  
+			
+			// but lets show off and get fuynky with bash and tee
+
+			$.setEnv("FNAME", files[f].path);
+			./${FNAME} | tee ./${FNAME}.log
+			
+			
+		}
+	}
+
+}
+

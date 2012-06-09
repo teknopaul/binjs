@@ -1,0 +1,20 @@
+# TODO LIST #
+
+
+### Build 
+
+curl github.com/teknopaul/binjs/install.sh | bash style script
+Find way to apply patches to bash
+Use correct Ubuntu / Fedora versions of bash
+
+### Libs
+
+Check out how to use npm wihtout messing up 
+
+### Documentation
+
+JSDoc
+Doxygen
+fiddle with preparser to output HTML for example scripts
+README.md
+

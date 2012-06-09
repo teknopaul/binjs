@@ -1,0 +1,9 @@
+binjs_import("~lib/binjs.js");
+
+var i = 0;
+for(; i < 128; i++) {
+	$.setEnv("i", i);
+
+	binjs_exec("echo \"\\033[${i}m ${i}:colour test \\033[0m\"");
+
+}

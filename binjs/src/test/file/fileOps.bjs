@@ -1,0 +1,21 @@
+#!/bin/js
+
+
+var file = new File("./afile.txt");
+
+
+file.touch();
+
+$.println("touched" + JSON.stringify(file.stat(), undefined, 2));
+
+file.delete();
+
+$.println("deleted" + JSON.stringify(file.stat(), undefined, 2));
+
+file.touch();
+file.rename("./moved.txt");
+
+$.println("moved" + JSON.stringify(file.stat(), undefined, 2));
+
+
+file.delete();

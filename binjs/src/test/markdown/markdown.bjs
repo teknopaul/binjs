@@ -1,0 +1,7 @@
+#!/bin/js
+
+binjs_import("~lib/markdown.js");
+
+cd `dirname $0`
+
+if (true) markdown.printFile("eg.md");

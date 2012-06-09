@@ -1,0 +1,9 @@
+#!/bin/js
+#
+#  String with a big fat bug in it
+#
+
+echo "bug script"
+
+var forceToBeJS = 0 ; noneExistingVar.broke();
+

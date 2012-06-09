@@ -1,0 +1,18 @@
+#!/bin/js
+#
+# a JavaScript / bash script
+#
+
+# The bash way to output text
+echo "some output"
+
+# The JavaScript way
+$.print("some output");
+
+# Bash has variables as you would expect
+echo "your HOME = $HOME";
+
+# For now, you have to fetch the environment specifically
+var home = $.getEnv("HOME");
+$.print("your home = " + home);
+

@@ -1,0 +1,76 @@
+# The File Object
+
+The File obejct gives you access to the file system in JavaScript.  Technically this is not needed since you Linux build has a million options for hacking files.  However when writing scripts it is convenient to have direct File API inthe Jafvascript part of the code.  So here is the File, it provides the basics and will probably grow over time.  It is loosly based on the w3c recomendation but is by no means standards compliant.
+
+
+## Constructor
+
+    new File(String);
+
+The constructor take a single argument the path as a JavaScript string. The File obejct represents both files and directories and paths that have not been created.
+
+## Attributes
+
+The following attributes are set when the File is instantiated.
+
+ * file.path 		- the path exactly as it is supplied in the constructor
+ * file.name 		- the name extracted from the path or "/" for the root
+ * file.exists 		- true if the file or directory exists
+ * file.uid 		- the user id of the file
+ * file.gid 		- the group id of the file
+ * file.size 		- the size in bytes
+ * file.lastAccessDate 	- a JavaScript Date object of the last access time
+ * file.lastModifiedDate - a JavaScript Date object of the last modified time
+
+N.B. lastModifiedDate is NOT updated on every access. to update the values call stat().
+
+ * file.stat()  	-  calling stat() updates all the attributes
+ * file.isFile() 	- return true if the File points to an existing normal file
+ * file.isDir() 	- return true if the File points to an existing normal directory 
+ * file.isSymLink() 	- return true if the File points to an existing symnbolic link
+ * file.isRoot()  	-  return true if this is the / root directory, B.B. evenif the path is not cannonical e.g. /bin/..
+
+ * file.touch() 	- set the last access and last modified time to now
+ * file.rename(String) 	- rename the file to the provided path, thus works as move
+ * file.delete() 	- deletes thee file
+ * file.getAbsolutePath() - returns the absolute cannonical path as a String
+ * file.getAbsoluteFile() - returns the absolute cannonical path as a new File object.
+ * file.list() 		- read the whole contents of a directory, returning an Array of Strings
+ * file.listFiles(function(name)) - read the contents of a directory, returning an Array of Files, if the functin argument is provided it can filter the list returned based on the name of the file
+ * file.read() 		- returns the contents of the file as a string, only works for utf-8 text files
+
+
+## Usage Patterns
+
+### Read the contents of a file line by line
+
+    var data = new File("/etc/hosts").split('\n');
+
+    for (var l = = ; l < data.length ; l++) {
+      var line = data[l];
+      ...
+    }
+
+### Flag files
+
+In bash 
+
+   test -f my.flag && one_liner_command
+
+In JavaScript
+
+   if ( new File("my.flag").exists()) {
+
+     ...
+
+   }
+
+### Fetching text files
+
+    var textFiles = new File(".").listFiles( function(name) { 
+      return name.lastIndexOf(".txt") = name.length - 4;
+    });
+
+
+
+
