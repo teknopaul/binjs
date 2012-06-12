@@ -139,7 +139,7 @@ DEFSRC =  $(srcdir)/alias.def $(srcdir)/bind.def $(srcdir)/break.def \
 	  $(srcdir)/times.def $(srcdir)/trap.def $(srcdir)/type.def \
 	  $(srcdir)/ulimit.def $(srcdir)/umask.def $(srcdir)/wait.def \
 	  $(srcdir)/reserved.def $(srcdir)/pushd.def $(srcdir)/shopt.def \
-	  $(srcdir)/printf.def $(srcdir)/complete.def $(srcdir)/mapfile.def
+	  $(srcdir)/printf.def $(srcdir)/complete.def $(srcdir)/mapfile.def $(srcdir)/throw.def
 
 STATIC_SOURCE = common.c evalstring.c evalfile.c getopt.c bashgetopt.c \
 		getopt.h 
@@ -151,7 +151,7 @@ OFILES = builtins.o \
 	jobs.o kill.o let.o mapfile.o \
 	pushd.o read.o return.o set.o setattr.o shift.o source.o \
 	suspend.o test.o times.o trap.o type.o ulimit.o umask.o \
-	wait.o getopts.o shopt.o printf.o getopt.o bashgetopt.o complete.o
+	wait.o getopts.o shopt.o printf.o getopt.o bashgetopt.o complete.o throw.o
 
 CREATED_FILES = builtext.h builtins.c psize.aux pipesize.h
 
@@ -291,6 +291,7 @@ wait.o: wait.def
 getopts.o: getopts.def
 reserved.o: reserved.def
 complete.o: complete.def
+throw.o: throw.def
 
 # C files
 bashgetopt.o: ../config.h $(topdir)/bashansi.h $(BASHINCDIR)/ansi_stdlib.h

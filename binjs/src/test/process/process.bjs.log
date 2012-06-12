@@ -1,3 +1,0 @@
-hello world
-$?=0 is not in the environment, it must be internal to bash
-last ret code: [1mnull[0m

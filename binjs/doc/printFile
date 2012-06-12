@@ -1,6 +1,5 @@
 #!/bin/js
-binjs_import("~lib/markdown.js");
+var markdown = binjs_import("~lib/markdown.js");
 
-// TODO argument handling
-if (true) markdown.printFile($.arg0);
+if (true) markdown.printFile(argv[1]);
 

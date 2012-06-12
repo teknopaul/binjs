@@ -7,7 +7,7 @@ binjs_import("~lib/colours.js");
 
 if ( typeof $ == 'undefined' ) {
  /**
-  * The $ object provides access to/bin/js core features.
+  * The $ object provides access to /bin/js core features.
   */
  $ = {};
  
@@ -21,15 +21,21 @@ if ( typeof $ == 'undefined' ) {
   * $.watch is an array of variables that are always coppied to the Bash environment from JavaScript
   * before every call to bash.
   *
-  * By default the typical indexing vars i,j,k are int eh watch list.
+  * By default the typical indexing vars i,j,k are in the watch list.
   *
   * delete $.watch if you dont want any syncing of variables.
   */
- $.watch = ['i', 'j', 'k'];
+ $.watch = [];
  
+ // copy the default bash envirionment to JavaScript land
  binjs_copyEnv();
  
 }
+
+var i,j,k;
+$.watch.i = i;
+$.watch.j = j;
+$.watch.k = k;
 
 /**
  * Print a line of text to std out.
@@ -98,7 +104,7 @@ $.color = function(colour, message) {
 		case 'magenta'	  : return binjs_MAGENTA + message + binjs_COLOUR_OFF; 
 		case 'orange'	  : return binjs_ORANGE + message + binjs_COLOUR_OFF;
 		default :
-		  return "invalid colour choose from black,white,grey,darkgrey,blue,green,red,yellow,cyan,magenta,orange";
+		  throw new Error("invalid colour choose from black,white,grey,darkgrey,blue,green,red,yellow,cyan,magenta,orange");
 	}
 }
 
@@ -142,7 +148,7 @@ $.error = function(errNo, errTag, errText) {
 	var message = $.color('red', "ERR" + (errNo == 0 ? "" : errNo))
 		 + ":"
 		 + errTag.replace(/ /g, "_")
-		 + " " + errText + "\n";
+		 + " " + errText;
 
 	binjs_println(message);
 
@@ -158,7 +164,7 @@ $.warn = function(errNo, errTag, errText) {
 	var message = $.color('orange', "WARN" + (errNo == 0 ? "" : errNo))
 		 + ":"
 		 + errTag.replace(/ /g, "_")
-		 + " " + errText + "\n";
+		 + " " + errText;
 
 	binjs_println(message);
 
@@ -174,7 +180,7 @@ $.info = function(errNo, errTag, errText) {
 	var message = $.color('blue', "INFO" + (errNo == 0 ? "" : errNo))
 		 + ":"
 		 + errTag.replace(/ /g, "_")
-		 + " " + errText + "\n";
+		 + " " + errText;
 
 	binjs_println(message);
 
@@ -186,3 +192,50 @@ $.info = function(errNo, errTag, errText) {
 $.getJobs = function() {
     return binjs_getJobs();
 }
+
+
+// Copied from nodeJS
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be revritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+$.inherits = function(ctor, superCtor) {
+  ctor.super_ = superCtor;
+  ctor.prototype = Object.create(superCtor.prototype, {
+    constructor: {
+      value: ctor,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+};

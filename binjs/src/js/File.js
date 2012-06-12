@@ -87,13 +87,65 @@ File.prototype.getAbsolutePath = function() {
 	
 }
 
+File.prototype.getParent = function() {
+
+	var fullPath = this.getAbsolutePath();
+	if (this.exists && this.isFile()) {
+		if (fullPath.lastIndexOf('/') === 0) {
+			return "/";
+		}
+		else {
+			return fullPath.substring(0, this.path.length - this.name.length - 1);
+		}
+	}
+	else if (this.exists && this.isDir()) {
+		var parts = fullPath.split(File.separator);
+		if (parts.length > 2) {
+			parts = parts.splice(1, parts.length -2);
+			return File.separator + parts.join(File.separator);
+		}
+		return "/";
+	}
+	else if ( ! this.exists ) { // change this also change getParentFile
+		var parts = fullPath.split(File.separator);
+		if (parts.length > 2) {
+			parts = parts.splice(1, parts.length -2);
+			var parentPath = File.separator + parts.join(File.separator);
+			var parentFile = new File(parentPath);
+			if (parentFile.exists && parentFile.isDir()) {
+				return parentPath;
+			}
+		}
+		return "/";
+	}
+	else throw new Error("File not found: " + this.path);
+	
+}
+
+
+File.prototype.getParentFile = function() {
+
+	if ( ! this.exists ) { // change this also change getParent
+		var parts = fullPath.split(File.separator);
+		if (parts.length > 2) {
+			parts = parts.splice(1, parts.length -2);
+			var parentPath = File.separator + parts.join(File.separator);
+			var parentFile = new File(parentPath);
+			if (parentFile.exists && parentFile.isDir()) {
+				return parentFile;
+			}
+		}
+		return new File("/");
+	}
+	else return new File(this.getParent());
+}
 /**
  *  Returns a new File object containing an absolute path file.
  */
 File.prototype.getAbsoluteFile = function() {
 
 	return new File(this.getAbsolutePath());
-
+	
 }
 
 /**
@@ -107,8 +159,8 @@ File.prototype.listFiles = function(filter) {
 	
 	for ( var i = 0 ; i < list.length ; i++) {
 		if ( list[i] != '.' && list[i] != '..' ) {
-            if (typeof filter === 'undefined' || filter.call(this, list[i]) ) {
-                files.push(new File(this.path + "/" + list[i]));
+			if (typeof filter === 'undefined' || filter.call(this, list[i]) ) {
+				files.push(new File(this.path + "/" + list[i]));
 			}
 		}
 	}

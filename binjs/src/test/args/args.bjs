@@ -1,4 +1,4 @@
-#!/bin/js -b-x
+#!/bin/js
 #
 # Test program argument handling
 # Call this script with args  

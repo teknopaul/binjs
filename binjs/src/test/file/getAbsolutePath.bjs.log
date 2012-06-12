@@ -1,5 +1,0 @@
-. = {"path":"/home/teknopaul/c_workspace/binjs/binjs/src/test","name":"test","mode":16877,"uid":1000,"gid":1001,"size":4096,"lastAccessDate":"2012-06-07T23:45:11.000Z","lastModifiedDate":"2012-06-07T23:45:14.000Z","exists":true}
-. = {"path":"/","name":"/","mode":16749,"uid":1000,"gid":0,"size":4096,"lastAccessDate":"2012-06-06T19:14:38.000Z","lastModifiedDate":"2012-06-03T15:37:45.000Z","exists":true}
-. = {"path":"/home/teknopaul/c_workspace/binjs/binjs/src/test","name":"test","mode":16877,"uid":1000,"gid":1001,"size":4096,"lastAccessDate":"2012-06-07T23:45:11.000Z","lastModifiedDate":"2012-06-07T23:45:14.000Z","exists":true}
-[94mINFO[0m:invalid_path_expected Error: Invalid path /..
-

@@ -2,10 +2,10 @@
 /**
  * Simple XML DOM implementation based on sax that works with Strings.
  *
- * This has been copied and modifed from nodejs code. there is actually very
+ * This has been copied and modifed from nodejs code. There is actually very
  * few changes since the sax.js parser accepts a String and is not really
- * asyncronouse code.  Whoda thunk it!  This class returns an Element from the
- * parse method instead of accepting acallback but apart from that is the same.
+ * asynchronous code.  Whoda thunk it! This class returns an Element from the
+ * parse method instead of accepting a callback but apart from that is the same.
  * as the nodejs version.
  * 
  * If you have an XML string and want a DOM this utility is convenient.
@@ -64,7 +64,7 @@ var DomJS = function() {
 	// this.processingInstructions = new Array();
 };
 
-DomJS.prototype.parse = function(string, cb) {
+DomJS.prototype.parse = function(string) {
 	if (typeof string != 'string') {
 		throw new Error('Data is not a string');
 	}
@@ -136,9 +136,6 @@ DomJS.prototype.parse = function(string, cb) {
 	};
 
 	parser.onend = function () {
-		if ( self.error == false) {
-			return self.root;
-		}
 	};
 
 	parser.write(string).close();

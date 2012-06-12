@@ -6,8 +6,9 @@
 
 $.println("text");
 $.println("bold text", true);
-$.println("red text", 'red');
-$.error(23,"Something bad happened");
+$.println("orange text", 'orange');
+$.print("testing the error() function");
+$.error(23, "Something bad happened");
 
 $.info(0,"Var from environment", $.env.HOME);
 

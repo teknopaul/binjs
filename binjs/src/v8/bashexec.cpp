@@ -56,7 +56,7 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 	const char* cstr = ToCString(str);
 
 	// sync JavaScript variables to Bash env
-	CopyVars(args);
+	CopyVars();
 	
 	// exec
 	libbash_run_one_command((char *)cstr);
@@ -70,6 +70,12 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 	
 	// Copy back any environment changes
 	CopyEnv(args);
+
+	char *exception = libbash_peak_variable("_EX");
+	if ( exception != NULL) {
+		libbash_unset_variable("_EX");
+		return ThrowException(Exception::TypeError(String::New(exception)));
+	}
 
 	return Undefined();
 
@@ -208,13 +214,13 @@ Handle<Value> CopyEnv(const Arguments& args) {
 /**
  *  Copy vars from JavaScript to Bash environment
  */
-Handle<Value> CopyVars(const Arguments& args) {
+void CopyVars() {
 	HandleScope scope;
 
-	// Find the $ variables
-	Local<Context> context = args.This()->CreationContext();
+	Local<Context> context = Context::GetCurrent();
 	Local<Object> global = context->Global();
-	
+
+	// Find the $ variables
 	Handle<Value> dollar = global->Get(String::New("$"));
 
 	if (dollar->IsObject()) {
@@ -222,28 +228,29 @@ Handle<Value> CopyVars(const Arguments& args) {
 		Handle<Value> watch = dollarObj->Get(String::New("watch"));
 		if ( watch->IsArray()) {
 			
+			
+			// Local<Array> watchListObj(Array::Cast(*watch));
 			Local<Object> watchListObj = watch->ToObject();
-			for ( uint32_t  i = 0 ; watchListObj->Has(i) ; i++) {
-				Local<String> var = watchListObj->Get(i)->ToString();
-				String::Utf8Value varStr(var);
-
-				Handle<Value> value = global->Get(var);
+			Local<Array> names = watchListObj->GetPropertyNames();
+			
+			//printf("Found watch %d\n", names->Length());
+			
+			for ( uint32_t  i = 0 ; i < names->Length() ; i++) {
+				Handle<Value> var = names->Get(i);
+				Handle<Value> value = watchListObj->Get(var);
 				
-				if ( ! value->IsUndefined()) {
+				if ( ! value->IsUndefined() && ! value->IsNull()) {
+					String::Utf8Value varStr(var);
 					String::Utf8Value valueStr(value);
-					
+					//printf("Setting %s=%s \n", ToCString(varStr), ToCString(valueStr));
 					libbash_set_variable(
 						ToCString(varStr), 
 						const_cast<char *>(ToCString(valueStr))
 						);
 				}
 			}
-			
-			return True();
 		}
 	}
-	return False();
-	
 }
 
 

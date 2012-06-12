@@ -1,21 +1,30 @@
 # TODO LIST #
 
-#### Environment
+### Bugs
 
- * Copy bash env to JavaScript in a $.env = {}  object
- * Syncronize PWD acorss JS and bash,  not just env variable but actaul CD according to C, JavaScript and C++  (can this be done?)
- * binjs_export("var")  to expjort  vars to bash
+$.env.watch list does not work inside functions 
+
+### General
+
+addd asserts to scripts in src/test
 
 ### Build 
 
-install.sh  lots of colours and check for sudo etc  make it clean
 curl github.com/teknopaul/binjs/install.sh | bash style script
 Find way to apply patches to bash
 Use correct Ubuntu / Fedora versions of bash
+Build failed on chermans 32bit Ubuntu
 
 ### Libs
 
-Check out how to use npm wihtout messing up 
+
+binjs_import should return an object
+import should run in its own scope like nodejs does
+var assert = require("assert"); needed since it seems node and CommonJS dose this
+perhaps only require() should run it is own scope?
+copy nodejs' inspect() method
+
+Check out how to use npm without messing up 
 
 ### Documentation
 

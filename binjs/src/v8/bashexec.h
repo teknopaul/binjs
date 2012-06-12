@@ -17,7 +17,7 @@ Handle<Value> GetVariable(const Arguments& args);
 
 Handle<Value> CopyEnv(const Arguments& args);
 
-Handle<Value> CopyVars(const Arguments& args);
+void CopyVars();
 
 Handle<Value> LastCommandExitValue(const Arguments& args);
 

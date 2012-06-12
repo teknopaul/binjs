@@ -303,7 +303,7 @@ Handle<Value> Load(const Arguments& args) {
 		HandleScope handle_scope;
 		String::Utf8Value file(args[i]);
 		if (*file == NULL) {
-			return ThrowException(String::New("Loading file, file was null"));
+			return ThrowException(Exception::TypeError(String::New("Loading file, file was null")));
 		}
 
 		//printf("Loading %s\n", ToCString(file));
@@ -320,14 +320,14 @@ Handle<Value> Load(const Arguments& args) {
 		}
 		
 		if (source.IsEmpty()) {
-			return ThrowException(String::New("Error loading file"));
+			return ThrowException(Exception::TypeError(String::New("Error loading file")));
 		}
 		if (!ExecuteString(source, String::New(*file), false, true)) {
 			printf("Error executing %s\n", ToCString(file));
 			if (try_catch.HasCaught()) {
 				ReportException(&try_catch);
 			}
-			return ThrowException(String::New("Error executing file"));
+			return ThrowException(Exception::TypeError(String::New("Error executing file")));
 		}
 
 	}

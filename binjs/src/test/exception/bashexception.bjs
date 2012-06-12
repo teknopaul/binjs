@@ -1,0 +1,29 @@
+#!/bin/js
+#
+# indicate an exception should be thrown in bash
+# by setting the variable _EX 
+#
+
+try {
+
+  echo Hello World Gone Wrong && _EX="World Is Broken"
+  echo never printed
+
+} catch(err) {
+  echo bash ex caught and deleted
+  $.info(23,"Bash ex caught")
+}
+
+// Now try the throw builtin hacked into bash by yours truly
+
+try {
+
+  echo Hello Bash Builtins && throw "Bash got hacked!"
+  echo never printed
+
+} catch(err) {
+  echo bash throw caught and deleted
+  $.info(23,"Bash throw caught")
+}
+
+

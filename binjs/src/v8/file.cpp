@@ -66,7 +66,7 @@ void InitialiseFile(Handle<FunctionTemplate> fileTemplate) {
 
 Handle<Value> FileConstructor(const Arguments& args) {
 	if (args.Length() < 1 || ! args[0]->IsString() ) {
-		return ThrowException(String::New("File constructor needs a file name"));
+		return ThrowException(Exception::TypeError(String::New("File constructor needs a file name")));
 	}
 	
 	if (!args.IsConstructCall()) {
@@ -277,7 +277,7 @@ Handle<Value> FileRename(const Arguments& args) {
 	HandleScope scope;
 	
 	if (args.Length() < 1 || ! args[0]->IsString() ) { // TODO dupport file.rename(otherFile);
-		return ThrowException(String::New("Rename to what?"));
+		return ThrowException(Exception::TypeError(String::New("Rename to what?")));
 	}
 	
 	String::Utf8Value newpath(args[0]);
@@ -362,13 +362,20 @@ Handle<Value> FileList(const Arguments& args) {
  */
 Handle<Value> FileRead(const Arguments& args) {
 
+	bool exists = args.This()->Get(String::New("exists"))->ToBoolean()->Value();
+	if ( ! exists ) {
+		return ThrowException(Exception::TypeError(String::New("File does not exist")));
+	}
+	
 	Handle<Value> handle = args.This()->Get(String::New("path"));
 	String::Utf8Value path(handle);
 	const char* cpath = ToCString(path);
 	
 	FILE* file = fopen(cpath, "rb");
-	if (file == NULL) return Handle<String>();
-
+	if (file == NULL) {
+		return ThrowException(Exception::TypeError(String::New("Cannot read file")));
+	}
+	
 	fseek(file, 0, SEEK_END);
 	int size = ftell(file);
 	rewind(file);
@@ -392,7 +399,7 @@ Handle<Value> FileRead(const Arguments& args) {
 Handle<Value> FileWrite(const Arguments& args) {
 
 	if (args.Length() < 1 || ! args[0]->IsString() ) {
-		return ThrowException(String::New("Missing data to write"));
+		return ThrowException(Exception::TypeError(String::New("Missing data to write")));
 	}
 	
 	String::Utf8Value contents(args[0]);
@@ -404,11 +411,12 @@ Handle<Value> FileWrite(const Arguments& args) {
 	
 	FILE* file = fopen(cpath, "wb");
 	if (file == NULL) {
-		return ThrowException(String::New("Can't open file for writing"));
+		return ThrowException(Exception::TypeError(String::New("Can't open file for writing")));
 	}
 
 	int len = strlen(ccontents);
 	int count = fwrite(ccontents, 1, len, file);	
+	fflush(file);
 	fclose(file);
 	
 	return count == len ? True() : False();

@@ -1,0 +1,76 @@
+#!/bin/js
+binjs_import("~lib/xml.js");
+#
+#  Example Script
+#
+
+
+/**
+ * Example function to un gzip and untar a file
+ * I know, Linux tar supports -z, its just an example.
+ */
+function untar(path) {
+
+  var file = new File(path).getAbsoluteFile();
+
+  if (! file.exists || ! file.isFile()) {
+	throw new Error("Not a readable file " + path);
+  }
+
+  var fileName = file.name;
+
+  if (fileName.lastIndexOf(".tar.gz") != fileName.length - 7) throw new Error("Filename must end in .tar.gz");
+
+  $.setEnv("path", path);
+  mv $path /tmp
+
+  $.setEnv("fileName", fileName);
+  echo "GUnZipping $fileName"
+  gunzip /tmp/$fileName
+
+  fileName = fileName.substring(0, fileName.length - 3); // remove .gz
+  $.setEnv("fileName", fileName);
+
+  cd /tmp
+  tar xvf $fileName
+  cd -
+
+  fileName = fileName.substring(0, fileName.length - 4); // remove .tar
+
+  var dir = new File("/tmp/" + fileName);
+  if ( ! dir.isDir() ) throw new Error("tar did not contain a directory called " + fileName);
+  else {
+	dir.rename(file.getParent() + "/" + fileName);
+  }
+  
+}
+
+ wget http://code.abnoctus.com/untar-1.0.tar.gz
+
+try {
+
+  untar("./untar-1.0.tar.gz");
+
+  var password = "password" + Math.floor((Math.random()*9999)+1); 
+  var confJson = JSON.parse(new File("./untar-1.0/config.json").read());
+  confJson.password = password;
+
+  new File("./untar-1.0/config.json").write(JSON.stringify(confJson));
+  
+
+  var domJS = new DomJS();
+  var doc = domJS.parse(new File("./untar-1.0/config.xml").read());
+    
+  var elem = doc.children[3];
+  elem.children = [];
+  elem.children.push(new Text(password));
+  
+  new File("./untar-1.0/config.xml").write(doc.toXml());
+  
+  $.println("Done.", 'green');
+
+}
+catch(err) {
+  $.error(1,"Error installing http://code.abnoctus.com/untar-1.0.tar.gz", err.toString());
+  throw err;
+}

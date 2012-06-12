@@ -37,3 +37,5 @@ src/libbash/throw.def
 src/js/dom-js.js
 src/js/sax.js
 src/js/xml.js
+src/js/assert.js
+examples/untar.bjs

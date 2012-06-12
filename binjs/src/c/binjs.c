@@ -127,6 +127,9 @@ int main(int argc, char* argv[]) {
 		bash_argv[a+1] = bash_optsv[a];
 	}
 	bash_argc++;
+	if ( verbose_flag ) {
+		bash_argv[bash_argc++] = "-x";
+	}
 	for (a = 0 ; a < prog_argc; a++) {
 		bash_argv[bash_argc] = prog_argv[a];
 		bash_argc++;

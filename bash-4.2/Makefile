@@ -473,7 +473,7 @@ BUILTIN_DEFS = $(DEFSRC)/alias.def $(DEFSRC)/bind.def $(DEFSRC)/break.def \
 	       $(DEFSRC)/ulimit.def $(DEFSRC)/umask.def $(DEFSRC)/wait.def \
 	       $(DEFSRC)/getopts.def $(DEFSRC)/reserved.def \
 	       $(DEFSRC)/pushd.def $(DEFSRC)/shopt.def $(DEFSRC)/printf.def \
-	       $(DEFSRC)/mapfile.def
+	       $(DEFSRC)/mapfile.def $(DEFSRC)/throw.def
 BUILTIN_C_SRC  = $(DEFSRC)/mkbuiltins.c $(DEFSRC)/common.c \
 		 $(DEFSRC)/evalstring.c $(DEFSRC)/evalfile.c \
 		 $(DEFSRC)/bashgetopt.c $(GETOPT_SOURCE)
@@ -492,7 +492,7 @@ BUILTIN_OBJS = $(DEFDIR)/alias.o $(DEFDIR)/bind.o $(DEFDIR)/break.o \
 	       $(DEFDIR)/source.o $(DEFDIR)/suspend.o $(DEFDIR)/test.o \
 	       $(DEFDIR)/times.o $(DEFDIR)/trap.o $(DEFDIR)/type.o \
 	       $(DEFDIR)/ulimit.o $(DEFDIR)/umask.o $(DEFDIR)/wait.o \
-	       $(DEFDIR)/getopts.o $(DEFDIR)/mapfile.o $(BUILTIN_C_OBJ)
+	       $(DEFDIR)/getopts.o $(DEFDIR)/mapfile.o $(DEFDIR)/throw.o $(BUILTIN_C_OBJ)
 GETOPT_SOURCE   = $(DEFSRC)/getopt.c $(DEFSRC)/getopt.h
 PSIZE_SOURCE	= $(DEFSRC)/psize.sh $(DEFSRC)/psize.c
 
@@ -1527,3 +1527,4 @@ builtins/type.o: $(DEFSRC)/type.def
 builtins/ulimit.o: $(DEFSRC)/ulimit.def
 builtins/umask.o: $(DEFSRC)/umask.def
 builtins/wait.o: $(DEFSRC)/wait.def
+builtins/throw.o: $(DEFSRC)/throw.def
