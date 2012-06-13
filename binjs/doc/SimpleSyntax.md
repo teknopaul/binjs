@@ -20,7 +20,7 @@ Simple JavaScript code is valid.
 
     for (var i = 0 ; i < 23 ; i++) {
 
-        $.print("Hello World");
+        $.println("Hello World");
 
     }
 

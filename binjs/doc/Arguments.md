@@ -5,7 +5,7 @@ When executing a /bin/js scripts command line arguments are passed to both bash 
 
     ./myscript.bjs one two three
 
-Bash is provided the environment variables $0 - $4 and in JavaScript the global variables argc and argv are set.  argc is redundant info in JavaScript 
+Bash is provided the environment variables $0 - $4 and in JavaScript the global variables argc and argv are set.  argc is redundant info in JavaScript. 
 
 Arguments can be accessed as follows
 

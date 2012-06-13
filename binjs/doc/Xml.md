@@ -1,7 +1,7 @@
 
 # Xml Support
 
-Modifying XML files in scripts is fiddly with only Linux tools like awk and sed at your disposal so /bin/js comes with an XML parser built in, it is lifted rom nodejs code with a couple of changes to make it more fitting for synchronous scripts.
+Modifying XML files in scripts is fiddly with only Linux tools like awk and sed at your disposal so /bin/js comes with an XML parser built in, it is lifted from nodejs code with a couple of changes to make it more fitting for synchronous scripts.
 
 ## Usage
 
@@ -9,11 +9,11 @@ Modifying XML files in scripts is fiddly with only Linux tools like awk and sed 
 
 The following header is needed to import the xml libraries.  This imports both Sax and Dom parsers.
 
-    binjs_import("~lib/xml.js");
+    binjs_import("~lib/Xml.js");
 
 To parse a document to a dom first read it as a JavaScript String then pass it to the DomJS parser.
 
-    var parser = new DomJS();
+    var parser = new Dom();
     var text = new File("./doc.xml").read();
     var rootElement = parser.parse(text);
 
@@ -27,15 +27,15 @@ The object can be modified and written back out with dom.toXml()
 
 To parse with Sax the same import is needed, or you can just import sax.js
 
-    binjs_import("~lib/xml.js");
+    binjs_import("~lib/Xml.js");
     
 or 
 
-    binjs_import("~lib/sax.js");
+    binjs_import("~lib/Sax.js");
 
-Parsing with sax requires passing callback functions which is nodejs's style of working. The sax nodejs parser is  synchnous code so can be used as follows.
+Parsing with sax requires passing callback functions which is nodejs's style of working. The Sax nodejs parser is  synchnous code so can be used as follows.
 
-    var parser = sax.parser();
+    var parser = new Sax().parser();
     var text = new File("./doc.xml").read();
 
     var xmlVer = "";

@@ -21,3 +21,5 @@ Welcome to /bin/js scripting the way you always wanted it. A fine mashup of bash
 Once you have compiled and installed /bin/js you can run the above example.bjs.
 
 ***
+
+Check INSTEALL.md for how to build

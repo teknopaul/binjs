@@ -3,6 +3,7 @@
 # make out/native/lib.target/libv8.so for this platform 
 # using 4 compile threads to run gcc
 
+make dependencies
 make -j4 library=shared native
 
 cp out/native/lib.target/libv8.so  ../binjs/contrib/libv8.so.1

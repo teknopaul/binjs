@@ -1,5 +1,5 @@
 #!/bin/js
-var markdown = binjs_import("~lib/markdown.js");
+binjs_import("~lib/markdown.js");
 
 if (true) markdown.printFile(argv[1]);
 

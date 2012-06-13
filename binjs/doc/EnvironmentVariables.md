@@ -29,3 +29,5 @@ By default it contains ["i", "j", "k"] so that simple forloop variables are prop
     }
 
 It can be removed if you dont want any variables copied to the Bash environment.
+
+This trick only works in the global scope and currently does not work inside a function.

@@ -145,7 +145,7 @@ void InitialiseJob(Handle<FunctionTemplate> jobTemplate) {
 
 }
 /**
- * Returns an Array of Objects representing a runnign job.
+ * Returns an Array of Objects representing a running job.
  * Jobs are started by taking & on the end of the command line.
  * Jobs are indexed and have a pid, future versions should provide kill()
  * for now you can use bash syntax

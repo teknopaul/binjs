@@ -37,12 +37,12 @@ for(j=0 ; j < 5 ; j++ ) {
 
 j = 0; // var recognition
 do{
-	$.println($.color('red', "j=" +  j));
+	$.println("j=" +  j, 'red');
 }while(j++ < 5);
 
 do
 {
-	$.println($.color('red', "j=" +  j));
+	$.println("j=" +  j, 'red');
 }
 while(j++ < 5);
 
@@ -50,6 +50,7 @@ try {
 
 	echo ready to barf
 	throw "up";
+
 }
 catch(barf) 
 {

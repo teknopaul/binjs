@@ -4,6 +4,8 @@
 #
 # This script copys everything needed to /lib/binjs then creates symlinks
 #
+# Run checkdeps.sh to verify if you have therequired build tools to install
+#
 
 # per HFS if the binary is /bin/js the libraries are in /lib/
 INST_DIR=/lib/binjs

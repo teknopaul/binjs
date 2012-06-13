@@ -1,5 +1,6 @@
 #!/bin/js
 
+cd `dirname $0`
 
 binjs_import("./dep.js");
 binjs_import("./otherdep.js");

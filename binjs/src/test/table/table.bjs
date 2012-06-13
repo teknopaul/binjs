@@ -1,0 +1,21 @@
+#!/bin/js
+binjs_import("~lib/Table.js")
+
+cd `dirname $0`
+
+var table = new Table(new File("./table.data").read());
+
+table.print();
+
+$.println();
+
+table.divider = "   ";
+
+table.print();
+
+
+table.data.push(['totals']);
+table.data.push([23,45,42]);
+
+table.print();
+

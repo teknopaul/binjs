@@ -1,0 +1,18 @@
+#!/bin/js
+
+binjs_import("~lib/Progress.js");
+
+var progress = new Progress("Downloading...   " , "Done.");
+
+
+var max = 10;
+progress.max = 10;
+
+progress.render();
+
+for ( var i = 0 ; i < max ; i++) {
+	$.sleep(100);
+	progress.tick();
+}
+progress.done();
+

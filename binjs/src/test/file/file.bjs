@@ -5,7 +5,7 @@
 
 var file = new File("./build.sh");
 
-binjs_println("" + file);
+$.println("" + file);
 
 $.info( 0, null, file.toString() );
 $.info( 0, null, file.exists );

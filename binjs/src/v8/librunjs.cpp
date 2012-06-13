@@ -36,6 +36,7 @@ int RunPipedJS(int pipe, int argc, char* argv[]);
 // core methods made available to JavaScript
 Handle<Value> Print(const Arguments& args);
 Handle<Value> PrintLine(const Arguments& args);
+Handle<Value> Flush(const Arguments& args);
 Handle<Value> Load(const Arguments& args);
 Handle<Value> Sleep(const Arguments& args);
 Handle<Value> Exit(const Arguments& args);
@@ -188,6 +189,7 @@ Persistent<Context> CreateShellContext() {
 	// global methods start wth binjs_  many callable via $.
 	global->Set(String::New("binjs_print"),		FunctionTemplate::New(Print));
 	global->Set(String::New("binjs_println"),	FunctionTemplate::New(PrintLine));
+	global->Set(String::New("binjs_flush"),		FunctionTemplate::New(Flush));
 	global->Set(String::New("binjs_import"),	FunctionTemplate::New(Load));
 	global->Set(String::New("binjs_sleep"),		FunctionTemplate::New(Sleep));
 	global->Set(String::New("binjs_exit"),		FunctionTemplate::New(Exit));
@@ -265,6 +267,16 @@ Handle<Value> PrintLine(const Arguments& args) {
 	
 	return Undefined();
 	
+}
+/**
+ * Print a string to stdout, something JavaScript cant normally do.
+ */
+Handle<Value> Flush(const Arguments& args) {
+
+	fflush(stdout);
+
+	return Undefined();
+
 }
 
 /**

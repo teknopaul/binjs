@@ -12,7 +12,10 @@ without warranty of any kind.
 
    This project is buit with scripts called ./build.sh which
 call the builds for bash and v8 and runjs and because root permissions
-are needed installs with a separate script.
+are needed installs with a separate script. To verify that you have the 
+required build tool to compile the source run checkdeps.sh and install
+usign yum or apt-get what ever is reported as missing. Then compile 
+and install with.
 
     ./build.sh
     sudo ./install.sh
