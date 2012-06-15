@@ -18,7 +18,7 @@ gcc -Wall -fPIC preparser.c libpreparser.o ${GLIBS} \
 					-o binjs_preparser\
 					-I. ${GLIBFLAGS} 
 
-gcc -Wall -fPIC binjs.c libpreparser.o ${EXTRA} ../v8/bashexec.o ../v8/file.o ../v8/util.o ../v8/librunjs.o  \
+gcc -Wall -fPIC binjs.c libpreparser.o ${EXTRA} ../v8/bashexec.o ../v8/file.o ../v8/util.o ../v8/shell.o ../v8/librunjs.o  \
 					-lv8 -lbash ${GLIBS} \
 					-o binjs \
 					${GLIBFLAGS} -L../../contrib

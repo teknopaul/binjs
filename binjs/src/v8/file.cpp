@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <cstring>
 
 #include <errno.h>
@@ -65,6 +66,8 @@ void InitialiseFile(Handle<FunctionTemplate> fileTemplate) {
 }
 
 Handle<Value> FileConstructor(const Arguments& args) {
+	HandleScope scope;
+	
 	if (args.Length() < 1 || ! args[0]->IsString() ) {
 		return ThrowException(Exception::TypeError(String::New("File constructor needs a file name")));
 	}
@@ -76,18 +79,44 @@ Handle<Value> FileConstructor(const Arguments& args) {
 
 	SetPath(args[0]->ToString(), self);
 	
-	DoStat(args[0]->ToString(), self);
+	DoStat(self->Get(String::New("path"))->ToString(), self);
 	
 	return Undefined(); 
 }
 
 static void SetPath(Handle<String> pathString, Handle<Object> self) {
+	HandleScope scope;
 
-	self->Set(String::New("path"), pathString);
-
-	// get the file name, the part after the last /
 	String::Utf8Value path(pathString);
 	const char* cpath = ToCString(path);
+	
+	//printf("cpath \"%s\" \n" , cpath);
+	
+	// Bash style tilde expansion
+	if ( *cpath == '~' ) {
+		int jump = 1; // how many chars to skip
+		Handle<String> expansion = String::New("");
+		if ( *(cpath +1) == '+' ) {
+			expansion = String::New(getenv("PWD"));
+			jump++;
+		}
+		else if ( *(cpath +1) == '-' ) {
+			expansion = String::New(getenv("OLDPWD"));
+			jump++;
+		}
+		else {
+			expansion = String::New(getenv("HOME"));
+		}
+		
+		pathString = String::Concat(expansion, String::New(cpath + jump));
+		self->Set(String::New("path"), pathString);
+	}
+	else {
+		self->Set(String::New("path"), pathString);
+	}
+	
+
+	// get the file name, the part after the last /
 	
 	// read the string from back to front
 	int len = strlen(cpath);
@@ -126,6 +155,7 @@ static void SetPath(Handle<String> pathString, Handle<Object> self) {
 
 
 static void DoStat(Handle<String> pathString, Handle<Object> self) {
+	HandleScope scope;
 
 	String::Utf8Value path(pathString);
 	const char* cpath = ToCString(path);

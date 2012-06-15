@@ -28,7 +28,7 @@
 // AssertionError's when particular conditions are not met. The
 // assert module must conform to the following interface.
 
-Assert = new function() {
+Assert = function() {
 
 };
 
@@ -44,7 +44,7 @@ AssertionError = function AssertionError(options) {
   this.expected = options.expected;
   this.operator = options.operator;
 };
-$.inherits(assert.AssertionError, Error);
+$.inherits(AssertionError, Error);
 
 AssertionError.truncate = function(s, n) {
   if (typeof s == 'string') {

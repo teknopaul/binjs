@@ -21,6 +21,8 @@ void CopyVars();
 
 Handle<Value> LastCommandExitValue(const Arguments& args);
 
+// TODO void ThrowOnNonZeroExitValue(bool);
+
 void InitialiseJob(Handle<FunctionTemplate> jobTemplate);
 
 Handle<Value> GetJobs(const Arguments& args);

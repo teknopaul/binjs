@@ -17,6 +17,7 @@
 #include <vector>
 
 #include <v8.h>
+#include <v8-debug.h>
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h> 
@@ -24,6 +25,7 @@
 #include "bashexec.h"
 #include "file.h"
 #include "util.h"
+#include "shell.h"
 
 using namespace v8;
 
@@ -81,7 +83,7 @@ extern "C" int runjs_pipejs(int pipe, int argc, char* argv[]) {
 
 extern "C" void runjs_exit(int status) {
 
-	exit(1);
+	exit(status);
 
 }
 // Extracts a C string from a V8 Utf8Value.
@@ -179,6 +181,34 @@ int RunPipedJS(int pipe, int argc, char* argv[]) {
 	return 0;
 
 }
+void DebuggerCallback(DebugEvent event,
+                        Handle<Object> exec_state,
+                        Handle<Object> event_data,
+                        Handle<Value> data){
+printf("here %d\n", 2 );
+return;
+
+}
+
+Handle<Value> ScopeDump(const Arguments& args) {
+	HandleScope scope;
+	
+	//Local<Context> ctx = Context::GetCalling();
+	Debug debug;
+	Debug::ClientData clientData;
+	//Debug::EventCallback that;
+	Handle<Value> data;
+	Debug::SetDebugEventListener(DebuggerCallback ,data); 
+	//Debug::Message message;
+	debug.DebugBreak();
+	Debug::DebugBreakForCommand();
+	Debug::ProcessDebugMessages();
+	//debug.CancelDebugBreak();
+	
+	printf("here %d\n", 1 );
+	
+	return Integer::New(0);
+}
 
 /**
  * Creates a new execution environment containing the built-in functions and Objects.
@@ -193,6 +223,8 @@ Persistent<Context> CreateShellContext() {
 	global->Set(String::New("binjs_import"),	FunctionTemplate::New(Load));
 	global->Set(String::New("binjs_sleep"),		FunctionTemplate::New(Sleep));
 	global->Set(String::New("binjs_exit"),		FunctionTemplate::New(Exit));
+	global->Set(String::New("binjs_trim"),		FunctionTemplate::New(Trim));
+	global->Set(String::New("binjs_scopeDump"),		FunctionTemplate::New(ScopeDump));
 
 	// libbash functions
 	global->Set(String::New("binjs_exec"),		FunctionTemplate::New(ExecAsBash));
@@ -200,6 +232,10 @@ Persistent<Context> CreateShellContext() {
 	global->Set(String::New("binjs_getEnv"),	FunctionTemplate::New(GetVariable));
 	global->Set(String::New("binjs_copyEnv"),	FunctionTemplate::New(CopyEnv));
 	global->Set(String::New("binjs_getJobs"),	FunctionTemplate::New(GetJobs));
+	
+	// shell functions
+	global->Set(String::New("binjs_shellWidth"),	FunctionTemplate::New(ShellWidth));
+	global->Set(String::New("binjs_shellHeight"),	FunctionTemplate::New(ShellHeight));
 	
 	// The File object
 	Handle<FunctionTemplate> fileTemplate = FunctionTemplate::New(FileConstructor);
@@ -214,12 +250,14 @@ Persistent<Context> CreateShellContext() {
 	InitialiseJob(jobTemplate);
 
 
-	
 	Persistent<Context> context = Context::New(NULL, global);
 		
 	return context;
 }
 
+/**
+ * Process command line arguments, set argc and argv and errno and pid
+ */
 void ProcessArgs(Handle<Object> global, int argc , char* argv[]) {
 	// program argc and argv
 	Handle<Value> jsArgc = Integer::New(argc);
@@ -235,7 +273,12 @@ void ProcessArgs(Handle<Object> global, int argc , char* argv[]) {
 	
 		v8::Handle<Value> methodArgv[1] = { String::New(argv[i]) };
 		push->Call(jsArgv, 1, methodArgv);
+
 	}
+	
+	global->Set(String::New("errno"), Integer::New(0));
+	global->Set(String::New("pid"), Integer::New(getpid()));
+	global->Set(String::New("lastpid"), Integer::New(0));
 }
 
 /**

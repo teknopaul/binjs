@@ -42,6 +42,8 @@ void libbash_free_vars(struct bash_var* vars);
 
 int libbash_last_command_exit_value();
 
+int libbash_last_asynchronous_pid();
+
 struct bash_job* libbash_get_jobs();
 void libbash_free_jobs(struct bash_job* jobs);
 

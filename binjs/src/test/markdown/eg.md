@@ -24,11 +24,7 @@ Now lets do lists,
  ** this here is another very long lines of text that is going to have to ger wrapped to 80 chars wide to view on the terminal and may actually span q few lines.
  ** lets try to get the list stuff indenting properly
 
-> blockquote here is some very long 
-lines of text that is going to have 
-to ger wrapped to 80 chars wide to 
-view on the terminal and may actually 
-span q few lines.
+> blockquote here is some very long lines of text that is going to have to ger wrapped to 80 chars wide to view on the terminal and may actually span q few lines.
 
 
 

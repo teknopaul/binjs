@@ -1,9 +1,14 @@
 /**
- * A Progress bas
+ * A Progress bar
  */
  
- 
+/**
+ * @param progressText the text to be dislpalyed while in progress
+ * @param doneText the text to display when finished
+ * @constructor
+ */
 Progress = function(progressText, doneText) {
+
 	this.progressText = progressText || "Progress...";
 	this.doneText = doneText || "Done.";
 	this.min = 0;
@@ -12,43 +17,46 @@ Progress = function(progressText, doneText) {
 	this.space = " ";
 	
 	// private
-	this.pos = 0;
-	this.onscreen = false;
-	this.isDone = false;
+	this._pos = 0;
+	this._onScreen = false;
+	this._isDone = false;
 }
 
 Progress.prototype.render = function() {
-	if ( ! this.onscreen ) {
-		this.onscreen = true;
-		$.println();
+	if ( ! this._isDone ) {
+		if ( ! this._onScreen ) {
+			this._onScreen = true;
+			$.println();
+		}
+		$.print("\r" + this.progressText, true); 
+		$.print(" [" + this._getBar() + "]");
+		binjs_flush();
 	}
-	$.print("\r" + this.progressText, true); 
-	$.print(" [" + this.getBar() + "]");
-	binjs_flush();
 }
 
 Progress.prototype.tick = function() {
-	this.pos++;
+	this._pos++;
 	this.render();
-	if ( this.pos == this.max) this.done();
+	if ( this._pos == this.max) this.done();
 }
 
 Progress.prototype.done = function() {
-	if ( ! this.isDone ) {
-		this.pos = this.max;
-		$.print("\r" + this.getSpace());
+	if ( ! this._isDone ) {
+		this._pos = this.max;
+		$.print("\r" + this._getSpace());
 		$.println("\r" + this.doneText, true); 
 	}
-	this.isDone = true;
+	this._isDone = true;
 }
 
-Progress.prototype.getBar = function() {
+Progress.prototype._getBar = function() {
 	var buf = "";
-	for(var i = this.min ; i < this.pos ; i++) buf += this.bar;
-	for(var i = this.pos ; i < this.max ; i++) buf += this.space;
+	for(var i = this.min ; i < this._pos ; i++) buf += this.bar;
+	for(var i = this._pos ; i < this.max ; i++) buf += this.space;
 	return buf;
 }
-Progress.prototype.getSpace = function() {
+
+Progress.prototype._getSpace = function() {
 	var buf = "";
 	for(var i = this.min ; i < this.progressText.length + 3 + (this.max - this.min) ; i++) buf += ' ';
 	return buf;

@@ -30,12 +30,15 @@ if ( typeof $ == 'undefined' ) {
  // copy the default bash envirionment to JavaScript land
  binjs_copyEnv();
  
+ String.prototype.trim = function() { 
+	return binjs_trim(this); 
+ }
+ 
 }
 
-var i,j,k;
-$.watch.i = i;
-$.watch.j = j;
-$.watch.k = k;
+// Global Magic
+var gi,gj,gk;
+$.watch =  ["gi","gj","gk"];
 
 /**
  * Print a line of text to std out.

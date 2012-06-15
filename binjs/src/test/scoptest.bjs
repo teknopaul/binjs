@@ -1,0 +1,10 @@
+#!/bin/js
+
+function sub() {
+	var scp = 23;
+	binjs_scopeDump();
+}
+
+binjs_scopeDump();
+
+

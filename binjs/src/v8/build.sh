@@ -24,13 +24,18 @@ gcc -Wall -fPIC -c file.cpp \
 		-I../../contrib/include \
 		-L../../contrib
 		
+gcc -Wall -fPIC -c shell.cpp \
+		-lv8 -lpthread \
+		-I../../contrib/include \
+		-L../../contrib
+		
 gcc -Wall -fPIC -c librunjs.cpp \
 		-lv8 -lpthread \
 		-I../../contrib/include \
 		-L../../contrib
 
 # create runjs shared library
-gcc -Wall -fPIC -shared librunjs.cpp bashexec.o file.o util.o\
+gcc -Wall -fPIC -shared librunjs.cpp bashexec.o file.o shell.o util.o\
 		-lv8 -lpthread -lbash \
 		-o librunjs.so.1 \
 		-I../../contrib/include \
@@ -39,7 +44,7 @@ gcc -Wall -fPIC -shared librunjs.cpp bashexec.o file.o util.o\
 ln -s librunjs.so.1 librunjs.so 2>/dev/null
 		
 # create runjs executable
-gcc -Wall -fPIC runjs.c librunjs.o bashexec.o file.o util.o ${EXTRA} \
+gcc -Wall -fPIC runjs.c librunjs.o bashexec.o file.o shell.o util.o ${EXTRA} \
 		-lv8 -lpthread -lbash \
 		-o runjs \
 		-I../../contrib/include \

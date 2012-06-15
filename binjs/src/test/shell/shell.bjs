@@ -1,0 +1,6 @@
+#!/bin/js
+
+binjs_import("~lib/Shell.js")
+
+$.println("Shell width = " + new Shell().getWidth()) ;
+$.println("Shell height = " + new Shell().getHeight()) ;

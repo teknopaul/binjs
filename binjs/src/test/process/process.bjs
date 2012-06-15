@@ -6,6 +6,17 @@
 
 echo hello world
 
-echo "\$?=$? is not in the environment, it must be internal to bash"
+echo "\$?=$? is not in the environment, it is internal to bash"
 
-$.println("last ret code: " + $.bold( $.getEnv("$?") ));
+$.println("$? is not there: " + $.bold( $.getEnv("$?") )); // not there
+
+echo fail && exit 5
+
+$.println("Use errno instead: " + errno ); // "Magic" var
+
+$.info(23, "Process ID", "" + pid); 
+
+cat notThere & 
+
+$.info(24, "last executed Process ID", "" + lastpid); 
+

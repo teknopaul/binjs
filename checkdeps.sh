@@ -2,6 +2,9 @@
 #
 # Check for the required build tools on this system 
 #
+#  todo  autoconf needed
+# failed v8 does not stop th ebuild why not?
+#
 
 # need googls gyp or svn to download it
 which gyp >/dev/null

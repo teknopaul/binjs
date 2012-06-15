@@ -1,6 +1,0 @@
-#!/bin/js
-
-binjs_print("print");
-binjs_print("print");
-binjs_print("print\n");
-

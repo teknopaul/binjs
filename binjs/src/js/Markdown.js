@@ -14,15 +14,17 @@
  * TODO rewrap wrapped text
  * TODO correctly handle entities
  */
+binjs_import("~lib/Shell.js");
 
 Markdown = function(){
-
+	this.padding = "";
+	for (var i = 0 ; i < Markdown.lineLength / 2 ; i++) this.padding += " ";
 };
 
 /**
  *  Wordwrap width
  */
-Markdown.lineLength = 80;
+Markdown.lineLength = new Shell().getWidth();
 
 /**
  * Symbols used for list markers
@@ -110,17 +112,17 @@ Markdown.prototype.list = function(text, listChar) {
 }
 
 Markdown.prototype.center = function(text) {
-    var indent = (this.linLen - text.length) / 2;
-    return "                                        ".substring(0, indent) + text;
+    var indent = (Markdown.lineLength - text.length) / 2;
+    return this.padding.substring(0, indent) + text;
 }
 
-Markdown.prototype.wordWrap = function(indent, text) {
-    $.print(this.doWordWrap(indent, text));
+Markdown.prototype.wordWrap = function(indent, text, rightMargin) {
+    $.print(this.doWordWrap(indent, text, rightMargin));
 }
 
-Markdown.prototype.doWordWrap = function(indent, text) {
+Markdown.prototype.doWordWrap = function(indent, text, rightMargin) {
     var buffer = "";
-	var width = Markdown.lineLength - indent;
+	var width = Markdown.lineLength - indent - (typeof rightMargin === 'number' ? rightMargin : 0);
         
 	while (true) {
 		buffer += ("            ".substring(0, indent));
@@ -165,7 +167,7 @@ Markdown.prototype.doOutput = function(mdString) {
                 startpos++;
             }
             $.print(Color.DARKGREY);
-			this.wordWrap(2, mdata[i].substring(startpos));
+			this.wordWrap(4, mdata[i].substring(startpos), 4);
 			$.print(Color.COLOR_OFF);
 		}
 		else if (
@@ -174,7 +176,7 @@ Markdown.prototype.doOutput = function(mdString) {
 			mdata[i].indexOf("***") == 0 ||
 			mdata[i].indexOf("* * *") == 0
 			) {
-			$.println("                               ···⤛«‹ ¶ ›» ⤜···                                ");
+			$.println(this.padding.substring(8) + "···⤛«‹ ¶ ›» ⤜···");
 			
 		}
 		else if (mdata[i].indexOf("    ") == 0) {

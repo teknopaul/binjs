@@ -419,8 +419,12 @@ int libbash_last_command_exit_value() {
 	return last_command_exit_value;
 }
 
+int libbash_last_asynchronous_pid() {
+	return last_asynchronous_pid;
+}
+
 /**
- * returns a malloced linked list of job detaails from bash.
+ * returns a malloced linked list of job details from bash.
  * caller should free() using libbash_free_jobs()
  */
 struct bash_job* libbash_get_jobs() {

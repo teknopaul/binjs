@@ -1,0 +1,31 @@
+#!/bin/js
+#
+#  File.ext() fiddles with the file extension
+#
+
+cd `dirname $0`
+
+$.println("Getter", 'green');
+$.println(new File("./notthere.txt").ext());
+$.println(new File("./notthere.").ext());
+$.println(new File("./notthere").ext());
+$.println(new File("./.notthere").ext());
+
+$.println("Setter", 'green');
+$.println(new File("./notthere.txt").ext("dat").path);
+$.println(new File("./notthere.txt").ext(".dat").path);
+$.println(new File("./notthere.txt").ext("o").path);
+$.println(new File("./a.o").ext("b").path);
+$.println(new File("./a.o").ext("").path);
+$.println(new File("./.hidden").ext("bck").path);
+$.println(new File("./.hidden.txt").ext("bck").path);
+$.println(new File("./noext").ext("txt").path);
+
+$.println("To ignore", 'green');
+$.println(new File("./.notthere.txt").ext("dat").path);
+try {
+$.println(new File(".").ext("a").path);
+} catch(err) {}
+try {
+$.println(new File("..").ext("a").path);
+} catch(err) {}

@@ -34,7 +34,7 @@ static const char* ToCString(const String::Utf8Value& value) {
 int InitBash(int argc, char **argv) {
 
 	return libbash_init(argc, argv);
-	
+
 }
 
 /**
@@ -50,6 +50,10 @@ void ExitBash(int s) {
  * Execute a string as bash
  */
 Handle<Value> ExecAsBash(const Arguments& args) {
+	HandleScope scope;
+
+	Local<Context> context = Context::GetCurrent();
+	Local<Object> global = context->Global();
 
 	// get the comand to exec as a C string
 	String::Utf8Value str(args[0]);
@@ -60,7 +64,13 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 	
 	// exec
 	libbash_run_one_command((char *)cstr);
+	
+	// set return value
 	lastCommandExitValue = libbash_last_command_exit_value();
+	global->Set(String::New("errno"), Integer::New(lastCommandExitValue));
+
+	// set last asyncrnonous pid
+	global->Set(String::New("lastpid"), Integer::New(libbash_last_asynchronous_pid()));
 	
 	// Set new Current Directory
 	char *pwd = libbash_peak_variable("PWD");
@@ -70,7 +80,8 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 	
 	// Copy back any environment changes
 	CopyEnv(args);
-
+	
+	// throw any exceptions
 	char *exception = libbash_peak_variable("_EX");
 	if ( exception != NULL) {
 		libbash_unset_variable("_EX");
@@ -85,6 +96,7 @@ Handle<Value> ExecAsBash(const Arguments& args) {
  * Set an environment variable into the scope of the embeded Bash runtime.
  */
 Handle<Value> SetVariable(const Arguments& args) {
+	HandleScope scope;
 
 	if (args.Length() == 0) {
 		return Undefined();
@@ -93,7 +105,7 @@ Handle<Value> SetVariable(const Arguments& args) {
 	const char* cname = ToCString(strName);
 
 	if (args.Length() == 1) {
-		libbash_set_variable(cname, (char *)"");
+		libbash_unset_variable(cname);
 	}
 	else {
 		String::Utf8Value strValue(args[1]);
@@ -136,8 +148,11 @@ Handle<Value> GetVariable(const Arguments& args) {
  * Return the exit value of the last command run by bash.
  */
 Handle<Value> LastCommandExitValue(const Arguments& args) {
+	HandleScope scope;
+	
 	return Integer::New(lastCommandExitValue);
 }
+
 
 void InitialiseJob(Handle<FunctionTemplate> jobTemplate) {
 
@@ -229,15 +244,15 @@ void CopyVars() {
 		if ( watch->IsArray()) {
 			
 			
-			// Local<Array> watchListObj(Array::Cast(*watch));
-			Local<Object> watchListObj = watch->ToObject();
-			Local<Array> names = watchListObj->GetPropertyNames();
+			Local<Array> watchListObj(Array::Cast(*watch));
+			//Local<Object> watchListObj = watch->ToObject();
+			//Local<Array> names = watchListObj->GetPropertyNames();
 			
 			//printf("Found watch %d\n", names->Length());
 			
-			for ( uint32_t  i = 0 ; i < names->Length() ; i++) {
-				Handle<Value> var = names->Get(i);
-				Handle<Value> value = watchListObj->Get(var);
+			for ( uint32_t  i = 0 ; i < watchListObj->Length() ; i++) {
+				Handle<Value> var = watchListObj->Get(i);
+				Handle<Value> value = global->Get(var);
 				
 				if ( ! value->IsUndefined() && ! value->IsNull()) {
 					String::Utf8Value varStr(var);
