@@ -16,7 +16,7 @@ LIBS=-lv8 -lbash
 all: libpreparser.o 
 	gcc -Wall libpreparser.o binjs_preparser.c -o binjs_preparser $(GLIBS)
 	gcc -Wall -c binjs.c `pkg-config --cflags glib-2.0`
-	g++ -Wall libpreparser.o binjs.o $(EXT_OBJS) -o binjs $(LIBS) $(GLIBS)
+	g++ -Wall binjs.o libpreparser.o $(EXT_OBJS) -o binjs $(LIBS) $(GLIBS)
 
 .PHONY: clean
 
