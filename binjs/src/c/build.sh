@@ -14,7 +14,7 @@ GLIBS=`pkg-config --libs glib-2.0`
 
 gcc -Wall -fPIC -c libpreparser.c ${GLIBS} ${GLIBFLAGS}
 
-gcc -Wall -fPIC preparser.c libpreparser.o ${GLIBS} \
+gcc -Wall -fPIC binjs_preparser.c libpreparser.o ${GLIBS} \
 					-o binjs_preparser\
 					-I. ${GLIBFLAGS} 
 
