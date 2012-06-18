@@ -33,7 +33,7 @@ Assert = function() {
 };
 
 // 2. The AssertionError is defined in assert.
-// new assert.AssertionError({ message: message,
+// new AssertionError({ message: message,
 //                             actual: actual,
 //                             expected: expected })
 

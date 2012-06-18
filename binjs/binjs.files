@@ -49,3 +49,8 @@ src/js/Xml.js
 src/js/Color.js
 src/js/Table.js
 src/js/Progress.js
+doc/MagicVars.md
+src/v8/shell.h
+src/v8/shell.cpp
+src/js/Shell.js
+notes/Parser_Rules.text

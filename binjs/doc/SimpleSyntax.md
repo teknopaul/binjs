@@ -45,23 +45,23 @@ Pipes and redirects and all the wonders of bash oneliners are available.
 
 All the beauty(ehem) of C style syntax from JavaScript is available.
 
-	#!/bin/js
-	
-	...
+    #!/bin/js
+   
+    ...
   
-	switch (opt) {
+    switch (opt) {
 
-		case 1 : {
-		  doThing();
-		  break;
-		case 2 :
-		  echo found a wrongun >> errs.log
-		  break;
-		default :
-		  $.error(10, "Unknown option");
-	}    
+        case 1 : {
+            doThing();
+            break;
+        case 2 :
+            echo found a wrongun >> errs.log
+            break;
+        default :
+            $.error(10, "Unknown option");
+    }    
 
-switch statements, if/else, while loops, do/while loops, try/catch/finally and others from JavaScirpt are used, since the bash ones are really ugly.  
+switch statements, if/else, while loops, do/while loops, try/catch/finally and others from JavaScirpt are used, since the bash ones are ugly.  
 
 The pipes and redirects and even the trailing & from bash are used.
 
@@ -83,7 +83,7 @@ The preparser generates
 
 And pipes the script to v8, when binjs_exec() is called the text is sent to an embedded instance of bash.
 
-The binjs_import("~lib/binjs.js"); line sets up the internal bash instance and a File object and some other bells and whistles.
+The binjs_import("~lib/binjs.js"); line sets up the internal bash instance The $ and File object and some other bells and whistles.
 
 ## Simple Usage
 
@@ -115,8 +115,8 @@ Var statements and functions must be written on a single line.
 
 Variable defined this way with function or var are then known to the parser and can be called as JavaScript
 
-	myVal.attribute = 23;
-	myFunc();
+    myVal.attribute = 23;
+    myFunc();
 
 Global vars are NOT supported
 
@@ -130,11 +130,11 @@ In short if you dont create a var or a function with the var and function statem
 
     if (true) var funk = function() {return true;}
 
-    funk();   // wrong, parse does not know about "funk" so it is interpreted as bash
+    funk();   // wrong, parser does not know about "funk" so it is interpreted as bash
 
 Just remember, each line is interpreted as EITHER JavaScript OR Bash by a preparser which sends the lines to the correct interpreter.  The preparser never compiles the code, it just peaks at the front of the line to see weather v8 or bash should compile it.
 
-Full details of the parser rules are in the Parser_Rules file.
+Full details of the parser rules are in the ParserRules.md file.
 
 You can always call
 

@@ -7,7 +7,7 @@ binjs_import("~lib/Xml.js");
 
 cd `dirname $0`
 
-var parser = new Dom();
+var parser = new Dom().parser();
 
 var text = new File("./doc.xml").read();
 var rootElement = parser.parse(text);

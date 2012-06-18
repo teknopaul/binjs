@@ -6,11 +6,11 @@ It has a recent build of v8 for the JavaScript runtime, and Bash 4.2 for the Bas
 
 Supports the best of Bash, pipes, redirects and anything you can do in a single line of bash command.
 
-The best of JavaScript C style syntax i++, try/catch for loops etc.
+The best of JavaScript C style syntax, i++, try/catch for loops etc.
 
 Overload the nasty bits of Bash like if [] ; then, the freaky case statements, the horrible math in double round brackets or with bc, and the unplesent $1 $2 $3 parameter handling for function calls.
 
-JavaScript is synchronous , no callback functions or setTimeouts(), an easy to follow single-threaded model with synchronous I/O APIs and sleep(millis) to wait the process.  Ideal for scripting.
+JavaScript is synchronous, no callback functions or setTimeouts(), an easy to follow single-threaded model with synchronous I/O APIs and sleep(millis) to wait the process.  Ideal for scripting.
 
 A synchronous File API that loooks like natural JavaScript.
 
@@ -24,8 +24,8 @@ Very simple library support, to include existing JavaScript.
 
 Shared environment for moving variable between JavaScript and Bash  $.getEnv() $.setEnv()  Bash environment is always available in JavaScript via $.env.HOME.  JavaScript vars can be automatically pushed to the Bash environment. 
 
-    for (var i = 0 ; i < 10 ; i++ ){
-      wget -O - http://linux.com/release/linux-cd-${i}.iso.tar.gz | tar x
+    for (var gi = 0 ; gi < 10 ; gi++ ){
+      wget -O - http://linux.com/release/linux-cd-${gi}.iso.tar.gz | tar x
     }
 
 Simple XML and JSON support, something traditionally tricky in Bash scripts.

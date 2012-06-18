@@ -22,18 +22,10 @@ SRC=`pwd`
 
 export BASH_SRC=../../../bash-4.2
 
-BASH_OBJECTS="libbash.o eval.o y.tab.o general.o make_cmd.o print_cmd.o \
-			dispose_cmd.o execute_cmd.o variables.o copy_cmd.o error.o expr.o \
-			flags.o jobs.o subst.o hashcmd.o hashlib.o mailcheck.o trap.o input.o \
-			unwind_prot.o pathexp.o sig.o test.o version.o alias.o array.o arrayfunc.o \
-			assoc.o braces.o bracecomp.o bashhist.o bashline.o  list.o stringlib.o \
-			locale.o findcmd.o redir.o pcomplete.o pcomplib.o syntax.o xmalloc.o"
-			
-BASH_DEPENDENCIES="-lbuiltins -lglob -lsh -lreadline -lhistory ./lib/termcap/libtermcap.a -ltilde -lmalloc -ldl"
 			
 if [ ! -d $BASH_SRC ] ; then
 	echo "Read the comments in this script for how to build libbash yourself"
-	if [ -f ../../contrib/libbash.sh ] ; then
+	if [ -f ../../contrib/libbash.so ] ; then
 		echo "Not the end of the world you have the lib version"
 		exit 0
 	fi
@@ -42,27 +34,17 @@ fi
 
 cd ${BASH_SRC}
 
+cp -v ${SRC}/libbash.* .
+
 # you only need to build bash with -fPIC once for dev of libbash.c itself
 if [ "$1" != "--quick" ] ; then
 	make clean
 	./configure CFLAGS=-fPIC
 	make
+else 
+	make
 fi
 
-cp ${SRC}/libbash.* .
-
-# compile libbash.c
-gcc  -DPROGRAM='"bash"' -DCONF_HOSTTYPE='"x86_64"' -DCONF_OSTYPE='"linux-gnu"' -DCONF_MACHTYPE='"x86_64-unknown-linux-gnu"' \
-		-DCONF_VENDOR='"unknown"' -DLOCALEDIR='"/usr/local/share/locale"' -DPACKAGE='"bash"' -DSHELL -DHAVE_CONFIG_H   \
-		-I.  -I. -I./include -I./lib  \
-		-fPIC -c libbash.c
-
-# link it, create libbash.so.1
-gcc -L./builtins -L./lib/readline -L./lib/readline -L./lib/glob -L./lib/tilde -L./lib/malloc -L./lib/sh -L./lib/termcap  \
-	-rdynamic  -fPIC -shared ${BASH_OBJECTS} \
-	-o libbash.so.1 \
-	${BASH_DEPENDENCIES}
-	
 # make libbash.a
 ar -r libbash.a ${BASSH_OBJECTS}
 

@@ -2,4 +2,23 @@
 *.o
 *.a
 *.out
+bash-4.2/libbash.c
+bash-4.2/libbash.h
+bash-4.2/libbash.o
+bash-4.2/libbash.so.1
+binjs/src/c/binjs
+binjs/src/c/binjs_preparser
+binjs/src/libbash/test/test_libbash
+binjs/src/v8/librunjs.so
+binjs/src/v8/librunjs.so.1
+binjs/src/v8/runjs
+binjs/contrib/
+bash-4.2/Makefile
+bash-4.2/libbash.a
+bash-4.2/libbash.c
+bash-4.2/libbash.h
+bash-4.2/libbash.o
+bash-4.2/libbash.so
+bash-4.2/libbash.so.1
+
 

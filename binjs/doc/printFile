@@ -1,5 +1,10 @@
 #!/bin/js
-binjs_import("~lib/markdown.js");
+binjs_import("~lib/Markdown.js");
 
-if (true) markdown.printFile(argv[1]);
+var data = new Markdown().parseFile(argv[1]);
+
+$.setEnv("data", data);
+
+echo "$data"  | more
+
 

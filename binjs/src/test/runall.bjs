@@ -1,4 +1,5 @@
 #!/bin/js
+binjs_import("~lib/Table.js");
 #
 # Script to run all the bjs scripts.
 #
@@ -9,6 +10,8 @@ cd `dirname $0`
 DIRS=`ls -1`
 
 var dirs = $.getEnv("DIRS").split("\n"); //  could have called new File(".").list()
+
+var results = new Table("script exitcode");
 
 for (var i = 0; i < dirs.length ; i++ ) {
 
@@ -28,15 +31,22 @@ for (var i = 0; i < dirs.length ; i++ ) {
 			
 			// could execute the file with
 			// binsjs_exec("./" + files[f].path );  
-			
-			// but lets show off and get fuynky with bash and tee
 
 			$.setEnv("FNAME", files[f].path);
-			./${FNAME} | tee ./${FNAME}.log
+			./${FNAME} 
 			
+			if(errno == 0) {
+				$.println("script returned 0", 'green');
+			}
+			else {
+				$.println("script returned " + errno, 'red');
+			}
 			
+			results.data.push([files[f].path, errno]);
 		}
 	}
 
 }
 
+
+results.print();

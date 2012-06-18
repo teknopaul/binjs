@@ -21,4 +21,4 @@ N.B. argc and argv are not known to the preparser so for example the following w
 
     argc++;
 
-Do not change the values of argc and argv, they are writeable currently but they may be made immutable in a future version.
+Code should not change the values of argc and argv, they are writeable currently but they may be made immutable in a future version.

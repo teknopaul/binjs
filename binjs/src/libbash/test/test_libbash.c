@@ -8,6 +8,8 @@ int main(int argc , char ** argv) {
 
 	libbash_run_one_command("echo Hello World");
 
+	libbash_run_one_command("sleep 1");
+
 	libbash_run_one_command("touch afile");
 
 	libbash_run_one_command("if [ -f afile ] ; then echo afile exists ; fi");
@@ -40,6 +42,8 @@ int main(int argc , char ** argv) {
 	}
 	libbash_free_jobs(jobs);
 	
+
+	libbash_run_one_command("sleep 6");
 
 	struct bash_var* vars = libbash_get_all_variables();
 

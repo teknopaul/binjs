@@ -3,7 +3,7 @@ binjs_import("~lib/Sax.js");
 
 cd `dirname $0`
 
-var parser = new sax().parser(true);
+var parser = new Sax().parser(true);
 var text = new File("./doc.xml").read();
 
 $.println(text, 'orange');

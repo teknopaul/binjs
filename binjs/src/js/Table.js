@@ -74,9 +74,9 @@ Table.prototype.align = function(obj, width) {
 	}
 	var indent = width - string.length;
 	return left ? 
-				string + "                                        ".substring(0, indent)
+				string + "                                                                                ".substring(0, indent)
 				:
-				"                                        ".substring(0, indent) + string
+				"                                                                        ".substring(0, indent) + string
 }
 	
 Table.prototype.print = function() {
@@ -85,10 +85,13 @@ Table.prototype.print = function() {
 	}
 	
 	// print headers
+	
 	for (var i = 0; i < this.titles.length ; i++) {
 		$.print(this.divider);
+		$.print(Color.UNDERLINE);
 		$.print(this.align(this.titles[i], this.widths[i]), true);
 	}
+	$.print(Color.COLOR_OFF);
 	$.println(this.divider);
 
 	// print data

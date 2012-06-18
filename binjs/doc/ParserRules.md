@@ -1,3 +1,4 @@
+
 # /bin/js PARSER RULES
 
 ## Overview
@@ -16,19 +17,18 @@ Correct syntax must have the JavaScript and bash on separate lines.
 
 Any developer familiar with Javascript and bash should be able to immediatly determine which line is Javascript and which is bash from reading the code. When writing the code, the rules to determine the language must be known. Some code could be both valid JavaScript and bash to look at, this document defines the rules the preparser has for determining the language of each line.
 
-JavaScript and bash are fairly flexible with syntax rules, /bin/js is much less flexible, this enables the preparser to determine the language.
+JavaScript and bash are fairly flexible with syntax rules, /bin/js is less flexible, this enables the preparser to determine the language.
 
 ## JavaScript tokens
 
-Reserved tokens determine that a line is JavaScript, there are not many token and they should be familiar.
-N.B. JavaScript toekns often overrides bash builtins.
+Reserved tokens determine that a line is JavaScript, there are not many tokens and they should be familiar.
+N.B. JavaScript tokens often overrides bash builtins.
 
 ### If
 
-If a line starts with "if " it is treated as JavaScript.
+If a line starts with "if " it is treated as JavaScript. Leading whitespace is ignored when reeading the first token on the line.
 
- * if 		- Thus bash "if" is not interpreted by bash ever.
-		  JavaScript if syntax uses () and {} as you would expect it to.
+ * if 		- Thus bash "if" is not interpreted by bash ever. JavaScript if syntax uses () and {} as you would expect it to.
  * else		
   
 ### JavasScript looping is used
@@ -64,24 +64,22 @@ Only JavaScript functions are allowed
   
 ### Variables
 
-Both bash environment variables ans String and JavaScript types variables are supported since the syntax is distinct.
+Both bash environment variables and JavaScript variables are supported since the syntax is distinct.
 
 To define a JavaScript variable use "var " as a prefix, with a space. A semicolon to terminate the line is required by /bin/js, even if not by JavaScript.
 
- * var x = false;	- var is obligatory, there are no globals or implicit variables.
-			  A JavaScript variable x is created with a boolean false.
+ * var x = false;	- var is obligatory. A JavaScript variable x is created with a boolean false.
 
 To define a bash environment variable there is var keyword, no spaces and no semicolon, exactly as you would in a bash script.
 
- * x=true		- No white space is permitted per bash rules
-			  An environment variable x with string value "true" is created
+ * x=true		- No white space is permitted per bash rules. An environment variable x with string value "true" is created.
 			  
 ### Pre-existing variables
 
 x = true;
 
 If x already exists as JavaScript variable which the preparser is aware of, an assignement is treated as JavaScript, JavaScript takes priority and x is set to boolean true.
-If x = true is written when x is not a Javascript var already it is an error since it is treated as bash and bash does not support the whitespace. 
+If x = true is written when x is not a JavaScript var already it is an error since it is treated as bash and bash does not support the whitespace. 
 It is important to realise that variables assignements are only treated as JavaScript if the preparser already knows about the variable.
 
     var x = false; // preparser learns about x from the var statement, or a function statement 
@@ -89,20 +87,22 @@ It is important to realise that variables assignements are only treated as JavaS
     y = true;      // error, preparser does not know about y.
     this.y = 23;   // this. is always treated as JavaScript
 
-Since variables may be created in included files or outside the view of the current script a naming convention is useful. It is highly recommended that all JavaScript variables start with a lowerCase letter and follow camelCase conventions and that all bash environment variables are UPPER_CASE with underscores. Static String variables created in JavaScript are available to bash so it is recommended they follow bash conventions and are always Strings.
+Since variables may be created in included files or outside the view of the current script a naming convention is useful. It is highly recommended that all JavaScript variables start with a lowerCase letter and follow camelCase conventions and that all bash environment variables are UPPER_CASE with underscores. Static String variables created in JavaScript can be made available to bash so it is recommended they follow bash conventions.
 e.g.
     var JS_STATIC_VAR = "My String";
 
 ### Other JavaScript keywords
 
- * new		- Lines starting with new are interpteted as JavaScript
- * return	- ditto
+Lines starting with the following keyworkds  are interpteted as JavaScript.
+
+ * new
+ * return
  * blank lines
  * this 
  * instanceof
  * typeof
 
-The following are little used but also mark the line as JavaScript
+The following are little used but also mark the line as JavaScript.
 
  * goto
  * void
@@ -122,25 +122,16 @@ Global functions from JavaScript also do NOT mark the line as JavaScript.
 
  * var i = parseInt("23");		- Correct, N.B. it is the prefix "var " that defines the row as JavaScript.
 
-The fact that global functions are not recognized means you cannot write
-
-  * eval("var = someStupidThing()"); 	- which is good because eval() is evil.
-
-### Reserved tokes
+### Reserved tokens
 
 Some tokens are reserved by the /bin/js interpreter and strictly speaking are neither JavaScript or bash and
 should never be used at the start of a line.
    
- * #/bin/js	- The first line is treated as a shebang, it is NOT optional, and it must be the first line.
+ * #!/bin/js	- The first line is treated as a shebang, it is NOT optional, and it must be the first line.
  * exit		- exit performs a bespoke exit in C (neither JS nor bash) and is covered separatly.
- * binjs_	- Any token that starts binjs_  is reserved for current or future use.
-		  Technically, in some versions, you can write binjs_exec("ls -l");  but this defeats the object of 
-		  scripting in /bin/js and is not guaranteed to be compatible with future versions.
- * \		- Lines may not start with a forward slash \, this would be silly.
- * $.		- $ is a valid JavaScript variable prefix but is reserved for /bin/js usage, sorry jQuery fans.
-		  Using it would make the code ugly since it is the marker for bash vars anyway.
-		  Since it is typical to start a bash line with $CMD $ itself is not treated as JAvaScript
-		  only $. is JavaScript.
+ * binjs_	- Any token that starts binjs_  is reserved for current or future use. Technically, in some versions, you can write binjs_exec("ls -l");  but this defeats the object of scripting in /bin/js and is not guaranteied to be compatible with future versions.
+ * \		- Lines may not start with a forward slash \.
+ * $.		- $ is a valid JavaScript variable prefix but is reserved for /bin/js usage, sorry jQuery fans. Using it would make the code ugly since it is the marker for bash vars anyway. Since it is typical to start a bash line with $CMD $ itself is NOT treated as JavaScript only $. is JavaScript.
 
 Some other JavaScript objects are reserved for future use.
 
@@ -151,7 +142,7 @@ Some other JavaScript objects are reserved for future use.
 Any curly bracket on a line with nothing else but whitespace is treated as JavaScript.
 
  * {		- K&R style functions or { on its own line are thus both supported.
- * }		- Closing currly brackets should always be on a new line.
+ * }		- Closing curly brackets should always be on a new line.
   
 e.g. You can use K&R functions like
 
@@ -173,16 +164,14 @@ As you should know by now, each line is processed as one language or the other s
 
 ### Comments
 
- * #	- Lines starting with # are re-commented with //, the JavaScript comment, by the preparser
-                  Thus lines starting with hash are niether JavaScript nor bash.
- * //	- JavaScript line comments are treated as JavaScript
+ * #	- Lines starting with # are re-commented with //, the JavaScript comment, by the preparser. Thus lines starting with hash are niether JavaScript nor bash.
+ * //	- JavaScript line comments are treated as JavaScript.
  * /**/ - Multiline comments are treated as JavaScript, but not recomended, code is less error prone if each line
 	  individually expresses itself.
 
-
 ### Long Strings
 
-Long strings sometimes need to be broken up in JavaScript, the + operator marks a line as JS to facilitate this
+Long strings sometimes need to be broken up in JavaScript, the + operator marks a line as JavaScript to facilitate this.
 
     var myStr = "something "
                 + "that is not obvious "
@@ -217,28 +206,27 @@ Thus each variable should be on its own line with its own var statement.
 Multi line assignments could theoreticallly be fixed in a future version so do not rely on this and always use UPPER_CASE unique varable names for bash variables.
 
     var x,y,z;
-    x=my_file.tar        // may break in a future version
+    y=my_file.tar        // may behave differently in a future version
     
-Using lower case variables for bash in /bin/js is silly and likely to confuse those that read your code and future versions of the preparser, so dont.
+Using lower case variables for bash in /bin/js is likely to confuse those that read your code and future versions of the preparser, so dont.
     
 Similarly, you should avoid silly variable names that clash with what might appear to be a bash command.
 
     var cp = new Object();
     cp .file  .otherfile   // cp exists as a JavaScript variable known to the preparser
 
-In the above case "cp" is intepreted as JavaScript and the code breaks, cp was apretty stupid name for a variable even if it was made to work. There is nothing to stop you creating bash variables called mv, cp, tar and other such nonsense except your own sense of what is fair to your fellow man.
+In the above case "cp" is intepreted as JavaScript and the code breaks, cp was a pretty stupid name for a variable even if it was made to work. There is nothing to stop you creating bash variables called mv, cp, tar and other such nonsense except your own sense of what is fair to your fellow man.
 
-  
 ### Everything else is bash
 
-Any line not started with a comment or a JavaScript token or a variable known to the pre-parser is interpreted as bash.
+Any line not determined to be JavaScript by the above rules is treated as Bash.
 
 Any line starting with the token "echo " is always interpreted as bash.
 
 ### Line continuation
 
-As with bash any line that starts to be interpreted as bash and is terminating in  \ and a new line 
-results in the following line being treated as a continuation of the  current line.
+As with bash, any line that starts to be interpreted as bash and is terminating in \ and a new line 
+results in the following line being treated as a continuation of the current line.
 
     cat file1 \
         file2 \
@@ -303,16 +291,14 @@ This enables multi-line JavaScript constructs as follows
 Multi-line JavaScript of this form is considered bad form and generally frowned upon in the world of /bin/js since it implies to noobs that trailing + opr & or | might work, they dont, and never will.  But it is hopefully obvious why this is needed for setting up very long constants.
 
 
-
 ### Assorted wierd rules
-
 
 ### Randomly banned stuff
 
 The following rules apply to encourage you to write legible scripts.
 
- * Lines starting with [ or ] are errors (despite being valid JavaScript)
- * Lines starting with " or ' are errors (despite being valid JavaScript)
+ * Lines starting with [ or ] are errors (despite being valid JavaScript and Bash)
+ * Lines starting with " or ' are errors (despite being valid JavaScript and Bash)
  * Lines starting with whitespace then # are errors
 
 ### Curly bracket rules
@@ -405,7 +391,8 @@ You can always export the code to a bash script and call it
 
 ### Semicolons
 
-It is strongly recommended to terminate JavaScript lines a semicolons, and to not terminate bash lines with a semicolon. This in itself makes the code more simple to read, unless you are an npm developer. Typically bash script lines are not terminated with semis, the JavaScript community is divided on the issue but in C and C# and JavaScript semis are required so it should be natrual to see code lines terminated with semis. /bin/js files are stricly neither bash nor JavaScript syntax so I get to call the shots :) The semis recomendation might start a flame war, but it stands as the recomendation, code may or may not work with or without semis since often code is passed direclty to the bash or JavaScript intepreter wihtout checking the end of the line. If I'm feeling really nasty I might hard code the necesity for semis in JavaScript in a future versions so watch out! There are no extra requirements for semis than where JavaScript permits them. For example, it may be required, in a future version to terminate with semis so that certain types of JavaScript line continuation can be accuratly determined.
+It is strongly recommended to terminate JavaScript lines a semicolons, and to not terminate bash lines with a semicolon. This in itself makes the code more simple to read. Typically bash script lines are not terminated with semis, the JavaScript community is divided on the issue but in C and C# and JavaScript semis are required so it should be natrual to see code lines terminated with semis. 
+/bin/js files are stricly neither bash nor JavaScript syntax so I get to call the shots :). The semis recomendation might start a flame war, but it stands as the recomendation, code may or may not work with or without semis since often code is passed directly to the bash or JavaScript intepreter without checking the end of the line.  If I'm feeling nasty I might hard code the necesity for semis in JavaScript in a future versions so watch out! There are no extra requirements for semis than where JavaScript permits them. For example, it may be required, in a future version to terminate with semis so that certain types of JavaScript line continuation can be accuratly determined.
 
 
 ### Permitted characters in a JavaScript var
@@ -433,7 +420,19 @@ This is too complicated for version 0.1 of /bin/js, so for now, all vars must co
 This might be fixed to closer match JavaScript strict requirements in a future version.  Anyone with a ç on their keyboard is by now used to the dangers of useing it in code though so dont hold your breath, for now vars (and functions) must be good ol' 7bit ascii chars.
 
 
+### JSON is not suppoerted syntax
 
+Creating objects with JSON syntax as follows is currently not supported.
 
+    {
+      att1 : true,
+      att2 : "string"
+    }
+
+Because "att1" is not known to the preparser it wil be treated as Bash. It may be possible to fix this in a future version so avoid nesting Bash statements inside JavaScript objects.  The following code will execute for the wrong reasons and should be avoided.
+
+    { att1 : true
+      cp fil2 file2
+    }
 
 

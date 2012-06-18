@@ -414,7 +414,7 @@ LIBRARY_LDFLAGS = $(READLINE_LDFLAGS) $(HISTORY_LDFLAGS) $(GLOB_LDFLAGS) \
 #
 
 # The main source code for the Bourne Again SHell.
-CSOURCES = shell.c eval.c parse.y general.c make_cmd.c print_cmd.c y.tab.c \
+COMMON_CSOURCES = eval.c parse.y general.c make_cmd.c print_cmd.c y.tab.c \
 	   dispose_cmd.c execute_cmd.c variables.c $(GLOBC) version.c \
 	   expr.c copy_cmd.c flags.c subst.c hashcmd.c hashlib.c mailcheck.c \
 	   test.c trap.c alias.c jobs.c nojobs.c $(ALLOC_FILES) braces.c \
@@ -422,6 +422,10 @@ CSOURCES = shell.c eval.c parse.y general.c make_cmd.c print_cmd.c y.tab.c \
 	   unwind_prot.c siglist.c bashline.c bracecomp.c error.c \
 	   list.c stringlib.c locale.c findcmd.c redir.c \
 	   pcomplete.c pcomplib.c syntax.c xmalloc.c
+
+CSOURCES = shell.c  $(COMMON_CSOURCES)  
+
+LIBBASH_CSOURCES = libbash.c  $(COMMON_CSOURCES)  
 
 HSOURCES = shell.h flags.h trap.h hashcmd.h hashlib.h jobs.h builtins.h \
 	   general.h variables.h config.h $(ALLOC_HEADERS) alias.h \
@@ -432,7 +436,22 @@ HSOURCES = shell.h flags.h trap.h hashcmd.h hashlib.h jobs.h builtins.h \
 	   execute_cmd.h parser.h pathexp.h pathnames.h pcomplete.h assoc.h \
 	   $(BASHINCFILES)
 
+COMMON_HSOURCES = shell.h flags.h trap.h hashcmd.h hashlib.h jobs.h builtins.h \
+	   general.h variables.h config.h $(ALLOC_HEADERS) alias.h \
+	   quit.h unwind_prot.h syntax.h ${GRAM_H} \
+	   command.h input.h error.h bashansi.h dispose_cmd.h make_cmd.h \
+	   subst.h externs.h siglist.h bashhist.h bashline.h bashtypes.h \
+	   array.h arrayfunc.h sig.h mailcheck.h bashintl.h bashjmp.h \
+	   execute_cmd.h parser.h pathexp.h pathnames.h pcomplete.h assoc.h \
+	   $(BASHINCFILES)
+
+HSOURCES = shell.h $(COMMON_HSOURCES)
+
+LIBBASH_HSOURCES = libbash.h $(COMMON_HSOURCES)
+
 SOURCES	 = $(CSOURCES) $(HSOURCES) $(BUILTIN_DEFS)
+
+LIBBASH_SOURCES	 = $(LIBBASH_CSOURCES) $(LIBBASH_HSOURCES) $(BUILTIN_DEFS)
 
 # header files chosen based on running of configure
 SIGNAMES_H = @SIGNAMES_H@
@@ -443,13 +462,17 @@ SIGLIST_O = @SIGLIST_O@
 SIGNAMES_O = @SIGNAMES_O@
 
 # Matching object files.
-OBJECTS	 = shell.o eval.o y.tab.o general.o make_cmd.o print_cmd.o $(GLOBO) \
+COMMON_OBJECTS = eval.o y.tab.o general.o make_cmd.o print_cmd.o $(GLOBO) \
 	   dispose_cmd.o execute_cmd.o variables.o copy_cmd.o error.o \
 	   expr.o flags.o $(JOBS_O) subst.o hashcmd.o hashlib.o mailcheck.o \
 	   trap.o input.o unwind_prot.o pathexp.o sig.o test.o version.o \
 	   alias.o array.o arrayfunc.o assoc.o braces.o bracecomp.o bashhist.o \
 	   bashline.o $(SIGLIST_O) list.o stringlib.o locale.o findcmd.o redir.o \
 	   pcomplete.o pcomplib.o syntax.o xmalloc.o $(SIGNAMES_O)
+
+OBJECTS	 = shell.o $(COMMON_OBJECTS)
+
+LIBBASH_OBJECTS	 = libbash.o $(COMMON_OBJECTS)
 
 # Where the source code of the shell builtins resides.
 BUILTIN_SRCDIR=$(srcdir)/builtins
@@ -533,7 +556,7 @@ CREATED_MAKEFILES = Makefile builtins/Makefile doc/Makefile \
 # Keep GNU Make from exporting the entire environment for small machines.
 .NOEXPORT:
 
-.made: $(Program) bashbug
+.made: $(Program) bashbug lib$(Program).so.1
 	@echo "$(Program) last made for a $(Machine) running $(OS)" >.made
 
 $(Program):  .build $(OBJECTS) $(BUILTINS_DEP) $(LIBDEP)
@@ -541,6 +564,13 @@ $(Program):  .build $(OBJECTS) $(BUILTINS_DEP) $(LIBDEP)
 	$(PURIFY) $(CC) $(BUILTINS_LDFLAGS) $(LIBRARY_LDFLAGS) $(LDFLAGS) -o $(Program) $(OBJECTS) $(LIBS)
 	ls -l $(Program)
 	-$(SIZE) $(Program)
+
+lib$(Program).so.1:  .build $(LIBBASH_OBJECTS) $(BUILTINS_DEP) $(LIBDEP)
+	$(RM) $@
+	$(PURIFY) $(CC) -shared -fPIC $(BUILTINS_LDFLAGS) $(LIBRARY_LDFLAGS) $(LDFLAGS) -o lib$(Program).so.1 $(LIBBASH_OBJECTS) $(LIBS)
+	ls -l lib$(Program).so.1
+	-$(SIZE) lib$(Program).so.1
+	ar -r libbash.a $(LIBBASH_OBJECTS)
 
 .build:	$(SOURCES) config.h Makefile version.h $(VERSPROG)
 	@echo
@@ -774,7 +804,7 @@ LIB_SUBDIRS = ${RL_LIBDIR}  ${HIST_LIBDIR} ${TERM_LIBDIR} ${GLOB_LIBDIR} \
 		${INTL_LIBDIR} ${TILDE_LIBDIR} ${ALLOC_LIBDIR} ${SH_LIBDIR}
 
 basic-clean:
-	$(RM) $(OBJECTS) $(Program) bashbug
+	$(RM) $(OBJECTS) $(Program) bashbug lib$(Program).so.1
 	$(RM) .build .made version.h 
 
 clean:	basic-clean

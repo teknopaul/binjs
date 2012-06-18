@@ -52,7 +52,7 @@ Dom.escape = function(string) {
 };
 
 Dom.prototype.parser = function () { 
-	return function() {
+	var DOMParser = function() {
 		/**
 		 * The root element of the XML document currently being parsed.
 		 */
@@ -80,7 +80,7 @@ Dom.prototype.parser = function () {
 				throw new Error('Data is not a string');
 			}
 			var self = this;
-			var parser = sax.parser(this.strict);
+			var parser = new Sax().parser(this.strict);
 		
 			parser.onerror = function (err) {
 				self.error = true;
@@ -161,7 +161,8 @@ Dom.prototype.parser = function () {
 			this.error = false;
 		};
 
-	} 
+	}
+	return new DOMParser();
 };
 
 /**
