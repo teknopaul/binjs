@@ -1,0 +1,34 @@
+#!/bin/js
+binjs_import("~lib/Assert.js");
+
+var assert = new Assert();
+
+
+cd `dirname $0`
+
+var file = new File("./touch.test");
+
+file.touch();
+var lastMod1 = file.lastModifiedDate;
+
+sleep 1
+
+file.touch();
+var lastMod2 = file.lastModifiedDate;
+
+$.sleep(500);
+
+file.touch();
+var lastMod3 = file.lastModifiedDate;
+
+
+
+$.println( "Last mod diff: " + (lastMod2.getTime() - lastMod1.getTime()) );
+$.println( "LM1: " + lastMod1 + " " + lastMod1.getTime()) ;
+$.println( "LM2: " + lastMod2 + " " + lastMod2.getTime()) ;
+ // appears stat.st_mtime is only second accurate
+$.println( "LM3: " + lastMod3 + " " + lastMod3.getTime()) ;
+
+
+assert.ok(lastMod2.getTime() - lastMod1.getTime() > 999 , "last mod not OK");
+

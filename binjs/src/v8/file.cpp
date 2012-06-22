@@ -4,7 +4,12 @@
 
 #include <errno.h>
 #include <sys/types.h>
+
+// if glibc > 2.10
 #include <sys/stat.h>
+// else 
+#include <sys/time.h>
+
 #include <fcntl.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -294,7 +299,11 @@ Handle<Value> FileTouch(const Arguments& args) {
 	
 	mode_t mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
 	int fd = open(cpath, O_WRONLY | O_CREAT, mode);
-	int ok = utimensat(AT_FDCWD, cpath, NULL, 0);
+	
+	// how to if def glibc > 2.10 guess we need autoconf
+	//int ok = utimensat(AT_FDCWD, cpath, NULL, 0);
+	int ok = utimes(cpath, NULL);
+	
 	close(fd);
 	
 	if ( ok == 0) DoStat(handle->ToString(), args.This());
@@ -349,7 +358,9 @@ Handle<Value> FileDelete(const Arguments& args) {
 	return False();
 }
 
-
+/**
+ * Returns a list of strings.
+ */
 Handle<Value> FileList(const Arguments& args) { 
 	HandleScope scope;
 
