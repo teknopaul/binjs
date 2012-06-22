@@ -84,8 +84,15 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 	// throw any exceptions
 	char *exception = libbash_peak_variable("_EX");
 	if ( exception != NULL) {
+/*		
+		printf("_EX=%s\n", exception);
+*/
+		char value[strlen(exception)];
+		strcpy(value, exception);
+		
 		libbash_unset_variable("_EX");
-		return ThrowException(Exception::TypeError(String::New(exception)));
+		
+		return ThrowException(Exception::TypeError(String::New(value)));
 	}
 
 	return Undefined();

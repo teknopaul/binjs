@@ -2,7 +2,25 @@
 
 ### Bugs
 
-$.env.watch list does not work inside functions 
+### Features
+
+support for `` needed for Markdown or web version syntax goes haywire
+import .bjs scripts properly
+i18n
+Interactive mode = false  to disable \r and other escapes
+Widgets 
+  Text
+  Date
+  Time
+  Boolean
+  Editor  Fire up editor for multiline text
+  \|/ spinner
+  Menu
+  File input with Bash's tab completion support?
+perhaps all of the above in a tui. package
+
+copy nodejs' inspect() method
+Debug on / off that enables Bash debug and $.debug() statements
 
 ### General
 
@@ -10,19 +28,18 @@ addd asserts to scripts in src/test
 
 ### Build 
 
+Options on where to deploy the code /lib  or /usr/lib
+build for RPM and DEB
+Replace all build.sh with Make files
 curl github.com/teknopaul/binjs/install.sh | bash style script
 Find way to apply patches to bash
 Use correct Ubuntu / Fedora versions of bash
-Build failed on chermans 32bit Ubuntu
 
-### Libs
+### Libs & Modules
 
-
-binjs_import should return an object
-import should run in its own scope like nodejs does
-var assert = require("assert"); needed since it seems node and CommonJS dose this
-perhaps only require() should run it is own scope?
-copy nodejs' inspect() method
+Probably best to leave Libs as they are and add Module support
+var assert = require("assert"); needed since it seems node and CommonJS does this
+Modules using require() should run it its own scope
 
 Check out how to use npm without messing up 
 
@@ -33,3 +50,6 @@ Doxygen
 fiddle with preparser to output HTML for example scripts
 README.md
 
+### Command line debugger
+
+Some optional ncusrses based TUI for debugging scripts

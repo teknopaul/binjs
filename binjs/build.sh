@@ -2,6 +2,8 @@
 #
 # Hacky 'ol build script for the moment (whadya expect this is a scripting project)
 #
+#  add --quick to skip make clean in the bash part
+#
 
 cd `dirname $0`
 BASEDIR=`pwd`
@@ -18,7 +20,7 @@ cd $BASEDIR
 
 # make libbash tests to see if you have made bash as default  or if the -fPIC build has been done
 echo -e "\033[33mMake libbash \033[0m"
-src/libbash/build.sh		||  exit 1
+src/libbash/build.sh $1		||  exit 1
 
 # make runjs v8 JavaScript runner
 echo -e "\033[33mMake runjs \033[0m"

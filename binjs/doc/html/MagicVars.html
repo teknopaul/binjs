@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>MagicVars.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="style.css" rel="stylesheet"/>
+	<link href="binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="container">
+			<div id="header"><span class="title">/bin/js documentation</span></div>
+			<div id="content">
+			<div id="menu">
+				<ul>
+					<li><a href="./index.html">Doc index</a></li>
+					<li><a href="../api/html/index.html">API index</a></li>
+					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
+					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
+				</ul>
+			</div>
+			<div id="main">
+				<img src="binjs_64x64.png" id="logo"/>
+<h1>Magic Vars</h1>
+
+<p>/bin/js sets some variable in the global scope at startup that developers should be aware of since they are useful.</p>
+
+<h2>Script Arguments <code>argc, argv</code></h2>
+
+<p>The values <code>argc</code> (an Integer) and <code>argv</code> (an Array) are set when the script runs with the count of arguments to the script and the arguments as a JavaScript Array of Strings.  The first element in the array is the name of the script.</p>
+
+<p>This is the JavaScript equivalent of Bash's <code>$#</code>, <code>$0</code>, <code>$@</code> and <code>$*</code>.</p>
+
+<h2>Last command exit value <code>errono</code></h2>
+
+<p>In a similar style to C code the global var <code>errno</code> is set to the exit value of the last command executed by Bash.</p>
+
+<pre><code>./myScript.sh
+switch(errno) {
+  case 0 :
+    ...
+</code></pre>
+
+<p>This is the JavaScript equivalent of Bash's <code>$?</code>.</p>
+
+<h2>Global Magic Vars <code>gi, gj, gk</code></h2>
+
+<p>The vars <code>gi,gj,gk</code> are predefined in the global scope and are synchronized with the Bash environment with every call.</p>
+
+<pre><code>for (gi = 0 ; gi &lt; 5 ; gi++) {
+    echo gi is $gi
+}
+</code></pre>
+
+<p>This is a simple convenience but when copying code be aware that only <code>gi,gj</code> and <code>gk</code> work like this, and only in the global scope.</p>
+
+<pre><code>for (gx = 0 ; gx &lt; 5 ; gx++) {
+    echo gx is $gx   # this will NOT work
+}
+</code></pre>
+
+<p>Overloading the global vars is possilbe by mistake, this will cause confusion, since the global <code>gi</code> is overriden by a local variable, but the global var is passed to the Bash environment.</p>
+
+<pre><code>var gi = 0;     
+echo gi is $gi  # Wrong
+</code></pre>
+
+<h2>Process ID <code>pid</code></h2>
+
+<p>The global var <code>pid</code> is set, this is the JavaScript equivalent of Bash's <code>$$</code>.</p>
+
+<pre><code>new File("/var/run/myapp.pid").write("" + pid);
+</code></pre>
+
+<h2>Last executed process ID <code>lastpid</code></h2>
+
+<p>The global var <code>lastpid</code> is set when Bash forks a process.</p>
+
+<pre><code>./longRunningScript.sh &amp;
+$.println("Forked:" + lastpid);
+</code></pre>
+
+<p>This is the JavaScript equivalent of Bash's <code>$!</code>.</p>
+
+				<br/><br/>
+			</div>
+		</div>
+		<div id="footer"> by teknopaul </div>
+	</div>
+	<br/><br/>
+  </body>
+</html>

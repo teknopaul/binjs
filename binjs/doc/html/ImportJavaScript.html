@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>ImportJavaScript.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="style.css" rel="stylesheet"/>
+	<link href="binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="container">
+			<div id="header"><span class="title">/bin/js documentation</span></div>
+			<div id="content">
+			<div id="menu">
+				<ul>
+					<li><a href="./index.html">Doc index</a></li>
+					<li><a href="../api/html/index.html">API index</a></li>
+					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
+					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
+				</ul>
+			</div>
+			<div id="main">
+				<img src="binjs_64x64.png" id="logo"/>
+<h1>Importing JavaScript</h1>
+
+<p>A global method <code>binjs_import()</code> can be used to execute entire JavaScript files.</p>
+
+<pre><code>binjs_import("./myscript.js");
+</code></pre>
+
+<p>The files must contain valid JavaScript, not /bin/js syntax files.  The files will be executed in the same context as the rest of /bin/js/ so you should respect the existing global variables which are all prefixed <code>binjs_</code> and the <code>$</code> variable is used by binjs.</p>
+
+<h2>Library locations</h2>
+
+<h3>~lib/</h3>
+
+<p>The prefix "~lib/" is used to define the global script location which is hardcoded as <code>/lib/binjs/lib</code>. If you want a different default lib dir you need to create symlinks.</p>
+
+<p>Your own libraries can be loaded from anywhere on the file system from the current directory or with an absolute path.  </p>
+
+<p>Currently there is no module system like nodejs.</p>
+
+<p>The <code>binjs_import()</code> method will not import a script with the same name twice, to avoid infinite recursion in the init process, however it does not (currently) check the inode of the script for equality it simply check to see if the string argument supplied to <code>binjs_import()</code> has been used before.</p>
+
+<h1>Library code style</h1>
+
+<p>Because there is no module scope when loading JavaScript files it is important not to populate the global scope with variables in imported JavaScript that might break code from other imports.  The prefered method for creating libraries is to make available JavaScript objects by defining a prototype and not to instantiate any objects.</p>
+
+<p>for example in a file MyLib.js</p>
+
+<pre><code>MyLib = function() {
+    this.attribute1;
+    this.attribute2;
+}
+
+Mylib.prototype.myFunction = function() {
+    ...
+    return this.attribute1;
+}
+</code></pre>
+
+<p>This code can be used as follows</p>
+
+<pre><code>binjs_import("MyLib.js");
+
+var lib = new MyLib();
+</code></pre>
+
+<p>Any JavaScript is valid in the library file so there is nothing to stop you creating functions and objects direclty in the  global scope.</p>
+
+<p>The following code works as expected but this is not considered good style.</p>
+
+<pre><code>var obj = new Object();
+function  prettyPrinter() {
+    ...
+</code></pre>
+
+<p>A variable <code>obj</code> and a global function prettyPrinter would bre created and since the module code is not visible users of the code could be supprised by its existence.</p>
+
+<p>When importing a file ~/lib/Mybject.js it should not be suprising to find new MyObject() in later code.</p>
+
+<p>This style of creating libraries makes the library usage indistinguisable from Objects provided by native C++ code such as the File object.</p>
+
+<h3>Importing /bin/js scripts</h3>
+
+<p>There is currently no way to import /bin/js files. You can execute /bin/js files with just </p>
+
+<pre><code>./myscript.bjs
+</code></pre>
+
+<p>The script will run as expected, but vars and functions are not exported. We aim to add this feature in a later version.</p>
+
+<p>If you need that feature now, call the preparser directly</p>
+
+<pre><code>cat myscript.bjs | /lib/binjs/bin/binjs_preparser &gt; /tmp/bjs.tmp
+binjs_import("/tmp/bjs.tmp");
+</code></pre>
+
+				<br/><br/>
+			</div>
+		</div>
+		<div id="footer"> by teknopaul </div>
+	</div>
+	<br/><br/>
+  </body>
+</html>

@@ -7,7 +7,7 @@ binjs_import("~lib/xml.js");
 
 /**
  * Example function to un gzip and untar a file
- * I know, Linux tar supports -z, its just an example.
+ * I know, tar supports -z, its just an example.
  */
 function untar(path) {
 

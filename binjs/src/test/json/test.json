@@ -1,0 +1,10 @@
+{
+	"att1" : true,
+	"att2" : false,
+	"nested" : {
+		"att4" : "yeah",
+		"att5" : "ooh"
+	},
+	"arr1" : [1,2,3,4,5]
+
+}

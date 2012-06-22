@@ -1,0 +1,14 @@
+#!/bin/js
+
+var c = "";
+
+binjs_shellMakeRaw();
+
+while ( (c = binjs_shellReadChar()) != '\r' ) {
+//	$.print(c);
+//	binjs_flush();
+}
+$.println('\r');
+
+binjs_shellReset();
+

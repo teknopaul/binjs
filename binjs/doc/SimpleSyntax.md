@@ -37,7 +37,7 @@ And you can mash-up both.
 
     }
 
-Pipes and redirects and all the wonders of bash oneliners are available.
+Pipes and redirects and all the wonders of bash one-liners are available.
 
     #!/bin/js
 
@@ -61,9 +61,9 @@ All the beauty(ehem) of C style syntax from JavaScript is available.
             $.error(10, "Unknown option");
     }    
 
-switch statements, if/else, while loops, do/while loops, try/catch/finally and others from JavaScirpt are used, since the bash ones are ugly.  
+`switch` statements, `if/else`, `while` loops, `do/while` loops, `try/catch/finally` and others from JavaScirpt are used, since the bash ones are ugly.  
 
-The pipes and redirects and even the trailing & from bash are used.
+The pipes and redirects and the trailing `&` from bash are used.
 
 ## How it works
 
@@ -81,9 +81,9 @@ The preparser generates
     //#
     binjs_exec("cat \"${HOME}/apache.log\" | tail -20 | awk \' {print $7}\' | tee.tail.log");
 
-And pipes the script to v8, when binjs_exec() is called the text is sent to an embedded instance of bash.
+And pipes the script to v8, when `binjs_exec()` is called the text is sent to an embedded instance of bash.
 
-The binjs_import("~lib/binjs.js"); line sets up the internal bash instance The $ and File object and some other bells and whistles.
+The `binjs_import("~lib/binjs.js");` line sets up the internal bash instance The `$` and `File` object and some other bells and whistles.
 
 ## Simple Usage
 
@@ -113,7 +113,7 @@ Var statements and functions must be written on a single line.
 
     }
 
-Variable defined this way with function or var are then known to the parser and can be called as JavaScript
+Variable defined this way with `function` or `var` are then known to the parser and can be called as JavaScript
 
     myVal.attribute = 23;
     myFunc();
@@ -126,7 +126,7 @@ Mutli-line vars are NOT supported
 
     var i,j,k;       // wrong only i is known
 
-In short if you dont create a var or a function with the var and function statements at the start of the line you can not call them
+In short if you dont create a `var` or a `function` with the `var` and `function` statements at the start of the line you can not call them.
 
     if (true) var funk = function() {return true;}
 
@@ -134,7 +134,7 @@ In short if you dont create a var or a function with the var and function statem
 
 Just remember, each line is interpreted as EITHER JavaScript OR Bash by a preparser which sends the lines to the correct interpreter.  The preparser never compiles the code, it just peaks at the front of the line to see weather v8 or bash should compile it.
 
-Full details of the parser rules are in the ParserRules.md file.
+Full details of the parser rules are in the `ParserRules.md` file.
 
 You can always call
 

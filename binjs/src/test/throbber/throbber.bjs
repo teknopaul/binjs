@@ -1,0 +1,20 @@
+#!/bin/js
+binjs_import("~lib/Throbber.js");
+#
+#  a Firefox style tui throbber/spinner
+#
+
+cd `dirname $0`
+
+var throbber = new Throbber("Waiting...");
+
+sleep 5 && touch file.flag &
+
+throbber.render( function() {
+	return new File("file.flag").exists;
+});
+
+new File("file.flag").delete();
+
+$.println("flag deleted")
+

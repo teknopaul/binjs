@@ -1,0 +1,9 @@
+#!/bin/js
+binjs_import("~lib/Shell.js");
+
+
+
+new Shell().setWindowTitle("All your window titles are belong to us");
+
+
+sleep 3;

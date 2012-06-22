@@ -18,7 +18,7 @@
 
 #include "librunjs.h"
 
-static void exit_handler() {
+void exit_handler(int parameter) {
 	runjs_exit(130);
 }
 

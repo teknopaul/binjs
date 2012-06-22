@@ -236,6 +236,12 @@ Persistent<Context> CreateShellContext() {
 	// shell functions
 	global->Set(String::New("binjs_shellWidth"),	FunctionTemplate::New(ShellWidth));
 	global->Set(String::New("binjs_shellHeight"),	FunctionTemplate::New(ShellHeight));
+	global->Set(String::New("binjs_shellV8Version"),FunctionTemplate::New(ShellV8Version));
+	global->Set(String::New("binjs_shellMakeRaw"),	FunctionTemplate::New(ShellMakeRaw));
+	global->Set(String::New("binjs_shellReset"),	FunctionTemplate::New(ShellReset));
+	global->Set(String::New("binjs_shellReadChar"),	FunctionTemplate::New(ShellReadChar));
+	global->Set(String::New("binjs_shellReadByte"),	FunctionTemplate::New(ShellReadByte));
+	global->Set(String::New("binjs_shellWriteByte"),FunctionTemplate::New(ShellWriteByte));
 	
 	// The File object
 	Handle<FunctionTemplate> fileTemplate = FunctionTemplate::New(FileConstructor);

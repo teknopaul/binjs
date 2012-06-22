@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Color.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../html/style.css" rel="stylesheet"/>
+	<link href="../../html/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="container">
+			<div id="header"><span class="title">/bin/js documentation</span></div>
+			<div id="content">
+			<div id="menu">
+				<ul>
+					<li><a href="../../html/index.html">Doc index</a></li>
+					<li><a href="./index.html">API index</a></li>
+					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
+					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
+				</ul>
+			</div>
+			<div id="main">
+				<img src="../../html/binjs_64x64.png" id="logo"/>
+<h1>Color</h1>
+
+<p>Definitions for constants for coloured output on the console (API uses yank speling).</p>
+
+<p>The Color object provides constants for making text appear coloured on the command line, color should be turned off after it is used.</p>
+
+<pre><code>$.println("something " + Color.RED + "really" + Color.COLOR_OFF + " important");
+</code></pre>
+
+<p>The <code>$.println()</code> method uses constants from this class, accepts strings and is potentially more convenient.</p>
+
+<pre><code>$.println("something important", 'red');
+</code></pre>
+
+<hr />
+
+<h2>Import</h2>
+
+<p>You do not have to import this library it is included by default.</p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>Color</li>
+</ul>
+
+<hr />
+
+<h2>Constructor</h2>
+
+<p>This class should not be constructed.</p>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<p>Color.BLACK   = "\033[30m";</p>
+
+<p>Color.WHITE   = "\033[97m";</p>
+
+<p>Color.GREY    = "\033[37m";</p>
+
+<p>Color.DARKGREY= "\033[90m";</p>
+
+<p>Color.BLUE    = "\033[94m";</p>
+
+<p>Color.GREEN   = "\033[32m";</p>
+
+<p>Color.RED     = "\033[91m";</p>
+
+<p>Color.YELLOW  = "\033[93m";</p>
+
+<p>Color.CYAN    = "\033[36m";</p>
+
+<p>Color.MAGENTA = "\033[35m";</p>
+
+<p>Color.ORANGE  = "\033[33m";</p>
+
+<p>Color.COLOR_OFF = "\033[0m";</p>
+
+<p>Thes constants are provided for bold "font" and underlined text.</p>
+
+<p><b>Color.BOLD</b>      = "\033[1m";</p>
+
+<p><u>Color.UNDERLINE</u> = "\033[4m";</p>
+
+<p>And blink can be set to timewarp yourself back to 1975.</p>
+
+<p><blink>Color.BLINK</blink>     = "\033[5m";</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>Color.disable()</h3>
+
+<p>Turn off coloured output by setting all the constants to the empty String "".</p>
+
+<h3>Color.enable()</h3>
+
+<p>Turn colouring output back on.</p>
+
+				<br/><br/>
+			</div>
+		</div>
+		<div id="footer"> by teknopaul </div>
+	</div>
+	<br/><br/>
+  </body>
+</html>

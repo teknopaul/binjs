@@ -1,0 +1,10 @@
+#!/bin/js
+#
+# Read user input
+#
+
+echo Enter something...
+read INPUT
+
+echo $INPUT
+

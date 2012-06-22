@@ -1,4 +1,5 @@
 #!/bin/js
+binjs_import("~lib/Markdown.js"); 
 
-binjs_import("~lib/markdown.js");  markdown.printFile("README.md");
+new Markdown().printFile("README.md");
 

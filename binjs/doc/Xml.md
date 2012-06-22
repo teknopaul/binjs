@@ -7,25 +7,25 @@ Modifying XML files in scripts is fiddly with only Linux tools like awk and sed 
 
 ### Dom
 
-The following header is needed to import the xml libraries.  This imports both Sax and Dom parsers, Dom uses Sax.
+The following header is needed to import the xml libraries.  This imports both `Sax` and `Dom` parsers, Dom uses Sax.
 
     binjs_import("~lib/Xml.js");
 
-To parse a document to a dom first read it as a JavaScript String then pass it to the DomJS parser.
+To parse a document to a dom first read it as a JavaScript String then pass it to the Dom parser.
 
-    var parser = new Dom();
     var text = new File("./doc.xml").read();
+    var parser = new Dom();
     var rootElement = parser.parse(text);
 
-A heirarchy of objects is returned, inspect an example with JSON.stringify() to understand how to navigate the Dom once parsed.
+A heirarchy of objects is returned, inspect an example with `JSON.stringify()` to understand how to navigate the Dom once parsed.
 
     $.println(JSON.stringify(rootElement));
 
-The object can be modified and written back out with dom.toXml()
+The object can be modified and written back out with `dom.toXml()`
 
 ### Sax
 
-To parse with Sax the same import is needed, or you can just import Sax.js.
+To parse with Sax the same import is needed, or you can just import `Sax.js`.
 
     binjs_import("~lib/Xml.js");
     
@@ -33,7 +33,7 @@ or
 
     binjs_import("~lib/Sax.js");
 
-Parsing with sax requires passing callback functions which is nodejs's style of working. The Sax nodejs parser is synchronous code so can be used as follows.
+Parsing with Sax requires passing callback functions which is nodejs's style of working. The Sax nodejs parser can be used as synchronous code by passing the whole XML document as one string to the `write` method, as follows.
 
     var parser = new Sax().parser();
     var text = new File("./doc.xml").read();

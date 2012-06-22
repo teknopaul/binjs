@@ -1,0 +1,28 @@
+#!/bin/js
+binjs_import("~lib/Json.js");
+#
+# Test Json colourizing
+#
+
+cd `dirname $0`
+
+var json = new Json();
+
+var jsonText = new File("./test.json").read();
+// get rid of whitespace
+jsonText = json.toJson( json.parse(jsonText) );
+
+
+$.println("pretty", true);
+json.prettyPrint(jsonText);
+
+$.println("parse", true);
+var object = json.parse(jsonText);
+
+$.println("toJson", true);
+$.println(json.toJson(object));
+
+$.println("toJson native indent", true);
+$.println(json.toJson(object, true));
+
+

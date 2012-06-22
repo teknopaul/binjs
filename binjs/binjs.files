@@ -1,8 +1,5 @@
 src/c/preparser.c
 build.sh
-examples/egscript.bjs.o
-examples/egscript.bjs
-examples/egscript.bjs.o.notes
 src/c/libpreparser.h
 src/c/libpreparser.c
 src/v8/librunjs.h
@@ -20,7 +17,6 @@ src/v8/file.h
 src/v8/file.cpp
 src/v8/util.h
 src/v8/util.cpp
-src/bash/install.sh
 src/c/build.sh
 src/v8/build.sh
 src/libbash/build.sh
@@ -54,3 +50,14 @@ src/v8/shell.h
 src/v8/shell.cpp
 src/js/Shell.js
 notes/Parser_Rules.text
+src/c/Makefile
+src/v8/Makefile
+doc/toHtml.bjs
+doc/html/style.css
+doc/html/header.html
+doc/html/footer.html
+doc/api/html/header.html
+doc/api/html/footer.html
+version
+src/js/Json.js
+src/js/Throbber.js

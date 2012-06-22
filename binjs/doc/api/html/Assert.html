@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Assert.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../html/style.css" rel="stylesheet"/>
+	<link href="../../html/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="container">
+			<div id="header"><span class="title">/bin/js documentation</span></div>
+			<div id="content">
+			<div id="menu">
+				<ul>
+					<li><a href="../../html/index.html">Doc index</a></li>
+					<li><a href="./index.html">API index</a></li>
+					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
+					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
+				</ul>
+			</div>
+			<div id="main">
+				<img src="../../html/binjs_64x64.png" id="logo"/>
+<h1>Assert</h1>
+
+<p>Assert is a CommonJS like library for unit testing.  It closely conforms to the CommonJS spec, but is not identical, code is copied and modified from nodejs.</p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/Assert.js")</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>Assert</li>
+<li>AssertionError extends Error</li>
+</ul>
+
+<hr />
+
+<h2>Constructor</h2>
+
+<p>The constructor takes no arguments.</p>
+
+<pre><code>var assert = new Assert();
+</code></pre>
+
+<p>This import method is not as CommonJS specifies, CommonJS specifies the use of <code>require()</code> which is not, currently, available in /bin/js, apart from that, the code for Assert follows the CommonJS spec.</p>
+
+<p>Functions and methods as per CommonJS specifications.</p>
+
+<p><a href="http://wiki.commonjs.org/wiki/Unit_Testing/1.0">http://wiki.commonjs.org/wiki/Unit_Testing/1.0</a></p>
+
+<p>The most commonly used methods of Assert are as follows.</p>
+
+<ul>
+<li>ok(bool, message)</li>
+<li>equal(actual, expect, message)</li>
+<li>fail()</li>
+</ul>
+
+<h3>/bin/js Usage</h3>
+
+<pre><code>var assert = new Assert();
+assert.ok(someTest());
+assert.equals(someFunc(), "Hello World", "got some incorrect text from someFunc()");
+</code></pre>
+
+				<br/><br/>
+			</div>
+		</div>
+		<div id="footer"> by teknopaul </div>
+	</div>
+	<br/><br/>
+  </body>
+</html>

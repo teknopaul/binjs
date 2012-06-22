@@ -131,26 +131,27 @@ Markdown.prototype.center = function(text) {
 	return this.padding.substring(0, indent) + text;
 }
 
-Markdown.prototype.wordWrap = function(indent, text, rightMargin) {
-	return this.doWordWrap(indent, text, rightMargin);
+Markdown.prototype.wordWrap = function(indent, text, rightMargin, processFonts) {
+	return this.doWordWrap(indent, text, rightMargin, processFonts);
 }
 
-Markdown.prototype.doWordWrap = function(indent, text, rightMargin) {
+Markdown.prototype.doWordWrap = function(indent, text, rightMargin, processFonts) {
 	var buffer = "";
 	var width = Markdown.lineLength - indent - (typeof rightMargin === 'number' ? rightMargin : 0);
-		
+
+	//text = processFonts ? this.doCodeFont(text) : text;
+	
 	while (true) {
 		buffer += "                ".substring(0, indent);
 		if ( text.length > width) {
 		
 			var endpos = width;
-			while(text.charAt(endpos) != ' ') endpos--;
-			
+			while(text.charAt(endpos) !== ' ') endpos--;
 			
 			buffer += text.substring(0, endpos);
 			buffer += "\n";
 			
-			if (text.charAt(endpos) == ' ') endpos++;
+			if (text.charAt(endpos) === ' ') endpos++;
 			text = text.substring(endpos);
 		}
 		else {
@@ -160,6 +161,32 @@ Markdown.prototype.doWordWrap = function(indent, text, rightMargin) {
 		}
 	}
 }
+
+/*
+XTerm and Konsole are unable to word wrap text with ctrl characters properly!
+So adding color inline to fonts looks nasty when wrapped.
+Uncomment this if the Linux console ever learns to count only visible width
+Markdown.prototype.doCodeFont = function(text) {
+	var inCode = false;
+	var buffer = "";
+	for(var i = 0 ; i < text.length ; i++) {
+		var c = text.charAt(i);
+		if (c === '`') {
+			if (inCode) {
+				buffer += Color.COLOR_OFF;
+			}
+			else {
+				buffer += Color.ORANGE;
+			}
+			inCode = !inCode;
+		} 
+		else buffer += c;
+	}
+	// we dont span lines with `` even if Markdown official does
+	if (inCode) buffer += Color.COLOR_OFF;
+	return buffer;
+}
+*/
 
 Markdown.prototype.doOutput = function(mdString) {
 	
@@ -213,7 +240,7 @@ Markdown.prototype.doOutput = function(mdString) {
 			buffer += this.list(mdata[i], '-');
 		}
 		else {
-			buffer += this.wordWrap(1, mdata[i], 1);
+			buffer += this.wordWrap(1, mdata[i], 1, true);
 		}
 	}
 	return buffer;

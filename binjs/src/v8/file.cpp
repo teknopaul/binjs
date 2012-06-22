@@ -306,7 +306,7 @@ Handle<Value> FileTouch(const Arguments& args) {
 Handle<Value> FileRename(const Arguments& args) {
 	HandleScope scope;
 	
-	if (args.Length() < 1 || ! args[0]->IsString() ) { // TODO dupport file.rename(otherFile);
+	if (args.Length() < 1 || ! args[0]->IsString() ) { // TODO support file.rename(otherFile);
 		return ThrowException(Exception::TypeError(String::New("Rename to what?")));
 	}
 	
@@ -350,8 +350,6 @@ Handle<Value> FileDelete(const Arguments& args) {
 }
 
 
-
-// TODO 
 Handle<Value> FileList(const Arguments& args) { 
 	HandleScope scope;
 

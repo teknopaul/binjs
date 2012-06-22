@@ -4,3 +4,7 @@ binjs_import("~lib/Shell.js")
 
 $.println("Shell width = " + new Shell().getWidth()) ;
 $.println("Shell height = " + new Shell().getHeight()) ;
+
+$.println("Shell /bin/js ver = " + new Shell().binjsVersion) ;
+$.println("Shell bash ver = " + new Shell().bashVersion) ;
+$.println("Shell v8 ver = " + new Shell().javaScriptVersion) ;

@@ -1,4 +1,3 @@
-
 /**
  * Utility Object for printing tables of data
  */
@@ -6,7 +5,10 @@
 /**
  * Create a Table.
  * Optional parameters are a String contaiing the table to be parsed 
- * or an array of title strings and a 2d array of data
+ * or an array of title strings and a 2d array of data.
+ *
+ * this is pretty simple code, feel free to contribute some features, hin thint
+ * TODO full screen width, no max padding, Unicode borders. ascii mode
  *
  * @constructor
  */

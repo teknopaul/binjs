@@ -1,0 +1,30 @@
+#!/bin/js
+
+binjs_import("~lib/Shell.js");
+
+
+var shell = new Shell();
+
+function cursorWander() {
+	var methods = [
+		shell.cursorUp, 
+		shell.cursorBack, 
+		shell.cursorForward, 
+		shell.cursorDown, 
+		shell.cursorForward, 
+		shell.cursorUp];
+
+	for ( var i = 0; i < 100 ; i++) {
+		methods[Math.floor(Math.random() * 3)]();
+		$.sleep(50);
+	}
+}
+
+cursorWander();
+
+// bring him back home
+for ( var i = 0; i < 100 ; i++) { 
+	shell.cursorDown();
+}
+
+echo A wandering cursor thats eventually comes home

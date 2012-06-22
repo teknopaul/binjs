@@ -2,7 +2,7 @@
 #
 # Script to fix the bash build to enable compiling a shared libray containing the bash shell.
 #
-# This is waaaay hacky, I should really patch bash and run make and rpmbuild.
+# This is a tad hacky, I should really patch bash and run make and rpmbuild.
 # This script does not apply redhat patches.
 #
 
@@ -38,11 +38,11 @@ cp -v ${SRC}/libbash.* .
 
 # you only need to build bash with -fPIC once for dev of libbash.c itself
 if [ "$1" != "--quick" ] ; then
-	make clean
+	make -s clean
 	./configure CFLAGS=-fPIC
-	make
+	make -s
 else 
-	make
+	make -s
 fi
 
 # make libbash.a

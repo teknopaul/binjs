@@ -1,0 +1,14 @@
+#!/bin/js
+binjs_import("~lib/Shell.js");
+
+var s = new Shell();
+
+s.cursorPosition(s.getHeight() / 2, (s.getWidth() / 2 ) - 15);
+$.print("pretty pointless but you get the idea", true);
+
+s.cursorPosition(s.getHeight() , s.getWidth() );
+
+$.println();
+
+
+

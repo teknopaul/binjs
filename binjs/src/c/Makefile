@@ -11,7 +11,7 @@ GLIBS=`pkg-config --cflags --libs glib-2.0`
 LIBS=-lv8 -lbash
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS) $(GLIBS)
+	$(CC) -Wall -c -o $@ $< $(CFLAGS) $(GLIBS)
 
 all: libpreparser.o 
 	gcc -Wall libpreparser.o binjs_preparser.c -o binjs_preparser $(GLIBS)
