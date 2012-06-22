@@ -7,12 +7,12 @@
 echo "some output"
 
 # The JavaScript way
-$.print("some output");
+$.println("some output");
 
 # Bash has variables as you would expect
 echo "your HOME = $HOME";
 
 # For now, you have to fetch the environment specifically
 var home = $.getEnv("HOME");
-$.print("your home = " + home);
+$.println("your home = " + home);
 

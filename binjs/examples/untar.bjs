@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/xml.js");
+binjs_import("~lib/Xml.js");
 #
 #  Example Script
 #
@@ -34,6 +34,7 @@ function untar(path) {
   cd /tmp
   tar xvf $fileName
   cd -
+  rm /tmp/$fileName
 
   fileName = fileName.substring(0, fileName.length - 4); // remove .tar
 
@@ -42,6 +43,8 @@ function untar(path) {
   else {
 	dir.rename(file.getParent() + "/" + fileName);
   }
+
+  
   
 }
 
@@ -58,8 +61,8 @@ try {
   new File("./untar-1.0/config.json").write(JSON.stringify(confJson));
   
 
-  var domJS = new DomJS();
-  var doc = domJS.parse(new File("./untar-1.0/config.xml").read());
+  var dom = new Dom();
+  var doc = dom.parser().parse(new File("./untar-1.0/config.xml").read());
     
   var elem = doc.children[3];
   elem.children = [];
