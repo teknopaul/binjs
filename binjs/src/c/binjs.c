@@ -19,10 +19,6 @@
 #include "../v8/librunjs.h"
 #include "libpreparser.h"
 
-static void exit_handler() {
-	runjs_exit(130);
-}
-
 /**
  * Exec launcher, if there is just two args it is assumed it has been run with  #!/bin/js and the frist arg is the name of the sript
  * 
@@ -36,6 +32,8 @@ static void exit_handler() {
  *
  */
 int main(int argc, char* argv[]) {
+	
+	signal(SIGINT, runjs_exit);
 	
 	// parse command line args
 
@@ -194,12 +192,10 @@ int main(int argc, char* argv[]) {
 
 	close(out);
 
-	signal(SIGPIPE, exit_handler);
-	signal(SIGTERM, exit_handler);
-	
 	runjs_init_bash(bash_argc, bash_argv);
 	//fprintf(stderr, "libbash initialised\n");
-	
+
+
 	int retval = runjs_pipejs(pipefd[0], v8_argc, v8_argv);
 
 	return retval;

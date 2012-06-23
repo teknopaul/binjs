@@ -38,5 +38,8 @@ if [ $? -ne 0 ] ; then
   echo install glib-2.0 development packages  && exit 1
 fi
 
+# glibc-headers
 
 # also need coreutils and a bunch of other normal stuff 
+
+## TODO this should be a ./configure script

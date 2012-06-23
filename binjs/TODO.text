@@ -2,14 +2,18 @@
 
 ### Bugs
 
+Signal handling is hard
+	parse_ad_exec call set_signal_handler in Bash
+	need to detect when bash has returned because of a signal
+	sleep returns 128 + sig but any command can return andy 8bit code so that is not specific enough
+
 ### Features
 
-support for `` needed for Markdown or web version syntax goes haywire
 import .bjs scripts properly
 i18n
 Interactive mode = false  to disable \r and other escapes
 Widgets 
-  Text
+  Text (Nb. name clash with Xml)
   Date
   Time
   Boolean

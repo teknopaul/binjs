@@ -13,6 +13,7 @@
 
 #include "../libbash/libbash.h"
 #include "util.h"
+#include "librunjs.h"
 
 using namespace v8;
 
@@ -33,8 +34,9 @@ static const char* ToCString(const String::Utf8Value& value) {
  */
 int InitBash(int argc, char **argv) {
 
-	return libbash_init(argc, argv);
-
+	int ret = libbash_init(argc, argv);
+	SetSignalHandler();
+	return ret;
 }
 
 /**
@@ -61,10 +63,12 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 
 	// sync JavaScript variables to Bash env
 	CopyVars();
-	
+	SetSignalHandler();
+
+
 	// exec
 	libbash_run_one_command((char *)cstr);
-	
+		
 	// set return value
 	lastCommandExitValue = libbash_last_command_exit_value();
 	global->Set(String::New("errno"), Integer::New(lastCommandExitValue));
@@ -77,6 +81,9 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 	if ( pwd != NULL) {
 		chdir(pwd);
 	}
+	
+	// restore our signal handelr
+	SetSignalHandler();
 	
 	// Copy back any environment changes
 	CopyEnv(args);

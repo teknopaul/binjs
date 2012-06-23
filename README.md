@@ -19,4 +19,9 @@ Once you have compiled and installed /bin/js you can run the above example.bjs.
 
 ***
 
-Check INSTEALL.md for how to build
+Check INSTALL.md for how to build
+
+***
+
+Github pages @ <teknopaul.github.com/binjs/>
+

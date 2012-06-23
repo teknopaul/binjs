@@ -21,6 +21,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <unistd.h> 
+#include <signal.h>
 
 #include "bashexec.h"
 #include "file.h"
@@ -58,13 +59,15 @@ static bool IsLoaded(const char* library);
 
 // constants
 static const char* JS_LIBRARY_PATH = "/lib/binjs/lib";
-static std::vector<const char*> *loadedLibraries = new std::vector<const char*>(); 
 
+static std::vector<const char*> *loadedLibraries = new std::vector<const char*>(); 
+static bool bashInitialized = false;
 
 // functions exported to C
 
 extern "C" int runjs_init_bash(int argc, char** argv) {
 
+	bashInitialized = true;
 	return InitBash(argc, argv);
 
 }
@@ -81,14 +84,27 @@ extern "C" int runjs_pipejs(int pipe, int argc, char* argv[]) {
 
 }
 
+/**
+ * exit from a signal i.e. SIGINT; i.e. Ctrl + C was called
+ */
 extern "C" void runjs_exit(int status) {
 
-	exit(status);
+	// printf("Exiting from runjs.\n");
+	if ( bashInitialized ) {
+		ExitBash(status);
+	}
+
+	exit(128 + status);
 
 }
 // Extracts a C string from a V8 Utf8Value.
 static const char* ToCString(const String::Utf8Value& value) {
 	return *value ? *value : "<string conversion failed>";
+}
+
+void SetSignalHandler() {
+	//	signal(SIGPIPE, runjs_exit);
+	signal(SIGINT,  runjs_exit);
 }
 
 /**

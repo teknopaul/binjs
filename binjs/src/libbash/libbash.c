@@ -415,9 +415,11 @@ void libbash_exit (int s) {
 	exit_shell(s);
 }
 
+
 int libbash_last_command_exit_value() {
 	return last_command_exit_value;
 }
+
 
 int libbash_last_asynchronous_pid() {
 	return last_asynchronous_pid;
@@ -473,7 +475,8 @@ void libbash_free_jobs(struct bash_job* jobs) {
  * Execute one command as if it were entered on the command line.
  */
 int libbash_run_one_command (char *command) {
-	return run_one_command(command);
+	int ret = run_one_command(command);
+	return ret;
 }
 
 /**
@@ -483,6 +486,7 @@ int libbash_run_one_command (char *command) {
  */
 int libbash_init (int argc, char** argv) 
 {
+
   char **env;
 
   env = environ;

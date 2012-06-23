@@ -16,4 +16,7 @@ void runjs_exit(int status);
 
 #ifdef __cplusplus
 } // extern "C"
+
+void SetSignalHandler();
+
 #endif
