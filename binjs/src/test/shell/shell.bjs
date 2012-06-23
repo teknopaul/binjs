@@ -1,10 +1,10 @@
 #!/bin/js
 
-binjs_import("~lib/Shell.js")
+binjs_import("~lib/Term.js")
 
-$.println("Shell width = " + new Shell().getWidth()) ;
-$.println("Shell height = " + new Shell().getHeight()) ;
+$.println("Term width = " + new Term().getWidth()) ;
+$.println("Term height = " + new Term().getHeight()) ;
 
-$.println("Shell /bin/js ver = " + new Shell().binjsVersion) ;
-$.println("Shell bash ver = " + new Shell().bashVersion) ;
-$.println("Shell v8 ver = " + new Shell().javaScriptVersion) ;
+$.println("Term /bin/js ver = " + new Term().binjsVersion) ;
+$.println("Term bash ver = " + new Term().bashVersion) ;
+$.println("Term v8 ver = " + new Term().javaScriptVersion) ;

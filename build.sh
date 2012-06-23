@@ -12,12 +12,12 @@ BASEDIR=`pwd`
 
 echo -e "\033[97mBuilding the v8 JavaScript interpreter \033[0m"
 cd  v8
-./build.sh		|| exit 1
+./build.sh $*		|| exit 1
 
 cd $BASEDIR
 
 echo "Building #!/bin/js"
 
 cd binjs
-./build.sh
+./build.sh $*
 

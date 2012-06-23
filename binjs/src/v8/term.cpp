@@ -3,7 +3,7 @@
 #include <string.h>
 #include <termios.h>
 
-#include "shell.h"
+#include "term.h"
 #include <v8.h>
 
 #define B_0  0
@@ -14,12 +14,12 @@
 #define B_111110  62
 #define B_1111110  126
 
-bool got_orig = false;
-struct termios orig_termios;
+bool haveOriginalTermSettings = false;
+struct termios originalTermSettings;
 
 using namespace v8;
 
-Handle<Value> ShellWidth(const Arguments& args) {
+Handle<Value> TermWidth(const Arguments& args) {
 	HandleScope scope;
 	
 	struct winsize w;
@@ -29,7 +29,7 @@ Handle<Value> ShellWidth(const Arguments& args) {
 
 }
 
-Handle<Value> ShellHeight(const Arguments& args) {
+Handle<Value> TermHeight(const Arguments& args) {
 	HandleScope scope;
 	
 	struct winsize w;
@@ -39,11 +39,11 @@ Handle<Value> ShellHeight(const Arguments& args) {
 	
 }
 
-Handle<Value> ShellV8Version(const Arguments& args) {
+Handle<Value> TermV8Version(const Arguments& args) {
 	return String::New(V8::GetVersion());
 }
 
-Handle<Value> ShellMakeRaw(const Arguments& args) {
+Handle<Value> TermMakeRaw(const Arguments& args) {
 	HandleScope scope;
 
 	struct termios p;
@@ -52,33 +52,49 @@ Handle<Value> ShellMakeRaw(const Arguments& args) {
 	
 	tcgetattr(FNIN, &p);
 	
-	if ( ! got_orig ) {
-		memcpy(&orig_termios, &p, sizeof(struct termios));
-		got_orig = true;
+	if ( ! haveOriginalTermSettings ) {
+		memcpy(&originalTermSettings, &p, sizeof(struct termios));
+		haveOriginalTermSettings = true;
 	}
-	
+
+	// make raw
 	cfmakeraw(&p);
-	
 	tcsetattr(FNIN, TCSANOW, &p);
 	
+	// raw is cool but prevents Ctrl+C exits which is annoying
+	struct termios pass_sigint;
+	tcgetattr(FNIN, &pass_sigint);
+	pass_sigint.c_iflag |= BRKINT;
+	pass_sigint.c_lflag |= ISIG;
+
+	tcsetattr(FNIN, TCSANOW, &pass_sigint);
+	
+	
 	return Undefined();
 }
 
-Handle<Value> ShellReset(const Arguments& args) {
+Handle<Value> TermReset(const Arguments& args) {
 	HandleScope scope;
+	
+	DoTermReset();
 
-	if (got_orig) {
-		tcsetattr(0, TCSANOW, &orig_termios);
+	return Undefined();
+}
+
+void DoTermReset() {
+
+	if (haveOriginalTermSettings) {
+		tcsetattr(0, TCSANOW, &originalTermSettings);
 	}
 
-	return Undefined();
 }
+
 /**
  * Read a UTF-8 char from the terminal, basically read one byte and itf the tope bit is 0
  * its multibyte and we need to work out howmany more to read and read them.
  * ref: http://en.wikipedia.org/wiki/UTF-8
  */
-Handle<Value> ShellReadChar(const Arguments& args) {
+Handle<Value> TermReadChar(const Arguments& args) {
 	HandleScope scope;
 
 	// Little leason in how to read Unicode form the stream it might read 1 to 6 bytes.
@@ -107,21 +123,21 @@ Handle<Value> ShellReadChar(const Arguments& args) {
 		}
 	}
 	
-	if (unicodeBytestoRead == 0) {
-		printf("char=%d", c[0] & 0xff);
-	}
+	//if (unicodeBytestoRead == 0) {
+	//	printf("char=%d", c[0] & 0xff);
+	//}
 
 	return String::New(c);
 
 }
 
-Handle<Value> ShellReadByte(const Arguments& args) {
+Handle<Value> TermReadByte(const Arguments& args) {
 	HandleScope scope;
 
 	return Integer::New(getc(stdin));
 }
 
-Handle<Value> ShellWriteByte(const Arguments& args) {
+Handle<Value> TermWriteByte(const Arguments& args) {
 	HandleScope scope;
 
 	for ( int i = 0 ; i < args.Length(); i++) {

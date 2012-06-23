@@ -1,12 +1,12 @@
 #!/bin/js
-binjs_import("~lib/Shell.js");
+binjs_import("~lib/Term.js");
 
-var s = new Shell();
+var t = new Term();
 
-s.cursorPosition(s.getHeight() / 2, (s.getWidth() / 2 ) - 15);
+t.cursorPosition(t.getHeight() / 2, (t.getWidth() / 2 ) - 15);
 $.print("pretty pointless but you get the idea", true);
 
-s.cursorPosition(s.getHeight() , s.getWidth() );
+t.cursorPosition(t.getHeight() , t.getWidth() );
 
 $.println();
 

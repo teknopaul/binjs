@@ -1,14 +1,17 @@
 /**
- * A Throbber like firefox spinning icon when soemthing is going on
+ * A Throbber like firefox's spinning icon when something is going on
  */
- 
+
+if (typeof tui == 'undefined') tui = {};
+
 /**
- * @param progressText the text to be dislpalyed while in progress
- * @param doneText the text to display when finished
+ * @param text the text to be displayed while in progress
  * @constructor
  */
-Throbber = function(text) {
-	this.glyphs = ['\\', '|', '/', '-'];
+tui.Throbber = function(text, unicode) {
+	this.unicodeGlyphs = ['·',  '✶', '❆', '✺'];
+	this.asciiGlyphs =   ['\\', '|', '/', '-'];
+	this.glyphs = unicode ? this.unicodeGlyphs : this.asciiGlyphs;
 	this.pos = 0;
 	this.text = text;
 	this.len = text.length;
@@ -17,7 +20,7 @@ Throbber = function(text) {
 	this._onScreen = false;
 }
 
-Throbber.prototype.render = function(until) {
+tui.Throbber.prototype.render = function(until) {
 	if (this._isDone) {
 		throw new Error("Throbber can not be reused, create a new one");
 	}

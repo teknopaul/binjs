@@ -1,0 +1,71 @@
+#!/bin/js
+binjs_import("~lib/Term.js");
+#
+# Starfield effect text mode stlyee.
+#
+# This looks plretty much like JavaScript but it is preparsed /bin/js syntax
+# the clear statement is run by bash.
+#
+# If you done use JSON style object notation JavaScript looks pretty natrual.
+#
+
+if (argc > 1 ) {
+	var speed = argv[1];
+}
+else {
+	var speed = 5;
+}
+
+clear
+
+var term = new Term();
+
+
+term.cursorOff();
+
+var originX = term.getWidth() / 2;
+var originY = term.getHeight() / 2;
+
+var Star = function() {
+	this.reset();
+}
+
+Star.prototype.reset = function() {
+	this.x = originX;
+	this.y = originY;
+	this.stepX = (Math.random() - 0.5) * speed;
+	this.stepY = (Math.random() - 0.5) * speed;
+}
+
+Star.prototype.move = function(draw) {
+	term.cursorPosition(this.y, this.x);
+	if (draw) $.print(' ');
+	this.x += this.stepX;
+	this.y += this.stepY;
+	if ( this.x < 0 || this.x > term.getWidth() || this.y < 0 || this.y > term.getHeight() ) {
+		this.reset();
+	}
+	else {
+		term.cursorPosition(this.y, this.x);
+		if (draw) $.print('·');
+	}
+}
+
+var stars = [];
+
+for (var i = 0 ; i < 50 ; i++ ) {
+	stars[i] = new Star();
+}
+
+
+for (var t = 0 ; t < 250; t++) {
+	for (var i = 0 ; i < 50 ; i++ ) {
+        	stars[i].move( t > 100 );
+	}
+	term.cursorPosition(0, 0);
+	$.print(t);
+	if (t > 100) $.sleep(100);
+}
+
+term.cursorOn();
+

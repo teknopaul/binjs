@@ -1,9 +1,9 @@
 #!/bin/js
-binjs_import("~lib/Shell.js");
+binjs_import("~lib/Term.js");
 
 
 
-new Shell().setWindowTitle("All your window titles are belong to us");
+new Term().setWindowTitle("All your window titles are belong to us");
 
 
 sleep 3;

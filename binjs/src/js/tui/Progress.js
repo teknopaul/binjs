@@ -2,12 +2,14 @@
  * A Progress bar
  */
  
+if (typeof tui == 'undefined') tui = {};
+
 /**
  * @param progressText the text to be dislpalyed while in progress
  * @param doneText the text to display when finished
  * @constructor
  */
-Progress = function(progressText, doneText) {
+tui.Progress = function(progressText, doneText) {
 
 	this.progressText = progressText || "Progress...";
 	this.doneText = doneText || "Done.";
@@ -22,7 +24,7 @@ Progress = function(progressText, doneText) {
 	this._isDone = false;
 }
 
-Progress.prototype.render = function() {
+tui.Progress.prototype.render = function() {
 	if ( ! this._isDone ) {
 		if ( ! this._onScreen ) {
 			this._onScreen = true;
@@ -34,13 +36,13 @@ Progress.prototype.render = function() {
 	}
 }
 
-Progress.prototype.tick = function() {
+tui.Progress.prototype.tick = function() {
 	this._pos++;
 	this.render();
 	if ( this._pos == this.max) this.done();
 }
 
-Progress.prototype.done = function() {
+tui.Progress.prototype.done = function() {
 	if ( ! this._isDone ) {
 		this._pos = this.max;
 		$.print("\r" + this._getSpace());
@@ -49,14 +51,14 @@ Progress.prototype.done = function() {
 	this._isDone = true;
 }
 
-Progress.prototype._getBar = function() {
+tui.Progress.prototype._getBar = function() {
 	var buf = "";
 	for(var i = this.min ; i < this._pos ; i++) buf += this.bar;
 	for(var i = this._pos ; i < this.max ; i++) buf += this.space;
 	return buf;
 }
 
-Progress.prototype._getSpace = function() {
+tui.Progress.prototype._getSpace = function() {
 	var buf = "";
 	for(var i = this.min ; i < this.progressText.length + 3 + (this.max - this.min) ; i++) buf += ' ';
 	return buf;

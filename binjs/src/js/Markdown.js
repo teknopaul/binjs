@@ -14,7 +14,7 @@
  * TODO rewrap wrapped text
  * TODO correctly handle entities
  */
-binjs_import("~lib/Shell.js");
+binjs_import("~lib/Term.js");
 
 Markdown = function(){
 	this.padding = "";
@@ -24,7 +24,7 @@ Markdown = function(){
 /**
  *  Wordwrap width
  */
-Markdown.lineLength = new Shell().getWidth();
+Markdown.lineLength = new Term().getWidth();
 
 /**
  * Symbols used for list markers

@@ -1,9 +1,9 @@
 #!/bin/js
-binjs_import("~lib/Table.js")
+binjs_import("~lib/tui/Table.js")
 
 cd `dirname $0`
 
-var table = new Table(new File("./table.data").read());
+var table = new tui.Table(new File("./table.data").read());
 
 table.print();
 

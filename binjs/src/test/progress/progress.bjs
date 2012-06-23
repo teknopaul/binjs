@@ -1,8 +1,8 @@
 #!/bin/js
 
-binjs_import("~lib/Progress.js");
+binjs_import("~lib/tui/Progress.js");
 
-var progress = new Progress("Downloading...   " , "Done.");
+var progress = new tui.Progress("Downloading...   " , "Done.");
 
 
 var max = 10;

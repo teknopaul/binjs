@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd `dirname $0`
+
 # make out/native/lib.target/libv8.so for this platform 
 # using 4 compile threads to run gcc
 

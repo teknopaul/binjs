@@ -26,7 +26,7 @@
 #include "bashexec.h"
 #include "file.h"
 #include "util.h"
-#include "shell.h"
+#include "term.h"
 
 using namespace v8;
 
@@ -89,7 +89,10 @@ extern "C" int runjs_pipejs(int pipe, int argc, char* argv[]) {
  */
 extern "C" void runjs_exit(int status) {
 
-	// printf("Exiting from runjs.\n");
+	//printf("Exiting from runjs.\n");
+	
+	DoTermReset();
+
 	if ( bashInitialized ) {
 		ExitBash(status);
 	}
@@ -249,15 +252,15 @@ Persistent<Context> CreateShellContext() {
 	global->Set(String::New("binjs_copyEnv"),	FunctionTemplate::New(CopyEnv));
 	global->Set(String::New("binjs_getJobs"),	FunctionTemplate::New(GetJobs));
 	
-	// shell functions
-	global->Set(String::New("binjs_shellWidth"),	FunctionTemplate::New(ShellWidth));
-	global->Set(String::New("binjs_shellHeight"),	FunctionTemplate::New(ShellHeight));
-	global->Set(String::New("binjs_shellV8Version"),FunctionTemplate::New(ShellV8Version));
-	global->Set(String::New("binjs_shellMakeRaw"),	FunctionTemplate::New(ShellMakeRaw));
-	global->Set(String::New("binjs_shellReset"),	FunctionTemplate::New(ShellReset));
-	global->Set(String::New("binjs_shellReadChar"),	FunctionTemplate::New(ShellReadChar));
-	global->Set(String::New("binjs_shellReadByte"),	FunctionTemplate::New(ShellReadByte));
-	global->Set(String::New("binjs_shellWriteByte"),FunctionTemplate::New(ShellWriteByte));
+	// term functions
+	global->Set(String::New("binjs_termWidth"),	FunctionTemplate::New(TermWidth));
+	global->Set(String::New("binjs_termHeight"),	FunctionTemplate::New(TermHeight));
+	global->Set(String::New("binjs_termV8Version"),FunctionTemplate::New(TermV8Version));
+	global->Set(String::New("binjs_termMakeRaw"),	FunctionTemplate::New(TermMakeRaw));
+	global->Set(String::New("binjs_termReset"),	FunctionTemplate::New(TermReset));
+	global->Set(String::New("binjs_termReadChar"),	FunctionTemplate::New(TermReadChar));
+	global->Set(String::New("binjs_termReadByte"),	FunctionTemplate::New(TermReadByte));
+	global->Set(String::New("binjs_termWriteByte"),FunctionTemplate::New(TermWriteByte));
 	
 	// The File object
 	Handle<FunctionTemplate> fileTemplate = FunctionTemplate::New(FileConstructor);

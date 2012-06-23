@@ -1,0 +1,10 @@
+#!/bin/js
+binjs_import("~lib/tui/Input.js");
+
+var inp = new tui.Input();
+inp.acceptNewLines = true; // accept Shift + Enter as a new line
+
+$.println("Start inputting");
+
+$.println("what we got = '" + inp.readline() + "'");
+

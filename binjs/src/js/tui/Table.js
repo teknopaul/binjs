@@ -1,6 +1,8 @@
 /**
  * Utility Object for printing tables of data
  */
+ 
+if (typeof tui == 'undefined') tui = {};
 
 /**
  * Create a Table.
@@ -12,7 +14,7 @@
  *
  * @constructor
  */
-Table = function(arg0, arg1) {
+tui.Table = function(arg0, arg1) {
 	// this is a unicode bar set to  normal pipe or a space for ascii output
 	this.divider = '⎜';
 	// consider one or more sequentioal delimters as one
@@ -35,9 +37,7 @@ Table = function(arg0, arg1) {
 	
 }
 
-
-
-Table.prototype.parse = function(string, delim) {
+tui.Table.prototype.parse = function(string, delim) {
 	var lines = string.split('\n');
 	if (lines.length <= 0) {
 		return;
@@ -58,13 +58,13 @@ Table.prototype.parse = function(string, delim) {
 	}
 }
 
-Table.prototype.center = function(text, width) {
+tui.Table.prototype.center = function(text, width) {
 	var indent = Math.floor((width - text.length) / 2);
 	var spaces = "                                        ".substring(0, indent);
 	return (spaces + text + spaces) + ( (text.length + (indent*2) < width) ? " " : "");
 }
 
-Table.prototype.align = function(obj, width) {
+tui.Table.prototype.align = function(obj, width) {
 	var string = "";
 	var left = true;
 	if (typeof obj == 'string') {
@@ -81,7 +81,7 @@ Table.prototype.align = function(obj, width) {
 				"                                                                        ".substring(0, indent) + string
 }
 	
-Table.prototype.print = function() {
+tui.Table.prototype.print = function() {
 	if (typeof this.widths == 'undefined')  {
 		this.setDefaultWidths(5);
 	}
@@ -108,7 +108,7 @@ Table.prototype.print = function() {
 	$.println();
 }
 
-Table.prototype.toString = function() {
+tui.Table.prototype.toString = function() {
 	if (typeof this.widths == 'undefined')  {
 		this.setDefaultWidths(5);
 	}
@@ -136,7 +136,7 @@ Table.prototype.toString = function() {
 }
 
 
-Table.prototype.setDefaultWidths = function(min) {
+tui.Table.prototype.setDefaultWidths = function(min) {
 	this.widths = [];
 	for (var c = 0; c < this.titles.length ; c++) {
 		this.widths[c] = Math.max(this.titles[c].length, min);

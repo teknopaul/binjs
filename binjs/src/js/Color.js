@@ -3,6 +3,9 @@ Color = function() {
 	throw new Error("Color can not be instantiated");
 };
 
+// \033 is 27 ie ESC
+// People who write term code talk in octal, FIIK why
+
 Color.BLACK   = "\033[30m";
 Color.WHITE   = "\033[97m";
 Color.GREY    = "\033[37m";

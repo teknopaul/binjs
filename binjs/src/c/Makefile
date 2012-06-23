@@ -6,7 +6,7 @@
 CC=gcc
 CFLAGS=-I.
 DEPS = libpreparser.h
-EXT_OBJS=../v8/bashexec.o ../v8/file.o ../v8/util.o ../v8/shell.o ../v8/librunjs.o
+EXT_OBJS=../v8/bashexec.o ../v8/file.o ../v8/util.o ../v8/term.o ../v8/librunjs.o
 GLIBS=`pkg-config --cflags --libs glib-2.0`
 LIBS=-lv8 -lbash
 
@@ -17,7 +17,8 @@ all: libpreparser.o
 	gcc -Wall libpreparser.o binjs_preparser.c -o binjs_preparser $(GLIBS)
 	gcc -Wall -c binjs.c `pkg-config --cflags glib-2.0`
 	g++ -Wall binjs.o libpreparser.o $(EXT_OBJS) $(LIBS) -o binjs $(GLIBS) -L../../contrib
-
+	ls -l binjs_preparser binjs
+	
 .PHONY: clean
 
 clean:

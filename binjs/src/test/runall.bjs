@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Table.js");
+binjs_import("~lib/tui/Table.js");
 #
 # Script to run all the bjs scripts.
 #
@@ -11,7 +11,7 @@ DIRS=`ls -1`
 
 var dirs = $.getEnv("DIRS").split("\n"); //  could have called new File(".").list()
 
-var results = new Table("script exitcode");
+var results = new tui.Table("script exitcode");
 
 for (var i = 0; i < dirs.length ; i++ ) {
 

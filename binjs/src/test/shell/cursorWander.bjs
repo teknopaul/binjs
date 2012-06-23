@@ -1,18 +1,18 @@
 #!/bin/js
 
-binjs_import("~lib/Shell.js");
+binjs_import("~lib/Term.js");
 
 
-var shell = new Shell();
+var term = new Term();
 
 function cursorWander() {
 	var methods = [
-		shell.cursorUp, 
-		shell.cursorBack, 
-		shell.cursorForward, 
-		shell.cursorDown, 
-		shell.cursorForward, 
-		shell.cursorUp];
+		term.cursorUp, 
+		term.cursorBack, 
+		term.cursorForward, 
+		term.cursorDown, 
+		term.cursorForward, 
+		term.cursorUp];
 
 	for ( var i = 0; i < 100 ; i++) {
 		methods[Math.floor(Math.random() * 3)]();
@@ -24,7 +24,7 @@ cursorWander();
 
 // bring him back home
 for ( var i = 0; i < 100 ; i++) { 
-	shell.cursorDown();
+	term.cursorDown();
 }
 
 echo A wandering cursor thats eventually comes home

@@ -1,12 +1,12 @@
 #!/bin/js
-binjs_import("~lib/Throbber.js");
+binjs_import("~lib/tui/Throbber.js");
 #
 #  a Firefox style tui throbber/spinner
 #
 
 cd `dirname $0`
 
-var throbber = new Throbber("Waiting...");
+var throbber = new tui.Throbber("Waiting...");
 
 sleep 5 && touch file.flag &
 

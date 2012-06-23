@@ -1,23 +1,23 @@
 #!/bin/js
-binjs_import("~lib/Shell.js");
+binjs_import("~lib/Term.js");
 #
 # Yer classic screen saver
 #
 
 //////////////clear
 
-var shell = new Shell();
-var width = shell.getWidth();
-var height = shell.getHeight();
+var term = new Term();
+var width = term.getWidth();
+var height = term.getHeight();
 
 function render(row, col) {
-	shell.cursorPosition(row, col);
+	term.cursorPosition(row, col);
 	var c = (col % 3 == 0 ? 97 : 65 ) + Math.floor(Math.random() * 26);
 	$.print(String.fromCharCode(c), 'green');
 }
 
 function renderBright(row, col) {
-	shell.cursorPosition(row, col);
+	term.cursorPosition(row, col);
 	var c = 97 + Math.floor(Math.random() * 26);
 	$.print(String.fromCharCode(c), 'white');
 }

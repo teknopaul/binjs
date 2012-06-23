@@ -82,7 +82,7 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 		chdir(pwd);
 	}
 	
-	// restore our signal handelr
+	// restore our signal handler
 	SetSignalHandler();
 	
 	// Copy back any environment changes

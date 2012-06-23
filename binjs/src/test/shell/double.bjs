@@ -1,0 +1,10 @@
+#!/bin/js
+binjs_import("~lib/Term.js");
+
+var term = new Term();
+
+term.writeDoubleHeight("Big and juicy");
+
+
+
+ 

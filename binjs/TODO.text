@@ -3,7 +3,7 @@
 ### Bugs
 
 Signal handling is hard
-	parse_ad_exec call set_signal_handler in Bash
+	parse_and_exec call set_signal_handler in Bash
 	need to detect when bash has returned because of a signal
 	sleep returns 128 + sig but any command can return andy 8bit code so that is not specific enough
 
@@ -28,7 +28,7 @@ Debug on / off that enables Bash debug and $.debug() statements
 
 ### General
 
-addd asserts to scripts in src/test
+add asserts to scripts in src/test
 
 ### Build 
 

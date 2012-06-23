@@ -5,7 +5,7 @@
 binjs_import("~lib/Color.js");
 
 
-if ( typeof $ == 'undefined' ) {
+if ( typeof $ === 'undefined' ) {
  /**
   * The $ object provides access to /bin/js core features.
   */
@@ -91,7 +91,7 @@ $.getEnv = function(name) {
 
 /**
  * Add colours to text.
- * @return the input text marked up with colour tags for bash shells.
+ * @return the input text marked up with colour ESC sequewnces for terminals.
  */
 $.color = function(colour, message) {
 	switch(colour) {

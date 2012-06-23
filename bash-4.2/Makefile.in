@@ -562,24 +562,18 @@ CREATED_MAKEFILES = Makefile builtins/Makefile doc/Makefile \
 $(Program):  .build $(OBJECTS) $(BUILTINS_DEP) $(LIBDEP)
 	$(RM) $@
 	$(PURIFY) $(CC) $(BUILTINS_LDFLAGS) $(LIBRARY_LDFLAGS) $(LDFLAGS) -o $(Program) $(OBJECTS) $(LIBS)
-	ls -l $(Program)
-	-$(SIZE) $(Program)
+	#ls -l $(Program)
+	#-$(SIZE) $(Program)
 
 lib$(Program).so.1:  .build $(LIBBASH_OBJECTS) $(BUILTINS_DEP) $(LIBDEP)
 	$(RM) $@
 	$(PURIFY) $(CC) -shared -fPIC $(BUILTINS_LDFLAGS) $(LIBRARY_LDFLAGS) $(LDFLAGS) -o lib$(Program).so.1 $(LIBBASH_OBJECTS) $(LIBS)
-	ls -l lib$(Program).so.1
-	-$(SIZE) lib$(Program).so.1
+	#ls -l lib$(Program).so.1
+	#-$(SIZE) lib$(Program).so.1
 	ar -r libbash.a $(LIBBASH_OBJECTS)
 
 .build:	$(SOURCES) config.h Makefile version.h $(VERSPROG)
-	@echo
-	@echo "	  ***********************************************************"
-	@echo "	  *                                                         *"
-	@echo "	  * `$(BUILD_DIR)/$(VERSPROG) -l`"
-	@echo "	  *                                                         *"
-	@echo "	  ***********************************************************"
-	@echo
+	@echo "`$(BUILD_DIR)/$(VERSPROG) -l`"
 
 bashbug: $(SUPPORT_SRC)bashbug.sh config.h Makefile $(VERSPROG)
 	@sed -e "s%!MACHINE!%$(Machine)%" -e "s%!OS!%$(OS)%" \
