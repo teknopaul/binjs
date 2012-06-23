@@ -12,17 +12,17 @@
 Term = function() {
 	this.binjsVersion = "0.1";
 	this.bashVersion = "4.2";
-	this.javaScriptVersion = binjs_TermV8Version();
+	this.javaScriptVersion = binjs_termV8Version();
 };
 
 Term.INVALID_ESC = "Invalid escape sequence";
 
 Term.prototype.getWidth = function() {
-	return binjs_TermWidth();
+	return binjs_termWidth();
 }
 
 Term.prototype.getHeight = function() {
-	return binjs_TermHeight();
+	return binjs_termHeight();
 }
 
 /**
@@ -31,7 +31,7 @@ Term.prototype.getHeight = function() {
  * @throws Error if the UTF-8 sequence is not valid
  */
 Term.prototype.readChar = function() {
-	return binjs_TermReadChar();
+	return binjs_termReadChar();
 }
 /**
  * Write an 8bit byte to stdout,  URTF-8 can be written with just $.print('ö')
@@ -40,9 +40,12 @@ Term.prototype.readChar = function() {
  * i.,e only 0 -255 is significant
  */
 Term.prototype.writeByte = function(args) {
-	return binjs_TermWriteByte.apply(this, arguments);
+	return binjs_termWriteByte.apply(this, arguments);
 }
 
+Term.prototype.flush = function() {
+	binjs_flush();
+}
 /**
  * Turn the console into raw mode where each input char is available
  * to read char with out processing, N.B. this means that backspace
@@ -52,7 +55,7 @@ Term.prototype.writeByte = function(args) {
  * up, down, left, right keypresses.
  */
 Term.prototype.makeRaw = function() {
-	return binjs_TermMakeRaw();
+	return binjs_termMakeRaw();
 }
 
 /**
@@ -60,7 +63,7 @@ Term.prototype.makeRaw = function() {
  * You must callthis before exit or the Term goes crazy.
  */
 Term.prototype.reset = function() {
-	return binjs_TermReset();
+	return binjs_termReset();
 }
 
 /**
@@ -110,7 +113,7 @@ Term.prototype.isViTwitch= function(codes) {
  */
 Term.prototype.consumeAnsiEscape = function() {
 	
-	var code =  binjs_TermReadByte();
+	var code =  binjs_termReadByte();
 	
 	// non-standard, catch people with a vi twitch, double ESC == exit
 	if (code === 27) return [27, 27];
@@ -122,7 +125,7 @@ Term.prototype.consumeAnsiEscape = function() {
 	if (code === 91) { // CIS codes  ESC[ 32 to 47 terminated by a single 64 to 126 char
 		var ret = [27, 91];
 		do {
-			var b = binjs_TermReadByte();
+			var b = binjs_termReadByte();
 			ret.push(b);
 		} while (b >= 32 && b < 64);
 		
@@ -140,11 +143,11 @@ Term.prototype.consumeAnsiEscape = function() {
 			
 		var ret = [27, code];
 		do {
-			var b = binjs_TermReadByte();
+			var b = binjs_termReadByte();
 			ret.push(b);
 		} while ( b !== 7 && b !== 27); // BEL or ESC
 		if (b === 27) {
-			var stt = binjs_TermReadByte();
+			var stt = binjs_termReadByte();
 			if (stt !== 92) throw new Error( Term.INVALID_ESC );
 			ret.push(stt); 
 		}
@@ -152,11 +155,11 @@ Term.prototype.consumeAnsiEscape = function() {
 	}
 
 	else if (code === 78) {  // SS2 code ESCN read one more char
-		return [27, code, binjs_TermReadByte()];
+		return [27, code, binjs_termReadByte()];
 	}
 	
 	else if (code === 79) {  // SS3 code ESCO (capital O) read one more char
-		return [27, code, binjs_TermReadByte()];
+		return [27, code, binjs_termReadByte()];
 	}
 	
 	else {  // 2 char ESC code
@@ -167,9 +170,9 @@ Term.prototype.consumeAnsiEscape = function() {
 
 // set the window title in xterm, Konsole does not like this??
 Term.prototype.setWindowTitle = function(title) {
-	binjs_TermWriteByte(27, 93, 50, 59); // ESC]2;
+	binjs_termWriteByte(27, 93, 50, 59); // ESC]2;
 	$.print(title);
-	binjs_TermWriteByte(7); // BEL
+	binjs_termWriteByte(7); // BEL
 	//binjs_TermWriteByte(27, 92); // ESC\ aka ST
 	binjs_flush();
 }
@@ -177,42 +180,42 @@ Term.prototype.setWindowTitle = function(title) {
 // dont seem to work in Konsole
 
 Term.prototype.cursorOff = function() {
-	binjs_TermWriteByte(27, 91, 63, 50, 53, 108); // ESC[ ?25l
+	binjs_termWriteByte(27, 91, 63, 50, 53, 108); // ESC[ ?25l
 	binjs_flush();
 }
 
 Term.prototype.cursorOn = function() {
-	binjs_TermWriteByte(27, 91, 63, 50, 53, 104); // ESC[ ?25h
+	binjs_termWriteByte(27, 91, 63, 50, 53, 104); // ESC[ ?25h
 	binjs_flush();
 }
 
 Term.prototype.cursorUp = function() {
-	binjs_TermWriteByte(27, 91, 65); // ESC[A
+	binjs_termWriteByte(27, 91, 65); // ESC[A
 	binjs_flush();
 }
 Term.prototype.cursorDown = function() {
-	binjs_TermWriteByte(27, 91, 66); // ESC[B
+	binjs_termWriteByte(27, 91, 66); // ESC[B
 	binjs_flush();
 }
 Term.prototype.cursorForward = function() {
-	binjs_TermWriteByte(27, 91 , 67); // ESC[C
+	binjs_termWriteByte(27, 91 , 67); // ESC[C
 	binjs_flush();
 }
 Term.prototype.cursorBack = function() {
-	binjs_TermWriteByte(27, 91 , 68); // ESC[D
+	binjs_termWriteByte(27, 91 , 68); // ESC[D
 	binjs_flush();
 }
 Term.prototype.writeNumber = function(num) {
 	var sNum = "" + Math.floor(num);
 	for (var i = 0 ; i < sNum.length ; i++) {
-		binjs_TermWriteByte(sNum.charAt(i).charCodeAt(0));
+		binjs_termWriteByte(sNum.charAt(i).charCodeAt(0));
 	}
 }
 Term.prototype.cursorPosition = function(row, col) {
-	binjs_TermWriteByte(27, 91); // ESC[
+	binjs_termWriteByte(27, 91); // ESC[
 	this.writeNumber(row);
-	binjs_TermWriteByte(59); // ;
+	binjs_termWriteByte(59); // ;
 	this.writeNumber(col);
-	binjs_TermWriteByte(102); // f
+	binjs_termWriteByte(102); // f
 	binjs_flush();
 }

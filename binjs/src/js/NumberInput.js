@@ -10,7 +10,7 @@ tui.NumberInput = function() {
 	// N.B. the atts are not copied in JS subclassing 
 	// so here we must have ALL the atts defined in Number's constructor
 	this.text = "";
-	this.shell = new Shell();
+	this.term = new Term();
 	this.returnOnEnter = true;
 	this.acceptTabs = false;
 	this.acceptNewLines = false;

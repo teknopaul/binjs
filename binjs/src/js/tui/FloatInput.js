@@ -17,7 +17,7 @@ tui.FloatInput = function() {
 	this.filter = function(c) {
 		return (c >= '0' && c <= '9') 
 				|| 
-				this.text.length === 0 && (c === '+' || c === '-');
+				( this.text.length === 0 && (c === '+' || c === '-') )
 				||
 				c === '.'
 	}

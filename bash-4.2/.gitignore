@@ -1,0 +1,8 @@
+Makefile
+libbash.a
+libbash.c
+libbash.h
+libbash.o
+libbash.so
+libbash.so.1
+
