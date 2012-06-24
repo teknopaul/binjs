@@ -60,3 +60,22 @@ Color.enable = function() {
 	Color.UNDERLINE = "\033[4m";
 	Color.BLINK     = "\033[5m";
 }
+
+Color.fromModifier = function(colour) {
+	switch(colour) {
+		case true		  : return Color.BOLD; 
+		case 'black'	  : return Color.BLACK; 
+		case 'white'	  : return Color.WHITE; 
+		case 'grey'	  	  : return Color.GREY; 
+		case 'darkgrey'	  : return Color.DARKGREY; 
+		case 'blue'	 	  : return Color.BLUE; 
+		case 'green'	  : return Color.GREEN; 
+		case 'red'	  	  : return Color.RED; 
+		case 'yellow'	  : return Color.YELLOW; 
+		case 'cyan'	  	  : return Color.CYAN; 
+		case 'magenta'	  : return Color.MAGENTA; 
+		case 'orange'	  : return Color.ORANGE;
+		default :
+		  throw new Error("invalid colour choose from black,white,grey,darkgrey,blue,green,red,yellow,cyan,magenta,orange");
+	}
+}

@@ -91,24 +91,10 @@ $.getEnv = function(name) {
 
 /**
  * Add colours to text.
- * @return the input text marked up with colour ESC sequewnces for terminals.
+ * @return the input text marked up with colour ESC sequences for terminals.
  */
-$.color = function(colour, message) {
-	switch(colour) {
-		case 'black'	  : return Color.BLACK + message + Color.COLOR_OFF; 
-		case 'white'	  : return Color.WHITE + message + Color.COLOR_OFF; 
-		case 'grey'	  	  : return Color.GREY + message + Color.COLOR_OFF; 
-		case 'darkgrey'	  : return Color.DARKGREY + message + Color.COLOR_OFF; 
-		case 'blue'	 	  : return Color.BLUE + message + Color.COLOR_OFF; 
-		case 'green'	  : return Color.GREEN + message + Color.COLOR_OFF; 
-		case 'red'	  	  : return Color.RED + message + Color.COLOR_OFF; 
-		case 'yellow'	  : return Color.YELLOW + message + Color.COLOR_OFF; 
-		case 'cyan'	  	  : return Color.CYAN + message + Color.COLOR_OFF; 
-		case 'magenta'	  : return Color.MAGENTA + message + Color.COLOR_OFF; 
-		case 'orange'	  : return Color.ORANGE + message + Color.COLOR_OFF;
-		default :
-		  throw new Error("invalid colour choose from black,white,grey,darkgrey,blue,green,red,yellow,cyan,magenta,orange");
-	}
+$.color = function(color, message) {
+	return Color.fromModifier(color) + message + Color.COLOR_OFF;
 }
 
 /**

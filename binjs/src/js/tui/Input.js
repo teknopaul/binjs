@@ -64,7 +64,10 @@ tui.Input.prototype.readline = function() {
 	
 	this.text = "";
 
-	this.term.makeRaw();
+	var wasRaw = binjs_TERM_IS_RAW;
+	if ( ! binjs_TERM_IS_RAW ) {
+		this.term.makeRaw();
+	}
 	
 	try {
 		while (true) {
@@ -110,13 +113,15 @@ tui.Input.prototype.readline = function() {
 		}
 	}
 	catch(err) {
-		if (err.message === Term.INVALID_ESC) {
+		if ( err.message.indexOf(Term.INVALID_ESC) === 0) {
 			return null;
 		}
-		else  throw err;
+		else throw err;
 	}
-	 finally {
-		this.term.reset();
+	finally {
+		if ( ! wasRaw) {
+			this.term.reset();
+		}
 	}
 	
 	$.print('\n');

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Popup.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../../html/style.css" rel="stylesheet"/>
+	<link href="../../../html/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab" id="doc-index-tab">
+				  <a class="vertical" href="../../../html/index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="../../../api/html/index.html">API index</a>
+				</div>
+				<div class="tab @EXTRA_CSS@" id="tui-index-tab">
+				  <a class="vertical" href="./index.html">TUI index</a>
+				</div>
+				<div class="tab" id="references-index-tab">
+				  <a class="vertical" href="../../../html/References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="Progress.html" class=next>➠</a>
+<h1>Popup</h1>
+
+<p>Popup text, a text bubble with some additional info for the user.</p>
+
+<pre><code>╔══════════════════════════╗
+║Enter the time in the     ║
+║format hh:mm              ║
+╚═══╦══════════════════════╝
+</code></pre>
+
+<p>Text and outline can be formatted with the modifers used by <code>$.print()</code>.</p>
+
+<p>The popup attemts to stay out of the way of the cursor, either below if the cursor is at the top of the screen or above if the cursor is at the bottom of the screen.  If the popup does not fit on screen it will not show, if you prefer, you can cause the popup to throw exceptions when it does not fit.</p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/tui/Popup.js");</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>tui.Popup</li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes three arguments, the text displayed, the text formatting modifier and the line formatting modifier.</p>
+
+<pre><code>var popup = new tui.Popup("OiOi!", true, 'red');
+popup.render();
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<h3>text</h3>
+
+<p>The text to display.</p>
+
+<h3>textFormat</h3>
+
+<p>The text formatting modifier as used by <code>$.print()</code>, i.e. <code>true</code> for bold or a string with a lower case color.</p>
+
+<h3>lineFormat</h3>
+
+<p>The text formatting for the line characters.</p>
+
+<h3>heightOffset</h3>
+
+<p>How far above or below the popu is rendered from the current cursor position, defaults to 2 rows.</p>
+
+<h3>throwOnError</h3>
+
+<p>When <code>true</code> if the popup text is too large for the users screen size an exception will be throw, by default <code>false</code> so the exception is swallowwed and the popup is not shown.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>render</h3>
+
+<p>Draw the popup to the console.</p>
+<a href="Progress.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

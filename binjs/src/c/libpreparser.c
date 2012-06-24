@@ -201,7 +201,9 @@ static void wrap_binjs_exit(int out, char * current_line) {
  * return true if bash line continuation is detected i.e. a \ at the end of the line
  */
 static int is_bash_continue(char * current_line ) {
-	return current_line[strlen(current_line) -1] == '\\';
+	int is_cont = current_line[strlen(current_line) -1] == '\\';
+	if (is_cont) current_line[strlen(current_line) -1] = ' ';
+	return is_cont;
 }
 
 /**
@@ -320,55 +322,7 @@ static int is_java_script(char * current_line, int in_js_comment) {
 	if ( strncmp(current_line + pos,		"binjs_",	6 ) == 0 ) return 1;
 	
 	if ( is_java_script_reserved_word(current_line + pos) ) return 1;
-	
-	/*
-	// TODO repalce with use of is_java_script_reserved_word (created below not tested)
-	//fprintf(stderr, "JS? %s \n", current_line + pos);
-	if ( strncmp(current_line + pos,		"//",		2 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"if ",		3 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"else ",	5 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"for ",		4 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"while ",	6 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"do ",		3 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"switch ",	7 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"case ",	5 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"break ",	6 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"continue ",	9 ) == 0 ) return 1;
-	
-	if ( strncmp(current_line + pos,		"catch ",	6 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"throw ",	6 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"try ",		4 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"debugger ",9 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"default ",	8 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"delete ",	7 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"finally ",	8 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"in ",		3 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"instanceof ",	11 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"new ",		4 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"return ",	7 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"this.",	5 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"typeof ",	7 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"void ",	5 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"with ",	5 ) == 0 ) return 1;
-	
-	if ( strncmp(current_line + pos,		"return ",	7 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"goto ",	5 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"binjs_",	6 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"$.",		2 ) == 0 ) return 1;
-	
-	// lets be polite  TODO better way to detect tokens that supports ({; and EOL
-	if ( strncmp(current_line + pos,		"if(",		3 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"else{",	5 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"for(",		4 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"while(",	6 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"do{",		3 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"case{",	5 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"switch(",	7 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"break;",	6 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"continue;",	9 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"catch(",	6 ) == 0 ) return 1;
-	if ( strncmp(current_line + pos,		"try{",		4 ) == 0 ) return 1;
-	*/
+
 	return 0;
 }
 

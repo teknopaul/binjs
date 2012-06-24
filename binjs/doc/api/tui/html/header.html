@@ -7,17 +7,22 @@
 	<link href="../../../html/binjs_16x16.png" rel="shortcut icon"/>
   </head>
 	<body id="pw-body">
-		<div id="container">
-			<div id="header"><span class="title">/bin/js documentation</span></div>
-			<div id="content">
-			<div id="menu">
-				<ul>
-					<li><a href="../../../html/index.html">Doc index</a></li>
-					<li><a href="./../index.html">API index</a></li>
-					<li><a href="./index.html">TUI index</a></li>
-					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
-					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
-				</ul>
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab" id="doc-index-tab">
+				  <a class="vertical" href="../../../html/index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="../../../api/html/index.html">API index</a>
+				</div>
+				<div class="tab @EXTRA_CSS@" id="tui-index-tab">
+				  <a class="vertical" href="./index.html">TUI index</a>
+				</div>
+				<div class="tab" id="references-index-tab">
+				  <a class="vertical" href="../../../html/References.html">References</a>
+				</div>
 			</div>
-			<div id="main">
-				<img src="../../../html/binjs_64x64.png" id="logo"/>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">

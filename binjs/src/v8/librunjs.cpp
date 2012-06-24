@@ -22,11 +22,16 @@
 #include <cstdlib>
 #include <unistd.h> 
 #include <signal.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #include "bashexec.h"
 #include "file.h"
 #include "util.h"
 #include "term.h"
+
+#include "../c/libpreparser.h"
 
 using namespace v8;
 
@@ -200,6 +205,86 @@ int RunPipedJS(int pipe, int argc, char* argv[]) {
 	return 0;
 
 }
+
+/*
+This would be nice but introduces cyclical dependencies so would need to 
+fix the Makefiles before implementing
+/
+  Execute a bjs script, using the existing v8 instance.
+ /
+Handle<Value> RunBinJS(const Arguments& args) {
+	
+	// Create a stack-allocated handle scope.
+	HandleScope handle_scope;
+
+	// read the script to memory
+	struct stat stat_s;
+	
+	String::Utf8Value str(args[0]);
+	const char* script_file = ToCString(str);
+	
+	int stat_ret = stat(script_file, &stat_s);
+
+	if (stat_ret != 0) {
+		return ThrowException(Exception::TypeError(String::New("Unable to stat bjs file")));
+	}
+
+	off_t file_size = stat_s.st_size;
+
+	if ( file_size == 0) {
+		return Undefined();
+	}
+
+	int in = open(script_file, O_RDONLY);
+	if (in == -1) {
+		return ThrowException(Exception::TypeError(String::New("Unable to open bjs file")));
+	}
+
+
+	int pipefd[2];
+	pipe(pipefd);
+	int out = pipefd[1];
+	
+	struct binjs_parsed_doc doc;
+	memset(&doc, 0 , sizeof(struct binjs_parsed_doc));
+	
+	int prep_err = binjs_preparse(in, out, &doc);
+	if (prep_err) {
+		if (doc.err == 1) {
+			return ThrowException(Exception::TypeError(String::New("Error preparsing")));
+		}
+		
+		if (doc.err == 2) {
+			fprintf(stderr, "Warning preparsing %s\n", doc.warning);
+		}
+	}
+
+	close(out);
+
+	TryCatch try_catch;
+	
+	Handle<String> sourceCode = ReadPipe(pipefd[0]);
+
+	Handle<Script> script = Script::Compile(sourceCode);
+	
+	if (script.IsEmpty()) {
+		ReportException(&try_catch);
+		return Integer::New(2);
+	}
+	
+	// Run the script.
+	script->Run();
+	
+	if( try_catch.HasCaught() ) {
+		ReportException(&try_catch);
+		Integer::New(3);
+	}
+
+	return Integer::New(0);
+}
+*/
+
+// TODO
 void DebuggerCallback(DebugEvent event,
                         Handle<Object> exec_state,
                         Handle<Object> event_data,

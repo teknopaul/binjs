@@ -1,0 +1,36 @@
+#!/bin/js
+binjs_import("~lib/tui/Popup.js");
+binjs_import("~lib/tui/TimeInput.js");
+#
+#  "Popup" help in its looses sense, prints text away from the cursor
+#
+
+var text = "This is some popup text, its a bit verbose really "
+	 + "but then I'm testing the word wrapping it would make "
+	 + "a lot more sense to keep the word length right down to "
+	 + "a minimum so that when the terminal is not very large "
+	 + "it fits and also popup overwrites something on screen "
+	 + "which might be annoying.";
+
+var popup = new tui.Popup(text, 'red', 'yellow');
+var tinput = new tui.TimeInput();
+
+$.println("Yo Yo , what time is it?", true);
+
+popup.render();
+var time = tinput.readline();
+
+$.println("time entered : " + time);
+
+var popup = new tui.Popup("Enter the time in the format hh:mm", 'blue');
+popup.width = 20;
+var tinput = new tui.TimeInput();
+
+$.println("Yo Yo , what time is it?", true);
+
+popup.render();
+var time = tinput.readline();
+
+
+
+

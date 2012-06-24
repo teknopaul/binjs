@@ -1,0 +1,32 @@
+#!/bin/js
+binjs_import("~lib/Term.js");
+#
+# Read stuff from the terminal
+#
+# In thero you can query the terminal for info such as cursor position
+# by writing to stdin and consuming from stdout
+#
+
+function debugEsc(esc){
+	$.print("ESC=[");
+        for ( var i = 0 ; i < esc.length ; i++) {
+                if ( i > 0 ) $.print(", ");
+                $.print("" + esc[i]);
+        }
+        $.println("]\r");
+}
+
+var term = new Term();
+
+var codes = term.query(27, 91, 54, 110);
+debugEsc(codes);
+
+var codes = term.query(27, 91, 54, 110);
+debugEsc(codes);
+
+var pos = term.getCursorPosition();
+
+$.print("POS"); debugEsc(pos);
+
+$.println("Cursor pos, x=" + pos[1] + "y=" + pos[0]);
+

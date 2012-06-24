@@ -7,19 +7,26 @@
 	<link href="binjs_16x16.png" rel="shortcut icon"/>
   </head>
 	<body id="pw-body">
-		<div id="container">
-			<div id="header"><span class="title">/bin/js documentation</span></div>
-			<div id="content">
-			<div id="menu">
-				<ul>
-					<li><a href="./index.html">Doc index</a></li>
-					<li><a href="../api/html/index.html">API index</a></li>
-					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
-					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
-				</ul>
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab @EXTRA_CSS@" id="doc-index-tab">
+				  <a class="vertical" href="./index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="../api/html/index.html">API index</a>
+				</div>
+				<div class="tab" id="tui-index-tab">
+				  <a class="vertical" href="../api/tui/html/index.html">TUI index</a>
+				</div>
+				<div class="tab @REFS_CSS@" id="references-index-tab">
+				  <a class="vertical" href="./References.html">References</a>
+				</div>
 			</div>
-			<div id="main">
-				<img src="binjs_64x64.png" id="logo"/>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="../api/html/index.html" class=next>➠</a>
 <h1>Xml Support</h1>
 
 <p>Modifying XML files in scripts is fiddly with only Linux tools like awk and sed at your disposal so /bin/js comes with an XML parser built in, it is lifted from nodejs code with a couple of changes to make it more fitting for synchronous scripts.</p>
@@ -74,12 +81,14 @@ parser.write(text).close();
 
 $.println("Xml version is: " + xmlVer);
 </code></pre>
+<a href="../api/html/index.html" class=next>➠</a>
 
-				<br/><br/>
+					<br/><br/>
+				</div>
 			</div>
+			<div id="footer"> by teknopaul </div>
 		</div>
-		<div id="footer"> by teknopaul </div>
+		<br/><br/>
 	</div>
-	<br/><br/>
   </body>
 </html>

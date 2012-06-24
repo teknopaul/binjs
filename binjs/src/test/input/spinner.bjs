@@ -17,3 +17,14 @@ var selected = spinner.select();
 
 $.println("You selected : " + selected , 'green');
 
+$.println("-");
+$.println("-");
+$.println("-");
+$.println("-");
+
+
+var spinner = new tui.Spinner(options);
+
+var selected = spinner.select();
+$.println("You selected : " + selected , 'green');
+

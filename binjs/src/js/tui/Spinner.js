@@ -22,7 +22,10 @@ tui.Spinner = function(options) {
 tui.Spinner.prototype.select = function() {
 
 	this.term.cursorOff();
-	this.term.makeRaw();
+	var wasRaw = binjs_TERM_IS_RAW;
+	if ( ! binjs_TERM_IS_RAW ) {
+		this.term.makeRaw();
+	}
 	
 	this.term.deleteLine();	
 	$.print(this.margin + this.options[this.selected]);
@@ -79,7 +82,11 @@ tui.Spinner.prototype.select = function() {
 	}
 	
 	this.term.cursorOn();
-	this.term.reset();
+	if ( ! wasRaw) {
+		this.term.reset();
+	}
 	$.println();
+	
 	return this.options[this.selected];
+	
 } 

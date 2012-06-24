@@ -9,13 +9,15 @@ CONTINCS=-I../../contrib/include
 CONTLIBS=-L../../contrib
 DEPS = file.h util.h term.h bashexec.h
 OBJS = file.o util.o term.o bashexec.o
+GINCS=`pkg-config --cflags glib-2.0`
+GLIBS=`pkg-config --libs glib-2.0`
 
 %.o: %.cpp $(DEPS) librunjs.h
 	$(CC) -Wall -fPIC -c -o $@ $< $(CONTINCS)
 
 all: $(OBJS) 
-	g++ -Wall -fPIC -c librunjs.cpp $(CONTINCS)
-	g++ -Wall -fPIC -shared librunjs.cpp $(OBJS) $(CONTLINKS) $(CONTINCS) $(CONTLIBS) -lbash \
+	g++ -Wall -fPIC -c librunjs.cpp $(CONTINCS) $(GINCS) 
+	g++ -Wall -fPIC -shared librunjs.cpp $(OBJS) $(CONTLINKS) $(GINCS) $(CONTINCS) $(CONTLIBS) -lbash \
 		-o librunjs.so.1
 	rm -f librunjs.so
 	ln -s librunjs.so.1 librunjs.so

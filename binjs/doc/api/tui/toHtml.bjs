@@ -11,11 +11,19 @@ var toc = [];
 
 function makeIndex() {
 
-	cat html/header.html | sed -e "s/@TITLE@/binjs index/g" > ./html/index.html
+	cat html/header.html | sed -e "s/@TITLE@/binjs index/g" \
+						 | sed -e "s/@EXTRA_CSS@/tab-selected/g" \
+		 > ./html/index.html
 	
-	echo "<h1>index</h1><ul>" >> ./html/index.html
+	echo '<img src="../../../html/binjs_64x64.png" id="logo"/>' >> ./html/index.html
 	
+	echo "<h1>TUI Index</h1>" >> ./html/index.html
 	
+	echo 'The Text User Interface package contains widgets for use on the command line.  \
+			Objects in the package use the <code>tui.</code> namespace.' >> ./html/index.html
+	
+	echo '<ul>' >> ./html/index.html
+
 	for (var i = 0 ; i < toc.length ; i++) {
 	
 		$.setEnv("SRC", toc[i].src);
@@ -34,17 +42,28 @@ for (var i = 0 ; i < files.length ; i++) {
 	var src = files[i].name;
 	var dest = files[i].ext("html").name
 	toc.push( { dest: dest, src : src } );
-	
-	
+
+	if ( i < files.length -1)  {
+		var next = files[i +1].ext("html").name
+		$.setEnv("NEXT", next);
+	}
+	else {
+		$.setEnv("NEXT", "../../../html/References.html");
+	}
+
 	$.setEnv("SRC", src);
 	$.setEnv("DEST", dest);
 
 	cat html/header.html | sed -e "s/@TITLE@/$SRC/g" > ./html/$DEST
+
+	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./html/$DEST 
 	
 	perl ../../Markdown.pl  $SRC >> ./html/$DEST
 	
 //	echo '<p class="date">generated ' `date` '</p>' >> ./html/$DEST
-	
+
+	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./html/$DEST 
+
 	cat html/footer.html >> ./html/$DEST
 	
 	$.info(1,"Generated", "./html/" + $.env.DEST);

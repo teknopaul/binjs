@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>HowItWorks.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="style.css" rel="stylesheet"/>
+	<link href="binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab @EXTRA_CSS@" id="doc-index-tab">
+				  <a class="vertical" href="./index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="../api/html/index.html">API index</a>
+				</div>
+				<div class="tab" id="tui-index-tab">
+				  <a class="vertical" href="../api/tui/html/index.html">TUI index</a>
+				</div>
+				<div class="tab @REFS_CSS@" id="references-index-tab">
+				  <a class="vertical" href="./References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="ImportJavaScript.html" class=next>➠</a>
+<h1>How it works</h1>
+
+<p>The /bin/js mash-up is achieved by preparsing the script and deciding for each line if it needs to be interpreted as JavaScript or Bash.  /bin/js uses the chrome v8 JavaScript runtime and some C++ libraries, Bash 4.2 hacked and compiled as a library with its features exposed as C functions, and a preparser written in C.</p>
+
+<p>If this is a /bin/js script</p>
+
+<pre><code>#!/bin/js
+#
+cat "${HOME}/apache.log" | tail -20 | awk ' {print $7}' | tee.tail.log
+</code></pre>
+
+<p>The preparser generates valid JavaScript in the form</p>
+
+<pre><code>binjs_import("~lib/binjs.js");
+//#
+binjs_exec("cat \"${HOME}/apache.log\" | tail -20 | awk \' {print $7}\' | tee.tail.log");
+</code></pre>
+
+<p>The JavaScirpt is then piped to v8.</p>
+
+<p>When <code>binjs_exec()</code> is called the argument to the method is passed as text to an embedded instance of bash.</p>
+
+<p>The <code>binjs_import("~lib/binjs.js");</code> line sets up the internal bash instance and a File object and some other bells and whistles.</p>
+
+<h2>Checking the preparser output</h2>
+
+<p>You can call</p>
+
+<pre><code>cat myScript.bjs | /bin/binjs_preparser
+</code></pre>
+
+<p>to see what the preparser is outputting.  This will print on stdout the JavaScript that would be piped to v8 by /bin/js.</p>
+<a href="ImportJavaScript.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

@@ -7,32 +7,38 @@
 	<link href="../../../html/binjs_16x16.png" rel="shortcut icon"/>
   </head>
 	<body id="pw-body">
-		<div id="container">
-			<div id="header"><span class="title">/bin/js documentation</span></div>
-			<div id="content">
-			<div id="menu">
-				<ul>
-					<li><a href="../../../html/index.html">Doc index</a></li>
-					<li><a href="./../index.html">API index</a></li>
-					<li><a href="./index.html">TUI index</a></li>
-					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
-					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
-				</ul>
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab" id="doc-index-tab">
+				  <a class="vertical" href="../../../html/index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="../../../api/html/index.html">API index</a>
+				</div>
+				<div class="tab @EXTRA_CSS@" id="tui-index-tab">
+				  <a class="vertical" href="./index.html">TUI index</a>
+				</div>
+				<div class="tab" id="references-index-tab">
+				  <a class="vertical" href="../../../html/References.html">References</a>
+				</div>
 			</div>
-			<div id="main">
-				<img src="../../../html/binjs_64x64.png" id="logo"/>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="ValidatedTextInput.html" class=next>➠</a>
 <h1>TimeInput</h1>
 
-<p>Sublasses tui.Input and only permits time to be entered in the form 00:00.
+<p>Sublasses tui.Input and only permits time to be entered in the form <code>00:00</code>.
 This input class only validates the String is in the correct form not that the time is valid.
-i.e. 25:99 is permitted and should be validated by the user.
+i.e. <code>25:99</code> is permitted and should be validated by the user.
 Future versions of this class will be more strict with user input.</p>
 
 <hr />
 
 <h2>Import</h2>
 
-<p><code>binjs_import("~lib/tui/TimeInput.js")</code></p>
+<p><code>binjs_import("~lib/tui/TimeInput.js");</code></p>
 
 <hr />
 
@@ -63,7 +69,7 @@ Future versions of this class will be more strict with user input.</p>
 
 <h3>readline</h3>
 
-<p>Call <code>readline()</code> to get the user input. A String is returned that may be null in error conditions.</p>
+<p>Call <code>readline()</code> to get the user input. A String is returned that may be <code>null</code> in error conditions.</p>
 
 <hr />
 
@@ -78,12 +84,14 @@ $.println("Enter a time in the fomrat 00:00");
 
 var time = tinput.readline();
 </code></pre>
+<a href="ValidatedTextInput.html" class=next>➠</a>
 
-				<br/><br/>
+					<br/><br/>
+				</div>
 			</div>
+			<div id="footer"> by teknopaul </div>
 		</div>
-		<div id="footer"> by teknopaul </div>
+		<br/><br/>
 	</div>
-	<br/><br/>
   </body>
 </html>

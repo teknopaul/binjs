@@ -6,6 +6,9 @@
  *
  * @author teknopaul
  */
+
+// This needs to be global since there may be multiple instances of Term
+var binjs_TERM_IS_RAW = false;
 /**
  * @constructor
  */
@@ -13,6 +16,7 @@ Term = function() {
 	this.binjsVersion = "0.1";
 	this.bashVersion = "4.2";
 	this.javaScriptVersion = binjs_termV8Version();
+	
 };
 
 Term.INVALID_ESC = "Invalid escape sequence";
@@ -34,7 +38,7 @@ Term.prototype.readChar = function() {
 	return binjs_termReadChar();
 }
 /**
- * Write an 8bit byte to stdout,  URTF-8 can be written with just $.print('ö')
+ * Write an 8bit byte to stdout,  UTF-8 can be written with just $.print('ö')
  * Any Number arg is written to stdout so you can use varargs
  * Numbers in JS are 32bit signed what is written to output is arg & 0x000000FF
  * i.,e only 0 -255 is significant
@@ -55,14 +59,16 @@ Term.prototype.flush = function() {
  * up, down, left, right keypresses.
  */
 Term.prototype.makeRaw = function() {
+	binjs_TERM_IS_RAW = true;
 	return binjs_termMakeRaw();
 }
 
 /**
  * Reset the Term back to unraw mode.
- * You must callthis before exit or the Term goes crazy.
+ * You must call this before exit or the Term goes crazy.
  */
 Term.prototype.reset = function() {
+	binjs_TERM_IS_RAW = false;
 	return binjs_termReset();
 }
 
@@ -82,8 +88,6 @@ Term.prototype.deleteLine = function(text) {
 	this.writeByte(27, 91, 50, 75);
 }
 
-// TODO (CSI in UTF-8 is 0xC2, 0x9B) but not no my terminal
-
 Term.prototype.isEscape = function(c) {
 	return c.charCodeAt(0) === 27;
 }
@@ -95,13 +99,15 @@ Term.prototype.isNewLine = function(codes) {
 }
 
 /**
- * The vi twitch is a double ESC, peole who use vi
+ * The vi twitch is a double ESC, people who use vi
  * exit text entry mode with ESC ESC without thinking
  */
 Term.prototype.isViTwitch= function(codes) {
 	 return codes[0] === 27 &&
 			codes[1] === 27;
 }
+
+// TODO (CSI in UTF-8 is 0xC2, 0x9B) but not on my terminal
 
 /**
  * Reads Ansii ESC sequences off the stream, the whole sequence is read
@@ -198,7 +204,6 @@ Term.prototype.cursorOff = function() {
 	binjs_termWriteByte(27, 91, 63, 50, 53, 108); // ESC[ ?25l
 	binjs_flush();
 }
-
 Term.prototype.cursorOn = function() {
 	binjs_termWriteByte(27, 91, 63, 50, 53, 104); // ESC[ ?25h
 	binjs_flush();
@@ -220,6 +225,15 @@ Term.prototype.cursorBack = function() {
 	binjs_termWriteByte(27, 91 , 68); // ESC[D
 	binjs_flush();
 }
+
+Term.prototype.cursorStore = function() {
+	binjs_termWriteByte(27, 91 , 115); // ESC[s
+	binjs_flush();
+}
+Term.prototype.cursorRestore = function() {
+	binjs_termWriteByte(27, 91 , 117); // ESC[u
+	binjs_flush();
+}
 Term.prototype.writeNumber = function(num) {
 	var sNum = "" + Math.floor(num);
 	for (var i = 0 ; i < sNum.length ; i++) {
@@ -227,10 +241,64 @@ Term.prototype.writeNumber = function(num) {
 	}
 }
 Term.prototype.cursorPosition = function(row, col) {
+
+	if (typeof col === 'undefined') return this.getCursorPosition();
+
 	binjs_termWriteByte(27, 91); // ESC[
 	this.writeNumber(row);
 	binjs_termWriteByte(59); // ;
 	this.writeNumber(col);
 	binjs_termWriteByte(102); // f
 	binjs_flush();
+	
 }
+
+/**
+ * Returns the cursor position as an array [row, col], 
+ * N.B. this is [y,x]
+ */
+Term.prototype.getCursorPosition = function() {
+	var ret = [0 , 0];
+	var codes = this.query(27, 91, 54, 110); // ESC[6n
+	
+	if (codes.length === 0) return [-1 , -1];
+	if ( codes[0] !== 27 ) throw new Error( Term.INVALID_ESC );
+	if ( codes[1] !== 91 ) throw new Error( Term.INVALID_ESC );
+	
+	var num = "";
+	for (var i = 2 ; i < codes.length ; i++) {
+		if (codes[i] === 82) { //R terminator
+			ret[1] = parseInt(num);
+			return ret;
+		}
+		else if (codes[i] === 59) { //; delim
+			ret[0] = parseInt(num);
+			num = "";
+		}
+		else if (codes[i] >= 48 && codes[i] <= 57) {
+			num += String.fromCharCode(codes[i]);
+		}
+		else throw new Error( Term.INVALID_ESC );
+	}
+	throw new Error( Term.INVALID_ESC );
+}
+
+Term.prototype.query = function(argv) {
+	var wasRaw = binjs_TERM_IS_RAW;
+	if ( ! binjs_TERM_IS_RAW ) {
+		this.makeRaw();
+	}
+	this.writeByte.apply(this, arguments);
+	this.flush();
+	var c = this.readChar();
+	var ret = [];
+	if (this.isEscape(c)) {
+		ret = this.consumeAnsiEscape();
+	}
+	if ( ! wasRaw) {
+		this.reset();
+	}
+	return ret;
+}
+
+
