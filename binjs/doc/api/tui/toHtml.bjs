@@ -1,0 +1,55 @@
+#!/bin/js
+#
+# convert *.md to HTML files
+#
+
+cd `dirname $0`
+
+var files = new File(".").listFiles("*.md");
+
+var toc = [];
+
+function makeIndex() {
+
+	cat html/header.html | sed -e "s/@TITLE@/binjs index/g" > ./html/index.html
+	
+	echo "<h1>index</h1><ul>" >> ./html/index.html
+	
+	
+	for (var i = 0 ; i < toc.length ; i++) {
+	
+		$.setEnv("SRC", toc[i].src);
+		$.setEnv("DEST", toc[i].dest);
+		echo '<li><a href="' $DEST '">' $SRC '</a></li>' >> ./html/index.html
+	
+	}
+	echo "</ul>" >> ./html/index.html
+	cat html/footer.html >> ./html/index.html
+	
+	$.info(1,"Generated", "./html/index.html");
+}
+
+for (var i = 0 ; i < files.length ; i++) {
+
+	var src = files[i].name;
+	var dest = files[i].ext("html").name
+	toc.push( { dest: dest, src : src } );
+	
+	
+	$.setEnv("SRC", src);
+	$.setEnv("DEST", dest);
+
+	cat html/header.html | sed -e "s/@TITLE@/$SRC/g" > ./html/$DEST
+	
+	perl ../../Markdown.pl  $SRC >> ./html/$DEST
+	
+//	echo '<p class="date">generated ' `date` '</p>' >> ./html/$DEST
+	
+	cat html/footer.html >> ./html/$DEST
+	
+	$.info(1,"Generated", "./html/" + $.env.DEST);
+
+}
+
+makeIndex();
+

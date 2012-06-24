@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Input.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../../html/style.css" rel="stylesheet"/>
+	<link href="../../../html/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="container">
+			<div id="header"><span class="title">/bin/js documentation</span></div>
+			<div id="content">
+			<div id="menu">
+				<ul>
+					<li><a href="../../../html/index.html">Doc index</a></li>
+					<li><a href="./../index.html">API index</a></li>
+					<li><a href="./index.html">TUI index</a></li>
+					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
+					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
+				</ul>
+			</div>
+			<div id="main">
+				<img src="../../../html/binjs_64x64.png" id="logo"/>
+<h1>Input</h1>
+
+<p>Base class for various Text input types, which accept user input from the console.
+This calss can be constructed on its own and manipulated to control user input.</p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/tui/Input.js");</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>tui.Input</li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes no arguments.</p>
+
+<pre><code>var input = new tui.Input();
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<h3>text</h3>
+
+<p>The text being entered. Default <code>""</code></p>
+
+<h3>returnOnEnter</h3>
+
+<p>Finish accepting input when the Enter key is pressed, default <code>true</code>.
+When <code>false</code> only double hitting <code>ESC</code>, or terminating the program retuns from input,</p>
+
+<h3>acceptTabs</h3>
+
+<p>Tabs are swallowed by default, turn this on if you want to accept <code>\t</code> as part of the input.</p>
+
+<h3>acceptNewLines</h3>
+
+<p>To accept new lines in input set this flag to true and to enter the new line type Shift + Enter.
+When shift + Enter is pressed a <code>\n</code> charanter is added to the text and the user can continue editing.
+Delete does not go back over new lines, so for a full featured multi-line editor launch the system editor.
+the <code>tui.EditorInput</code> launches the system enditor.</p>
+
+<h3>filter</h3>
+
+<p>A function that can reject characters of input,  this method is called with a singel argument, the character typed for
+every keypress (if the function exists).  If the function returns <code>false</code> the keypress is rejected and the
+character is not typed on screen.</p>
+
+<h3>validator</h3>
+
+<p>If this function exists it is called when input is finished by pressing Enter, if the function returns <code>false</code>
+The editor does not return.  <code>tui.ValidatedTextInput</code> is a more convenient use of this feature with 
+visual feedback when validation fails.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>readline</h3>
+
+<p>Read a line of text input from the user.  Returns the text entered or <code>null</code> in some error conditions.</p>
+
+				<br/><br/>
+			</div>
+		</div>
+		<div id="footer"> by teknopaul </div>
+	</div>
+	<br/><br/>
+  </body>
+</html>

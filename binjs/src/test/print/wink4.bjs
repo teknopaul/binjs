@@ -1,0 +1,19 @@
+#!/bin/js
+binjs_import("~lib/Term.js")
+
+var term = new Term();
+
+term.cursorOff();
+$.print(":|", true);
+term.flush();
+$.sleep(1000);
+$.print("\r:D", true);
+term.flush();
+$.sleep(500);
+$.print("\r:)", true);
+term.flush();
+$.sleep(1000);
+$.println();
+term.cursorOn();
+
+

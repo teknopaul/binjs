@@ -1,6 +1,6 @@
 binjs_import("~lib/Term.js")
 
-if (typeof tui == 'undefined') tui = {};
+if (typeof tui === 'undefined') tui = {};
 
 /**
  * Input class to accept text input but with more control over what we accept.
@@ -20,7 +20,11 @@ tui.Input = function(filter) {
 	/** Tabs are swallowed by default, turn this on if you wnat to accept \t in the input */
 	this.acceptTabs = false;
 	
-	/** Turn this on if you want Shft + Enter to create a '\n' and continue editing.*/
+	/** 
+	 * Turn this on if you want Shft + Enter to create a '\n' and continue editing.
+	 * delete does not go back over new lines right now, nor do cursors work
+	 * If you want a real multi line editor luanch the systems editor.
+	 */
 	this.acceptNewLines = false;
 	
 	/** 
@@ -29,20 +33,17 @@ tui.Input = function(filter) {
 	 * the character is printed and added to this.text.
 	 */
 	this.filter = filter || false;
-}
-
-tui.Input.prototype.debugEscape = function(data) {
-	$.print("ESC=[");
-	for ( var i = 0 ; i < data.length ; i++) {
-		if ( i > 0 ) $.print(", ");
-		$.print(data[i]);
-	}
-	$.print("]");
+	
+	/**
+	 * Function to check the final input, if the function returns yes the Input is returned
+	 * if the function returns no the user has to delte and try again.
+	 */
+	this.validator = false;
 }
 
 tui.Input.prototype.deleteBack = function() {
 	
-	if ( this.text.length == 0) return;
+	if ( this.text.length === 0) return;
 	
 	this.term.cursorBack();
 	this.term.writeByte(32);
@@ -71,7 +72,10 @@ tui.Input.prototype.readline = function() {
 			var c = this.term.readChar();
 			
 			if ('\r' == c) {
-				if ( this.returnOnEnter ) break;
+				if ( this.returnOnEnter ) {
+					if ( this.validator && ! this.validator(this.text) )  continue;
+					else break;
+				}
 				else {
 					this.text += '\n';
 					$.print('\n');

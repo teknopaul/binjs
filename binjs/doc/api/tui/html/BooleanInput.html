@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>BooleanInput.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../../html/style.css" rel="stylesheet"/>
+	<link href="../../../html/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="container">
+			<div id="header"><span class="title">/bin/js documentation</span></div>
+			<div id="content">
+			<div id="menu">
+				<ul>
+					<li><a href="../../../html/index.html">Doc index</a></li>
+					<li><a href="./../index.html">API index</a></li>
+					<li><a href="./index.html">TUI index</a></li>
+					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
+					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
+				</ul>
+			</div>
+			<div id="main">
+				<img src="../../../html/binjs_64x64.png" id="logo"/>
+<h1>BooleanInput</h1>
+
+<p>Sublasses <code>tui.Input</code> and only permits <code>y</code> or <code>n</code> to be entered by the user.</p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/tui/BooleanInput.js");</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>tui.BooleanInput</li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes no arguments.</p>
+
+<pre><code>var input = new tui.BooleanInput();
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<p>Same as parent class.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>ok</h3>
+
+<p>Returns a boolean true or false from the user input.</p>
+
+<hr />
+
+<h2>Usage</h2>
+
+<pre><code>#!/bin/js
+binjs_import("~lib/tui/BooleanInput.js");
+
+var input = new tui.BooleanInput();
+
+$.println("Are you ready? [y/n]");
+
+var bool = input.ok();
+</code></pre>
+
+				<br/><br/>
+			</div>
+		</div>
+		<div id="footer"> by teknopaul </div>
+	</div>
+	<br/><br/>
+  </body>
+</html>

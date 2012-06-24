@@ -75,6 +75,13 @@ Term.prototype.writeDoubleHeight = function(text) {
 	this.writeByte(27, 35, 52);$.println(text);
 	$.println();
 }
+/**
+ * Delete current line,  ESC[2K
+ */
+Term.prototype.deleteLine = function(text) {
+	this.writeByte(27, 91, 50, 75);
+}
+
 // TODO (CSI in UTF-8 is 0xC2, 0x9B) but not no my terminal
 
 Term.prototype.isEscape = function(c) {
@@ -124,15 +131,23 @@ Term.prototype.consumeAnsiEscape = function() {
 
 	if (code === 91) { // CIS codes  ESC[ 32 to 47 terminated by a single 64 to 126 char
 		var ret = [27, 91];
+		var i = 0;
 		do {
 			var b = binjs_termReadByte();
+			
+			if (i++ === 0 && b === 91 ) { // ESC[[ = function keys, generally ignored
+				ret.push(b);
+				ret.push(binjs_termReadByte());
+				return ret;
+			}
+
 			ret.push(b);
 		} while (b >= 32 && b < 64);
 		
 		if (b >= 64 && b <= 126) {
 			return ret;
 		}
-		throw new Error();
+		throw new Error( Term.INVALID_ESC );
 	}
 	
 	else if (code === 93 ||  // OSC codes  ESC]  read to BEL or ST  ESC\

@@ -26,11 +26,11 @@ tui.Table = function(arg0, arg1) {
 	// this.widths can be set to define the column widths
 	this.widths = undefined;
 	
-	if (typeof arg0 == 'string') {
+	if (typeof arg0 === 'string') {
 		this.parse(arg0, ' ');
 	}
 	
-	else if (typeof arg0 == 'array') {
+	else if (typeof arg0 === 'array') {
 		this.headers = arg0;
 		this.data = arg1;
 	}

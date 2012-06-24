@@ -2,7 +2,7 @@
  * A Progress bar
  */
  
-if (typeof tui == 'undefined') tui = {};
+if (typeof tui === 'undefined') tui = {};
 
 /**
  * @param progressText the text to be dislpalyed while in progress

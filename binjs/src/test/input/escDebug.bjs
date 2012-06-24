@@ -1,0 +1,35 @@
+#!/bin/js
+binjs_import("~lib/Term.js");
+
+
+var term = new Term();
+
+term.cursorOff();
+
+term.makeRaw();
+
+while (true) {
+	
+	var c = term.readChar();
+	if (term.isEscape(c)) {
+		var esc = term.consumeAnsiEscape();
+		$.print("ESC=[");
+		for ( var i = 0 ; i < esc.length ; i++) {
+			if ( i > 0 ) $.print(", ");
+			$.print("" + esc[i]);
+		}
+		$.println("]\r");
+	}
+	else if ('\r' == c) {
+		break;
+	}
+	else {
+		$.print(c);
+	}
+
+}
+
+term.reset();
+term.cursorOn();
+
+

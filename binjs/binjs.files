@@ -66,3 +66,7 @@ src/js/tui/Table.js
 src/js/Term.js
 src/v8/term.h
 src/v8/term.cpp
+src/js/tui/BooleanInput.js
+src/js/tui/Spinner.js
+src/js/tui/EditorInput.js
+src/js/tui/ValidatedTextInput.js

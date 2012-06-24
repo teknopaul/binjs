@@ -1,0 +1,14 @@
+#!/bin/js
+binjs_import("~lib/tui/BooleanInput.js");
+
+
+var bInp = new tui.BooleanInput();
+
+
+echo "you with us? [y/n]"
+
+var ok = bInp.ok();
+
+if ( ok ) $.println("cool",'green');
+else $.println("grrrrr", 'red');
+

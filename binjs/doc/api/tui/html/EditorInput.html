@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>EditorInput.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../../html/style.css" rel="stylesheet"/>
+	<link href="../../../html/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="container">
+			<div id="header"><span class="title">/bin/js documentation</span></div>
+			<div id="content">
+			<div id="menu">
+				<ul>
+					<li><a href="../../../html/index.html">Doc index</a></li>
+					<li><a href="./../index.html">API index</a></li>
+					<li><a href="./index.html">TUI index</a></li>
+					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
+					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
+				</ul>
+			</div>
+			<div id="main">
+				<img src="../../../html/binjs_64x64.png" id="logo"/>
+<h1>EditorInput</h1>
+
+<h2>A class that follows the tui style but launches vi or the users preferred text editor to fetch input.</h2>
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/tui/EditorInput.js");</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>tui.EditorInput</li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes one arguments, the default text to be placed in the editor.</p>
+
+<pre><code>var input = new tui.EditorInput(defaultText);
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<h3>editor</h3>
+
+<p>The path to the text editor to be run, defaults to /bin/vi.
+When the object is constructed the constructor checks for the existence of <code>/usr/bin/editor</code>, which Ubuntu uses as the default editor and may redirect to vi or any other editor.
+If the user has specified an editor of preference in the <code>EDITOR</code> environment variable that editor is used.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>edit</h3>
+
+<p>Returns the text created by the user in the editor.  This method returns a number the error code if there was an error.  If the text has not be changed by the user the method also returns a number.</p>
+
+				<br/><br/>
+			</div>
+		</div>
+		<div id="footer"> by teknopaul </div>
+	</div>
+	<br/><br/>
+  </body>
+</html>

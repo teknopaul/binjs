@@ -2,10 +2,10 @@
 binjs_import("~lib/tui/Input.js");
 
 /**
- * An Input that only accepts floating point numbers
- * @constructor
+ * An Input that only accepts y or n
+ *@constructor
  */
-tui.FloatInput = function() {
+tui.BooleanInput = function() {
 	
 	// N.B. the atts are not copied in JS subclassing 
 	// so here we must have ALL the atts defined in Input's constructor
@@ -15,12 +15,13 @@ tui.FloatInput = function() {
 	this.acceptTabs = false;
 	this.acceptNewLines = false;
 	this.filter = function(c) {
-		return (c >= '0' && c <= '9') 
-				|| 
-				( this.text.length === 0 && (c === '+' || c === '-') )
-				||
-				c === '.'
+		return (c === 'Y' || c === 'y' || c === 'N' || c === 'n');
 	}
 }
 
-$.inherits(tui.FloatInput, tui.Input);
+$.inherits(tui.BooleanInput, tui.Input);
+
+tui.BooleanInput.prototype.ok = function() {
+	var ok = this.readline();
+	return ok.charAt(0) === 'Y' || ok.charAt(0) === 'y';
+}

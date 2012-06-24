@@ -1,0 +1,23 @@
+#!/bin/js
+binjs_import("~lib/tui/EditorInput.js");
+#
+# EditorInput just fires up the system text editor to accept input.
+#
+
+
+var editor = new tui.EditorInput("\n"
+	+ "# comments after this line will be ignored\n"
+	+ "# enter text and then save and exit\n");
+
+var text = editor.edit();
+
+
+# Do something with the input, here we just print it
+
+if (typeof text === 'string') {
+	$.println(text, 'green');
+}
+else {
+	$.println("I really wanted a comment, not going to submit now", 'yellow');
+}
+

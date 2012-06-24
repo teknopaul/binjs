@@ -11,7 +11,7 @@ binjs_import("~lib/tui/Input.js");
 tui.TimeInput = function() {
 	
 	// N.B. the atts are not copied in JS subclassing 
-	// so here we must have ALL the atts defined in Number's constructor
+	// so here we must have ALL the atts defined in Input's constructor
 	this.text = "";
 	this.term = new Term();
 	this.returnOnEnter = true;

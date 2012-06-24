@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>FloatInput.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../../html/style.css" rel="stylesheet"/>
+	<link href="../../../html/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="container">
+			<div id="header"><span class="title">/bin/js documentation</span></div>
+			<div id="content">
+			<div id="menu">
+				<ul>
+					<li><a href="../../../html/index.html">Doc index</a></li>
+					<li><a href="./../index.html">API index</a></li>
+					<li><a href="./index.html">TUI index</a></li>
+					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
+					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
+				</ul>
+			</div>
+			<div id="main">
+				<img src="../../../html/binjs_64x64.png" id="logo"/>
+<h1>NumberInput</h1>
+
+<p>Sublasses tui.Input and only permits digits and decimal points to be entered by the user.</p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/tui/FloatInput.js")</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>tui.FloatInput</li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes no arguments.</p>
+
+<pre><code>var input = new tui.FloatInput();
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<p>Same as parent class.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<p>Same as parent class.</p>
+
+<h3>readline</h3>
+
+<p>Call <code>readline()</code> to get the user input. A String is returned that may be null in error conditions, otherwsie cane be parsed to a float.</p>
+
+<hr />
+
+<h2>Usage</h2>
+
+<pre><code>#!/bin/js
+binjs_import("~lib/tui/FloatInput.js");
+
+var input = new tui.FloatInput();
+
+$.println("Enter a number");
+
+var text = input.readline();
+</code></pre>
+
+				<br/><br/>
+			</div>
+		</div>
+		<div id="footer"> by teknopaul </div>
+	</div>
+	<br/><br/>
+  </body>
+</html>

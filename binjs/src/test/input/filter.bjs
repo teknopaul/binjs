@@ -1,0 +1,23 @@
+#!/bin/js
+
+binjs_import("~lib/tui/Input.js");
+
+
+
+// The base Input can be created passing your own custom function to filter characters
+// this example only permits one character from the list, other input is prevented
+// N.B: Enter submits and Ctrl + C is forwarded to kill the application
+// Two ESC ESC keypresses. vi style, also exits
+
+var finput = new tui.Input(function(c) {
+	
+	return "abcdef:öäü".indexOf(c) > -1 && finput.text.length == 0;
+
+});
+
+$.println("Enter a single character from this list abcdef:öäü", true);
+
+var char = finput.readline();
+
+$.println("You choose : " + char);
+

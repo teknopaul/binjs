@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>ValidatedTextInput.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../../html/style.css" rel="stylesheet"/>
+	<link href="../../../html/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="container">
+			<div id="header"><span class="title">/bin/js documentation</span></div>
+			<div id="content">
+			<div id="menu">
+				<ul>
+					<li><a href="../../../html/index.html">Doc index</a></li>
+					<li><a href="./../index.html">API index</a></li>
+					<li><a href="./index.html">TUI index</a></li>
+					<li><a href="https://github.com/teknopaul/binjs">github project</a></li>
+					<li><a href="http://teknopaul.github.com/binjs/">github page</a></li>
+				</ul>
+			</div>
+			<div id="main">
+				<img src="../../../html/binjs_64x64.png" id="logo"/>
+<h1>ValidatedTextInput</h1>
+
+<p>Sublasses tui.Input to provide validation of the text inputted by the user.</p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/tui/ValidatedTextInput.js")</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>tui.ValidatedTextInput</li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes the function to validate the text as its only argument.</p>
+
+<pre><code>var input = new tui.ValidatedTextInput( function () {
+
+    return /^[a-z0-9_-]*@mycompany.com$/gi.test(this.text);
+
+});
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<p>Same as parent class.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<p>Same as parent class.</p>
+
+<h3>readline</h3>
+
+<p>Call <code>readline()</code> to get the user input. A String is returned.</p>
+
+<hr />
+
+				<br/><br/>
+			</div>
+		</div>
+		<div id="footer"> by teknopaul </div>
+	</div>
+	<br/><br/>
+  </body>
+</html>
