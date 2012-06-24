@@ -49,4 +49,4 @@ tui.EditorInput.prototype.edit = function() {
 		}
 	}
 	else return errno;
-
+}
