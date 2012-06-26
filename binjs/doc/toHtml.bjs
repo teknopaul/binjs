@@ -17,59 +17,59 @@ function makeIndex() {
 
 	cat html/header.html | sed -e "s/@TITLE@/#!\/bin\/js/g" \
 						 | sed -e "s/@EXTRA_CSS@/tab-selected/g" \
-			> ./html/index.html
+			> ./index.html
 
-	echo '<img src="binjs_64x64.png" id="logo"/>' >> ./html/index.html
+	echo '<img src="img/binjs_64x64.png" id="logo"/>' >> ./index.html
 	
-	echo "<h1>/bin/js Documentation</h1>" >> ./html/index.html
+	echo "<h1>/bin/js Documentation</h1>" >> ./index.html
 	
-	echo '<h3>Overviews</h3>' >> ./html/index.html
+	echo '<h3>Overviews</h3>' >> ./index.html
 	
-	echo '<ul>' >> ./html/index.html
+	echo '<ul>' >> ./index.html
 		
 	for (var i = 0 ; i < toc.length ; i++) {
 	
 		$.setEnv("SRC", toc[i].src);
 		$.setEnv("DEST", toc[i].dest);
-		echo '<li><a href="' $DEST '">' $SRC '</a></li>' >> ./html/index.html
+		echo '<li><a href="' $DEST '">' $SRC '</a></li>' >> ./index.html
 	
 	}
-	echo "</ul>" >> ./html/index.html
+	echo "</ul>" >> ./index.html
 	
-	echo "<br/>" >> ./html/index.html
+	echo "<br/>" >> ./index.html
 	
 	
-	echo '</br/><br/><br/><div class="created">Generated from source on ' >> ./html/index.html
-	date >> ./html/index.html
-	echo '</div>' >> ./html/index.html
+	echo '</br/><br/><br/><div class="created">Generated from source on ' >> ./index.html
+	date >> ./index.html
+	echo '</div>' >> ./index.html
 	
-	cat html/footer.html >> ./html/index.html
+	cat html/footer.html >> ./index.html
 	
-	$.info(1,"Generated", "./html/index.html");
+	$.info(1,"Generated", "./index.html");
 }
 
 function makeReferences() {
 
 	cat html/header.html | sed -e "s/@TITLE@/#!\/bin\/js/g" \
 						 | sed -e "s/@REFS_CSS@/tab-selected/g" \
-			> ./html/References.html
+			> ./References.html
 
-	echo '<img src="binjs_64x64.png" id="logo"/>' >> ./html/References.html
+	echo '<img src="binjs_64x64.png" id="logo"/>' >> ./References.html
 
-	perl ./Markdown.pl _References.md >> ./html/References.html
+	perl ./Markdown.pl _References.md >> ./References.html
 	
-	cat html/footer.html >> ./html/References.html
+	cat html/footer.html >> ./References.html
 	
 }
 
 function makeCoverPage() {
 
 	cat html/header.html | sed -e "s/@TITLE@/#!\/bin\/js/g" \
-			> ./html/CoverPage.html
+			> ./CoverPage.html
 
-	perl ./Markdown.pl _CoverPage.md >> ./html/CoverPage.html
+	perl ./Markdown.pl _CoverPage.md >> ./CoverPage.html
 	
-	cat html/footer.html >> ./html/CoverPage.html
+	cat html/footer.html >> ./CoverPage.html
 	
 }
 
@@ -84,25 +84,25 @@ for (var i = 0 ; i < files.length ; i++) {
 		$.setEnv("NEXT", next);
 	}
 	else {
-		$.setEnv("NEXT", "../api/html/index.html");
+		$.setEnv("NEXT", "api/index.html");
 	}
 	
 	$.setEnv("SRC", src);
 	$.setEnv("DEST", dest);
 
-	cat html/header.html | sed -e "s/@TITLE@/$SRC/g" > ./html/$DEST
+	cat html/header.html | sed -e "s/@TITLE@/$SRC/g" > ./$DEST
 
-	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./html/$DEST 
+	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./$DEST 
 
-	perl ./Markdown.pl  $SRC >> ./html/$DEST
+	perl ./Markdown.pl  $SRC >> ./$DEST
 	
-//	echo '<p class="created">Generated from source on ' `date` '</p>' >> ./html/$DEST
+//	echo '<p class="created">Generated from source on ' `date` '</p>' >> ./$DEST
 	
-	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./html/$DEST 
+	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./$DEST 
 	
-	cat html/footer.html >> ./html/$DEST
+	cat html/footer.html >> ./$DEST
 	
-	$.info(1,"Generated", "./html/" + $.env.DEST);
+	$.info(1,"Generated", "./" + $.env.DEST);
 
 }
 

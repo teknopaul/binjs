@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>FileInput.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../style/style.css" rel="stylesheet"/>
+	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab" id="doc-index-tab">
+				  <a class="vertical" href="../../index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="../index.html">API index</a>
+				</div>
+				<div class="tab @EXTRA_CSS@" id="tui-index-tab">
+				  <a class="vertical" href="index.html">TUI index</a>
+				</div>
+				<div class="tab" id="references-index-tab">
+				  <a class="vertical" href="../../References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="FloatInput.html" class=next>➠</a>
+<h1>FileInput</h1>
+
+<p>Sublasses tui.Input and accepts any text but additionally provides tab completion for files and directories.  The interface is not exactly the same as bash tab completion but is close enough. Future versions may provide a closer match to bash's features.
+Entering a tilde <code>~</code> and pressing tab expands to the user's home directory, but other tilde expansions are not supported.</p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/tui/FileInput.js");</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>tui.FileInput</li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes no arguments.</p>
+
+<pre><code>var input = new tui.FileInput();
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<p>Same as parent class.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>readline</h3>
+
+<p>Call <code>readline()</code> to get the user input. A String is returned that may be null in error conditions.</p>
+
+<h3>requireFile</h3>
+
+<p>If this method is called, prior to calling readline, the user is not permitted to continue until a valid existing file is entered.  The text flashes red if the current text is not an exisiting file.  the user need not have read access tot he file but must be able to traverse all the directories up to the path for the file to be accepted.</p>
+
+<h3>requireDir</h3>
+
+<p>If this method is called, prior to calling readline, the user is not permitted to continue until a valid existing directory is entered.  The text flashes red if the current text is not a directory.</p>
+
+<hr />
+
+<h2>Usage</h2>
+
+<pre><code>#!/bin/js
+binjs_import("~lib/tui/FileInput.js");
+
+var input = new tui.FileInput();
+
+input.requireDir();
+
+$.println("Enter a directory");
+
+var text = input.readline();
+</code></pre>
+<a href="FloatInput.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

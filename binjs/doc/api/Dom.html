@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<title>@TITLE@</title>
+	<title>Dom.md</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../style/style.css" rel="stylesheet"/>
 	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
@@ -27,3 +27,51 @@
 				<div id="content">
 				<div id="main">
 			
+<a href="File.html" class=next>➠</a>
+<h1>Dom</h1>
+
+<p>XML Dom parser and implementation</p>
+
+<p>Dom.js is a clone of nodejs dom-js</p>
+
+<p>See <a href="../../html/Xml.html">Xml parsing</a></p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p>The import should be <code>~lib/Xml.js</code> which imports both Sax and Dom.</p>
+
+<p><code>binjs_import("~lib/Xml.js")</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>Dom</li>
+<li>Element</li>
+<li>Text</li>
+<li>Comment</li>
+<li>ProcessingInstruction</li>
+<li>CDATASection</li>
+</ul>
+
+<hr />
+
+<h3>/bin/js Usage</h3>
+
+<pre><code>var dom = new Dom();
+var root = dom.parser().parse(xmlString);
+</code></pre>
+<a href="File.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

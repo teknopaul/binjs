@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Exceptions.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="style/style.css" rel="stylesheet"/>
+	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab @EXTRA_CSS@" id="doc-index-tab">
+				  <a class="vertical" href="index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="api/index.html">API index</a>
+				</div>
+				<div class="tab" id="tui-index-tab">
+				  <a class="vertical" href="api/tui/index.html">TUI index</a>
+				</div>
+				<div class="tab @REFS_CSS@" id="references-index-tab">
+				  <a class="vertical" href="References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="Features.html" class=next>➠</a>
+<h1>Exceptions</h1>
+
+<h2>throw</h2>
+
+<p>Bash has pretty limited exception handling and JavaScript is faily good with support for <code>try</code> , <code>catch</code> and <code>finally</code>.</p>
+
+<p>Generally to trap an error in a bash script the idiom is to OR an exit commant to the command line so that the script is interrupted if the line being executed fails.</p>
+
+<pre><code>./callScript.sh || exit 3
+</code></pre>
+
+<p>This enables a script to bomb out before it does any damage if there is an unexpected error, but its not very elegant.  JavaScript code can wrap a block of code with a try/catch block and exceptions can be thrown. /bin/js provides a mechanism by which bash commands can integrate error handling with JavaScript.</p>
+
+<pre><code>./callScript.sh || throw "script failed"
+</code></pre>
+
+<p>Throw is a bash builtin that has been added to facilitate integrating JavaScript and bash error handling.  The syntax is similar to the exit idiom but when the throw is called a JavaScript <code>Error</code> object is created with the String as its message and can be caught later in the script.  Notice that when the bash builtin <code>throw</code> is called a String is provided and the builtin creates the <code>Error</code> object, but when JavaScript exceptions are thrown the script should specify the <code>Error</code> explicitly.</p>
+
+<pre><code>try {
+
+    ...
+
+    ./callScript.sh || throw "script failed"
+
+    ...
+
+    logevent 23 || throw "logging failed"
+
+    ...
+
+    if (jsError) { 
+        throw new Error("JavaScript error");
+    }
+
+}
+catch(error) { // object caught is a JavaScript Error
+    $.error(1,"Exception caught", error.message);
+}
+</code></pre>
+
+<p>You can throw JavaScript Strings or other Objects as you might in any JavaScript code but this makes integrating exception handlers with bash exceptions more difficult since there is, currently, no way to make the bash builtin throw anything other than an Object containing a String message.</p>
+
+<p>N.B. the throw builtin can only be used in a bash statement at the end of the command (after || ), because the preparser determins <code>throw</code> to be JavaScript at the start of a line.</p>
+
+<h2>errno</h2>
+
+<p>The typical error handling mechanisn for a bash script is to check the <code>$?</code> variable, which is the last exit value of a command run by bash.  Since <code>if</code> and <code>switch</code> statements are handled by JavaScript in /bin/js the <code>$?</code> value is copied to the global <code>errno</code> variable which provides a code pattern that should be familiar to C developers, where <code>errno</code> is common.</p>
+
+<pre><code>./someScript.sh
+
+switch(errno) {
+    case 0 : {
+        echo all OK
+    }
+    case 1 : {
+        throw new Error("File not found");
+    }
+    case 2 : {
+        throw new
+    }
+}
+</code></pre>
+<a href="Features.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

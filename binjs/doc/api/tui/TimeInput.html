@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>TimeInput.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../style/style.css" rel="stylesheet"/>
+	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab" id="doc-index-tab">
+				  <a class="vertical" href="../../index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="../index.html">API index</a>
+				</div>
+				<div class="tab @EXTRA_CSS@" id="tui-index-tab">
+				  <a class="vertical" href="index.html">TUI index</a>
+				</div>
+				<div class="tab" id="references-index-tab">
+				  <a class="vertical" href="../../References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="ValidatedTextInput.html" class=next>➠</a>
+<h1>TimeInput</h1>
+
+<p>Sublasses tui.Input and only permits time to be entered in the form <code>00:00</code>.
+This input class only validates the String is in the correct form not that the time is valid.
+i.e. <code>25:99</code> is permitted and should be validated by the user.
+Future versions of this class will be more strict with user input.</p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/tui/TimeInput.js");</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>tui.TimeInput</li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes no arguments.</p>
+
+<pre><code>var input = new tui.TimeInput();
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<p>Same as parent class.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<p>Same as parent class.</p>
+
+<h3>readline</h3>
+
+<p>Call <code>readline()</code> to get the user input. A String is returned that may be <code>null</code> in error conditions.</p>
+
+<hr />
+
+<h2>Usage</h2>
+
+<pre><code>#!/bin/js
+binjs_import("~lib/tui/TimeInput.js");
+
+var tinput = new tui.TimeInput();
+
+$.println("Enter a time in the fomrat 00:00");
+
+var time = tinput.readline();
+</code></pre>
+<a href="ValidatedTextInput.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

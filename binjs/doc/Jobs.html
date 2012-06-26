@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Jobs.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="style/style.css" rel="stylesheet"/>
+	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab @EXTRA_CSS@" id="doc-index-tab">
+				  <a class="vertical" href="index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="api/index.html">API index</a>
+				</div>
+				<div class="tab" id="tui-index-tab">
+				  <a class="vertical" href="api/tui/index.html">TUI index</a>
+				</div>
+				<div class="tab @REFS_CSS@" id="references-index-tab">
+				  <a class="vertical" href="References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="MagicVars.html" class=next>➠</a>
+<h1>Job Control</h1>
+
+<p>/bin/js has job control from bash.</p>
+
+<h2>Where is setTimeout()</h2>
+
+<p>JavaScript in the browser and in nodejs have a <code>setTimeout</code> method which is used to kick off an operation and wait for it to finish.  Both nodejs and the browser call this asynchronously but in /bin/js everthing is single-threaded and synchronous so <code>setTimeout()</code> makes no sense.  Instead we have a <code>sleep</code> method and job control.</p>
+
+<h2>Sleep</h2>
+
+<p>Instead of setting a timeout you can just sleep the main thread with the following method.</p>
+
+<pre><code>$.sleep(millis);
+</code></pre>
+
+<p>You can call the native /bin/sleep as well, whose argument is in seconds.</p>
+
+<pre><code>sleep 1
+</code></pre>
+
+<h2>Forking processes</h2>
+
+<p>While /bin/js supports only one thread in the JavaScript it does support managing multiple processes via bash's job control.  Simply calling a bash statement followed by an ampersand <code>&amp;</code> will fork a process and enter the process into bash's job control.</p>
+
+<pre><code>wget http://code.abnoctus.com/my-file.tar.gz &amp;
+</code></pre>
+
+<p>Processes started this way can be looked up using the <code>$.getJobs()</code> method.</p>
+
+<pre><code>while ($.getJobs().length &gt; 0) {
+    var jobsArray = $.getJobs();
+    $.println("Waiting for process: " + jobsArray[0].pid);
+    $.sleep(500);
+}
+</code></pre>
+
+<p>In the above code the jobsArray is not updated as the status of the jobs changes, you must call <code>getJobs()</code> again to get an update.</p>
+
+<p>Each job in the array is represented as a Job Object with the following properties;</p>
+
+<pre><code>{
+  id : Integer,
+  pid : Integer,
+  command : String,
+  running : Boolean,
+  state : Integer
+}
+</code></pre>
+<a href="MagicVars.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Table.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../../style/style.css" rel="stylesheet"/>
+	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab" id="doc-index-tab">
+				  <a class="vertical" href="../../index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="../index.html">API index</a>
+				</div>
+				<div class="tab @EXTRA_CSS@" id="tui-index-tab">
+				  <a class="vertical" href="index.html">TUI index</a>
+				</div>
+				<div class="tab" id="references-index-tab">
+				  <a class="vertical" href="../../References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="Throbber.html" class=next>➠</a>
+<h1>Table</h1>
+
+<p>Renders a table of data</p>
+
+<hr />
+
+<h2>Import</h2>
+
+<p><code>binjs_import("~lib/tui/Table.js")</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>tui.Table</li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes two optional arguments.</p>
+
+<pre><code>var progress = new tui.Throbber(arg0, arg1);
+</code></pre>
+
+<h3>arg0</h3>
+
+<p>If <code>arg0</code> is a string, it is assumed to be table data and i sparsed splitting columns by spaces and rows by <code>\n</code> new line characters.</p>
+
+<p>If <code>arg0</code> is an array it is assumed to be table data where <code>arg0</code> is an array of strings, the headers; <code>arg1</code>is the table of data which is 2 dimensional array containing a grid of data, data values do not need to be strings.</p>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<h3>divider</h3>
+
+<p>The character used to divide the columns, deffaults to a unicode full height pipe <code>|</code>.  Can be changed to a normal pipe <code>|</code> for ascii output.</p>
+
+<h3>compress</h3>
+
+<p>Consider one or more sequential delimiters as a single delimiter, when parsing <code>arg0</code> during construction.  this permist preformatted tables padded with spaces to be parsed.</p>
+
+<h3>titles</h3>
+
+<p>The column titles, must contain Strings</p>
+
+<h3>data</h3>
+
+<p>The grid of data, may contains Strings and Numbers</p>
+
+<h3>widths</h3>
+
+<p>widths can be set to an array of integes to define the column widths, if not set widths will be calcualted from the longest data items.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>parse</h3>
+
+<p>Takes two arguments  <code>string</code> &amp; <code>delim</code>,  the string is the tablle data and the delim is the column separator, rows are assumed to be serarated by <code>\n</code> new lines.</p>
+
+<h3>print</h3>
+
+<p>Print the table to the console.</p>
+
+<h3>toString</h3>
+
+<p>Return the table as a string, for inclusion in a report, the string representation has no ESC characters but is padded.</p>
+<a href="Throbber.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

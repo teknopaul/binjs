@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Arguments.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="style/style.css" rel="stylesheet"/>
+	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab @EXTRA_CSS@" id="doc-index-tab">
+				  <a class="vertical" href="index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="api/index.html">API index</a>
+				</div>
+				<div class="tab" id="tui-index-tab">
+				  <a class="vertical" href="api/tui/index.html">TUI index</a>
+				</div>
+				<div class="tab @REFS_CSS@" id="references-index-tab">
+				  <a class="vertical" href="References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="EnvironmentVariables.html" class=next>➠</a>
+<h1>Arguments to the script</h1>
+
+<p>When executing a /bin/js scripts command line arguments are passed to both bash and JavaScript. If a script is run as follows.</p>
+
+<pre><code>./myscript.bjs one two three
+</code></pre>
+
+<p>Bash is provided the environment variables <code>$0 - $4</code> and in JavaScript the global variables <code>argc</code> and <code>argv</code> are set.  <code>argc</code> is redundant info in JavaScript. </p>
+
+<p>Arguments can be accessed as follows</p>
+
+<pre><code>$.println("Args according to JavaScript")
+for (var i = 0; i &lt; argc ; i++ ) {
+    $.println( i + ": '" + argv[i] + "'" );
+}
+
+echo "Args according to bash"
+echo "0=$0 1=$1 2=$2 3=$3 4=$4"
+</code></pre>
+
+<p>N.B. <code>argc</code> and <code>argv</code> are not known to the preparser so for example the following would not be parsed as JavaScript if on its own line in the script.</p>
+
+<pre><code>argc++;
+</code></pre>
+
+<p>Code should not change the values of <code>argc</code> and <code>argv</code>, they are writeable currently but they may be made immutable in a future version.</p>
+<a href="EnvironmentVariables.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

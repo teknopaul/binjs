@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Xml.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="style/style.css" rel="stylesheet"/>
+	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab @EXTRA_CSS@" id="doc-index-tab">
+				  <a class="vertical" href="index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="api/index.html">API index</a>
+				</div>
+				<div class="tab" id="tui-index-tab">
+				  <a class="vertical" href="api/tui/index.html">TUI index</a>
+				</div>
+				<div class="tab @REFS_CSS@" id="references-index-tab">
+				  <a class="vertical" href="References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="api/index.html" class=next>➠</a>
+<h1>Xml Support</h1>
+
+<p>Modifying XML files in scripts is fiddly with only Linux tools like awk and sed at your disposal so /bin/js comes with an XML parser built in, it is lifted from nodejs code with a couple of changes to make it more fitting for synchronous scripts.</p>
+
+<h2>Usage</h2>
+
+<h3>Dom</h3>
+
+<p>The following header is needed to import the xml libraries.  This imports both <code>Sax</code> and <code>Dom</code> parsers, Dom uses Sax.</p>
+
+<pre><code>binjs_import("~lib/Xml.js");
+</code></pre>
+
+<p>To parse a document to a dom first read it as a JavaScript String then pass it to the Dom parser.</p>
+
+<pre><code>var text = new File("./doc.xml").read();
+var parser = new Dom();
+var rootElement = parser.parse(text);
+</code></pre>
+
+<p>A heirarchy of objects is returned, inspect an example with <code>JSON.stringify()</code> to understand how to navigate the Dom once parsed.</p>
+
+<pre><code>$.println(JSON.stringify(rootElement));
+</code></pre>
+
+<p>The object can be modified and written back out with <code>dom.toXml()</code></p>
+
+<h3>Sax</h3>
+
+<p>To parse with Sax the same import is needed, or you can just import <code>Sax.js</code>.</p>
+
+<pre><code>binjs_import("~lib/Xml.js");
+</code></pre>
+
+<p>or </p>
+
+<pre><code>binjs_import("~lib/Sax.js");
+</code></pre>
+
+<p>Parsing with Sax requires passing callback functions which is nodejs's style of working. The Sax nodejs parser can be used as synchronous code by passing the whole XML document as one string to the <code>write</code> method, as follows.</p>
+
+<pre><code>var parser = new Sax().parser();
+var text = new File("./doc.xml").read();
+
+var xmlVer = "";
+parser.onopentag = function (node) {
+    if (node.name == "abc") 
+      xmlVer = node.attributes["version"];
+};
+
+parser.write(text).close();
+
+$.println("Xml version is: " + xmlVer);
+</code></pre>
+<a href="api/index.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

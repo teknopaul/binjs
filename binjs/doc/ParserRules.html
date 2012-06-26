@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>ParserRules.md</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="style/style.css" rel="stylesheet"/>
+	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<div id="tabs">
+				<div class="tab @EXTRA_CSS@" id="doc-index-tab">
+				  <a class="vertical" href="index.html">Doc index</a>
+				</div>
+				<div class="tab" id="api-index-tab">
+				  <a class="vertical" href="api/index.html">API index</a>
+				</div>
+				<div class="tab" id="tui-index-tab">
+				  <a class="vertical" href="api/tui/index.html">TUI index</a>
+				</div>
+				<div class="tab @REFS_CSS@" id="references-index-tab">
+				  <a class="vertical" href="References.html">References</a>
+				</div>
+			</div>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<a href="SimpleSyntax.html" class=next>➠</a>
+<h1>/bin/js PARSER RULES</h1>
+
+<h2>Overview</h2>
+
+<p>Each line of the #!/bin/js script is interpreted as JavaScript OR bash. The script is interpreted line by line determining if each line is JavaScript or an embedded bash command. The idea is much like embedded SQL, /bin/js is bash embedded in JavaScript.</p>
+
+<p>Thus, the following line is NOT possible, since it would be both bash and JavaScript.</p>
+
+<pre><code>if (true) cp file1 file2
+</code></pre>
+
+<p>Correct syntax must have the JavaScript and bash on separate lines.</p>
+
+<pre><code>if (true) {
+  cp file1 file2
+}
+</code></pre>
+
+<p>Any developer familiar with Javascript and bash should be able to immediatly determine which line is Javascript and which is bash from reading the code. When writing the code, the rules to determine the language must be known. Some code could be both valid JavaScript and bash to look at, this document defines the rules the preparser has for determining the language of each line.</p>
+
+<p>JavaScript and bash are fairly flexible with syntax rules, /bin/js is less flexible, this enables the preparser to determine the language.</p>
+
+<h2>JavaScript tokens</h2>
+
+<p>Reserved tokens determine that a line is JavaScript, there are not many tokens and they should be familiar.
+N.B. JavaScript tokens often overrides bash builtins.</p>
+
+<h3>If</h3>
+
+<p>If a line starts with <code>if</code> it is treated as JavaScript. Leading whitespace is ignored when reading the first token on the line.</p>
+
+<ul>
+<li>if       - Thus bash <code>if</code> is not interpreted by bash ever. JavaScript <code>if</code> syntax uses <code>()</code> and <code>{}</code> as you would expect it to.</li>
+<li>else     </li>
+</ul>
+
+<h3>JavasScript looping is used</h3>
+
+<p>JavaScript loops and crontrol is prefered over bash loops since K&amp;R got there first (and JS it is much prettier).
+If a line starts with one of these tokens it is treated as Javascript.</p>
+
+<ul>
+<li>for      - Thus no bash for loops</li>
+<li>while     </li>
+<li>do        </li>
+<li>case      </li>
+<li>break    </li>
+<li>continue</li>
+<li>default</li>
+<li>delete</li>
+<li>return</li>
+<li>switch</li>
+<li>with</li>
+<li>in</li>
+</ul>
+
+<h3><code>try/catch</code> statements are treated as JavaScript</h3>
+
+<ul>
+<li>try</li>
+<li>catch</li>
+<li>finally</li>
+<li>throw</li>
+</ul>
+
+<h3>Functions</h3>
+
+<p>Only JavaScript functions are allowed</p>
+
+<ul>
+<li>function - at the start of the line marks the line as JavaScript thus bash function is not permitted.</li>
+</ul>
+
+<h3>Variables</h3>
+
+<p>Both bash environment variables and JavaScript variables are supported since the syntax is distinct.</p>
+
+<p>To define a JavaScript variable use <code>var</code> as a prefix, with a space. A semicolon to terminate the line is required by /bin/js, even if not by JavaScript.</p>
+
+<pre><code>var x = false;
+</code></pre>
+
+<p>var is obligatory. A JavaScript variable <code>x</code> is created with a boolean <code>false</code>.</p>
+
+<p>To define a bash environment variable there is no var keyword, no spaces and no semicolon, exactly as you would in a bash script.</p>
+
+<pre><code>x=true
+</code></pre>
+
+<p>No white space is permitted per bash rules. An environment variable <code>x</code> with string value <code>"true"</code> is created.</p>
+
+<h3>Pre-existing variables</h3>
+
+<pre><code>x = true;
+</code></pre>
+
+<p>If <code>x</code> already exists as JavaScript variable which the preparser is aware of, an assignement is treated as JavaScript. JavaScript takes priority and <code>x</code> is set to boolean <code>true</code>.
+If <code>x = true</code> is written when <code>x</code> is not a JavaScript var already, it is an error, since the line is treated as bash and bash does not support the whitespace. 
+It is important to realise that variables assignements are only treated as JavaScript if the preparser already knows about the variable.</p>
+
+<pre><code>var x = false; // preparser learns about `x` from the `var` statement 
+x = true;      // preparser knows to treat `x` as JavaScript
+y = true;      // error, preparser does not know about `y`.
+this.y = 23;   // `this.` is always treated as JavaScript
+</code></pre>
+
+<p>Since variables may be created in included files or outside the view of the current script a naming convention is useful. It is highly recommended that all JavaScript variables start with a lowerCase letter and follow camelCase conventions and that all bash environment variables are UPPER_CASE with underscores. Static String variables created in JavaScript can be made available to bash so it is recommended they follow bash conventions.</p>
+
+<pre><code>var JS_STATIC_VAR = "My String";
+</code></pre>
+
+<h3>Other JavaScript keywords</h3>
+
+<p>Lines starting with the following keywords are interpteted as JavaScript.</p>
+
+<ul>
+<li>new</li>
+<li>return</li>
+<li>blank lines</li>
+<li>this </li>
+<li>instanceof</li>
+<li>typeof</li>
+</ul>
+
+<p>The following are little used but also mark the line as JavaScript.</p>
+
+<ul>
+<li>goto</li>
+<li>void</li>
+<li>debugger</li>
+</ul>
+
+<h3>JavaScript Objects</h3>
+
+<p>JavaScript Objects like String do NOT mark the line as JavaScript.</p>
+
+<ul>
+<li><p>Number.toFixed(23.0);        - Wrong, sent to Bash as a syntax error, and useless anyway.</p></li>
+<li><p>var s = Number.toFixed(23.0);    - Correct, N.B. it is the prefix <code>var</code> that defines the row as JavaScript.</p></li>
+</ul>
+
+<p>Global functions from JavaScript also do NOT mark the line as JavaScript.</p>
+
+<ul>
+<li><p>parseInt("23");          - Wrong, sent to Bash as a syntax error, and useless anyway</p></li>
+<li><p>var i = parseInt("23");      - Correct, N.B. it is the prefix <code>var</code> that defines the row as JavaScript.</p></li>
+</ul>
+
+<h3>Reserved tokens</h3>
+
+<p>Some tokens are reserved by the /bin/js interpreter and strictly speaking are neither JavaScript or bash and
+should never be used at the start of a line.</p>
+
+<ul>
+<li>#!/bin/js    - The first line is treated as a shebang, it is NOT optional, and it must be the first line.</li>
+<li>exit     - <code>exit</code> performs a bespoke exit in C (neither JS nor bash) and is covered separatly.</li>
+<li>binjs_   - Any token that starts <code>binjs_</code> is reserved for current or future use. Technically, in some versions, you can write <code>binjs_exec("ls -l");</code>  but this defeats the object of scripting in /bin/js and is not guaranteied to be compatible with future versions.</li>
+<li>\        - Lines may not start with a forward slash <code>\</code>.</li>
+<li>$.       - <code>$</code> is a valid JavaScript variable prefix but is reserved for /bin/js usage, sorry jQuery fans. Using it would make the code ugly since it is the marker for bash vars anyway. Since it is typical to start a bash line with <code>$CMD</code> <code>$</code> itself is NOT treated as JavaScript only <code>$.</code> is JavaScript.</li>
+</ul>
+
+<p>Some other JavaScript objects are reserved for future use.</p>
+
+<ul>
+<li>global</li>
+<li>binjs</li>
+<li>js</li>
+</ul>
+
+<p>Any curly bracket on a line with nothing else but whitespace is treated as JavaScript.</p>
+
+<ul>
+<li>{        - K&amp;R style functions or { on its own line are thus both supported.</li>
+<li>}        - Closing curly brackets should always be on a new line.</li>
+</ul>
+
+<p>e.g. You can use K&amp;R functions like</p>
+
+<pre><code>function my_func()
+{
+  cp file 1 file2
+}
+</code></pre>
+
+<p>or Java style like</p>
+
+<pre><code>function my_func() {
+  cp file 1 file2
+}
+</code></pre>
+
+<p>As you should know by now, each line is processed as one language or the other so the following is wrong.</p>
+
+<pre><code>function my_func() {
+  cp file 1 file2 }
+</code></pre>
+
+<h3>Comments</h3>
+
+<ul>
+<li>#    - Lines starting with <code>#</code> are re-commented with <code>//</code>, the JavaScript comment, by the preparser. Thus lines starting with <code>#</code> are niether JavaScript nor bash.</li>
+<li>//   - JavaScript line comments are treated as JavaScript.</li>
+<li>/**/ - Multiline comments are treated as JavaScript, but not recomended, code is less error prone if each line
+  individually expresses itself.</li>
+</ul>
+
+<h3>Long Strings</h3>
+
+<p>Long strings sometimes need to be broken up in JavaScript, the <code>+</code> operator marks a line as JavaScript to facilitate this.</p>
+
+<pre><code>var myStr = "something "
+            + "that is not obvious "
+            + "is that + at the end of the line "
+            + "would not work.";
+</code></pre>
+
+<p>Notice that you can not place the <code>+</code> operator at the end of the line.</p>
+
+<h3>Existing variable known to the preparser</h3>
+
+<p>Existing JavaScript objects and functions mark a line as JavaScript which should be natural when used normally.</p>
+
+<pre><code>var x = new Object();
+x.callFunc();  // `x` is known as JavaScript and thus interpreted.
+
+function funk() { 
+  return true; 
+}
+funk();  // `funk` is known as JavaScript and thus interpreted.
+</code></pre>
+
+<p>It is the pre-parser that records existing variable not the JavaScript interpreter, so only variable created on a new line with <code>var</code> are known to the interpreter.</p>
+
+<pre><code>var x,y,z;
+y.att = 1234; // `y` is NOT known as JavaScript variable by the pre-parser
+</code></pre>
+
+<p>Thus each variable should be on its own line with its own <code>var</code> statement.</p>
+
+<pre><code>var x;
+var y;
+var z;
+</code></pre>
+
+<p>Multi-line assignments could theoreticallly be fixed in a future version so do not rely on this and always use UPPER_CASE unique varable names for bash variables.</p>
+
+<pre><code>var x,y,z;
+y=my_file.tar        // may behave differently in a future version
+</code></pre>
+
+<p>Using lower case variables for bash in /bin/js is likely to confuse those that read your code and future versions of the preparser, so dont.</p>
+
+<p>Similarly, you should avoid silly variable names that clash with what might appear to be a bash command.</p>
+
+<pre><code>var cp = new Object();
+cp .file  .otherfile   // `cp` exists as a JavaScript variable known to the preparser
+</code></pre>
+
+<p>In the above case <code>cp</code> is intepreted as JavaScript and the code breaks, <code>cp</code> was a pretty stupid name for a variable even if it was made to work. There is nothing to stop you creating bash variables called <code>mv</code>, <code>cp</code>, <code>tar</code> and other such nonsense except your own sense of what is fair to your fellow man.</p>
+
+<h3>Everything else is bash</h3>
+
+<p>Any line not determined to be JavaScript by the above rules is treated as bash.</p>
+
+<p>Any line starting with the token <code>echo</code> is always interpreted as bash.</p>
+
+<h3>Line continuation</h3>
+
+<p>As with bash, any line that starts to be interpreted as bash and is terminating in <code>\</code> and a new line <code>\n</code> 
+results in the following line being treated as a continuation of the current line.</p>
+
+<pre><code>cat file1 \
+    file2 \
+    file3 &gt; output.txt
+</code></pre>
+
+<p>Unfortunalty no such rule is available for JavaScript and since by default unknown lines are treated as bash, thus long Javascript lines cause errors.</p>
+
+<p>The following does not work.</p>
+
+<pre><code>if (
+  clause1 &amp;&amp;
+  clause2 &amp;&amp;
+  clause3
+) {
+  cp file file
+}
+</code></pre>
+
+<p>N.B. the following might work for the wrong reasons, if each clause were correctly defined with <code>var</code> statements. However this is strongly discouraged since in most situations multi-line Javascript statements fail.</p>
+
+<pre><code>if ( clause1 &amp;&amp;
+     clause2 &amp;&amp;
+     clause3 ) 
+{
+  cp file file
+}
+</code></pre>
+
+<p>The following is correct.</p>
+
+<pre><code>if ( clause1 &amp;&amp; clause2 &amp;&amp; clause3 ) {
+  cp file file
+}
+</code></pre>
+
+<p>Those of you that code in vi with an 80 char window width, no word wrap and are used to code with forced line lengths should get strict about terminating with semicolons and turn on visible line breaks! The general rule is that long lines with dynamic word wrapping is preferred, however the following conveniences are provided.</p>
+
+<ul>
+<li>Lines starting with <code>&amp;</code> or <code>|</code>  are JavaScript, since they can not be bash.</li>
+<li>Lines starting with <code>(</code> or <code>)</code> or <code>+</code> are JavaScript, despìte being valid bash.</li>
+</ul>
+
+<p>This enables multi-line JavaScript constructs as follows</p>
+
+<pre><code>if ( clause1
+     &amp;&amp; clause2
+     &amp;&amp; clause3 ) {
+  cp file file
+}
+
+if ( clause1
+     || clause2
+     || clause3 ) {
+  cp file file
+}
+
+var flags = VERBOSE 
+          | LARGE
+          | SILLY
+          | COMPLEX;
+
+var sqlString = "SELECT "
+              + "name, email "
+              + "FROM contacts"
+              + "WHERE name = ?";
+</code></pre>
+
+<p>Multi-line JavaScript of this form is considered bad form and generally frowned upon in the world of /bin/js since it implies to noobs that trailing <code>+</code> opr <code>&amp;</code> or <code>|</code> might work, they dont, and never will.  But it is hopefully obvious why this is needed for setting up very long constants.</p>
+
+<h3>Assorted wierd rules</h3>
+
+<h3>Randomly banned stuff</h3>
+
+<p>The following rules apply to encourage you to write legible scripts.</p>
+
+<ul>
+<li>Lines starting with <code>[</code> or <code>]</code> are errors (despite being valid JavaScript and Bash)</li>
+<li>Lines starting with <code>"</code> or <code>'</code> are errors (despite being valid JavaScript and Bash)</li>
+<li>Lines starting with whitespace then <code>#</code> are errors</li>
+</ul>
+
+<h3>Curly bracket rules</h3>
+
+<p>JavaScript blocks must be terminated with <code>}</code> on its own line.</p>
+
+<pre><code>if (x == true) {
+  echo hello }   // wrong } sent to bash and is a syntax error
+
+if (x == true) {
+  echo hello 
+}   // correct
+</code></pre>
+
+<p>You may be able to break these rules in a given version of the preparser but you should not do so for forward combatability.</p>
+
+<pre><code>if (x == true) { y=23 }   // wrong, but may not be validated, 
+                          // may run as JavaScript and may 
+                          // do wierd stuff in a future version.
+
+if (x == true) { 
+  var y = 23; 
+}   // correct and will work in future versions
+
+if (x == true) { 
+  Y=23
+}   // correct and assignement is bash as a string
+</code></pre>
+
+<h3>Forcing interpretation</h3>
+
+<p>If you are really stuck and need to force a line to be bash write</p>
+
+<pre><code>echo "" &amp;&amp; goto       - runs a program called `goto`
+</code></pre>
+
+<p>And conversly to force a line to be JavaScript write</p>
+
+<pre><code>if (true) SomeStupidFunction();
+</code></pre>
+
+<p>tries to execute as a function <code>SomeStupidFunction</code>, despite the fact that <code>SomeStupidFunction</code> has not been defined properly (perhaps in a bespoke library).</p>
+
+<p>These two tricks will work currently, they should not be necessary, but since in JavaScript functions can be defined any where you can get yourself in a mess. So <code>if(true)</code>  and <code>echo "" &amp;&amp;</code> will always be available as a get out clause.</p>
+
+<h3>Hidden functions and variables</h3>
+
+<p>if, instead of using </p>
+
+<pre><code>function normalFunction() {
+   ...
+</code></pre>
+
+<p>you write</p>
+
+<pre><code>if (x = 1234) normalFunction = function() {}
+</code></pre>
+
+<p>It might well execute,  but you can not execute </p>
+
+<pre><code>normalFunction();
+</code></pre>
+
+<p>since the PRE-parser does not know about the function and assumes it is a bash statement.</p>
+
+<p>The same "feature" applies to vars.</p>
+
+<pre><code>var x,y,z;          // y and z know to JavaScript but not to the pre-parser
+if (true) var x,y,z;    // x, y and z know to JavaScript but not to the pre-parser
+{ var x,y,z };          // x, y and z know to JavaScript but not to the pre-parser
+</code></pre>
+
+<p>Avoid this kind of mess, keep things simple and stick to simple JavaScript syntax.</p>
+
+<p>If you need much more complicated JavaScript structures you should probalby be using nodejs.</p>
+
+<p>Skipping <code>{}</code> is strongly advised against and may not work in future versions</p>
+
+<pre><code>if (true)
+  cp file1 file2
+</code></pre>
+
+<h3>bash is interpreted line by line</h3>
+
+<p>All bash is interpreted line by line, so the old <code>EOF</code> trick is not avaialble in /bin/js. The following with NOT work as expected.</p>
+
+<pre><code>yum install $1 &lt;&lt; EOF
+y
+EOF
+</code></pre>
+
+<p>You can do other tricks</p>
+
+<pre><code>cat yesfile.txt | yum install
+</code></pre>
+
+<p>You can always export the code to a bash script and call it</p>
+
+<pre><code>./do_yes_yum.sh
+</code></pre>
+
+<h3>Semicolons</h3>
+
+<p>It is strongly recommended to terminate JavaScript lines a semicolons, and to not terminate bash lines with a semicolon. This in itself makes the code more simple to read. Typically bash script lines are not terminated with semis, the JavaScript community is divided on the issue but in C and C# and JavaScript semis are required so it should be natrual to see code lines terminated with semis. 
+/bin/js files are stricly neither bash nor JavaScript syntax so I get to call the shots :). The semis recomendation might start a flame war, but it stands as the recomendation, code may or may not work with or without semis since often code is passed directly to the bash or JavaScript intepreter without checking the end of the line.  If I'm feeling nasty I might hard code the necesity for semis in JavaScript in a future versions so watch out! There are no extra requirements for semis than where JavaScript permits them. For example, it may be required, in a future version to terminate with semis so that certain types of JavaScript line continuation or JSON notation can be accuratly determined.</p>
+
+<h3>Permitted characters in a JavaScript var</h3>
+
+<p>A JavaScript var name in the form</p>
+
+<pre><code>var xxx = true;
+</code></pre>
+
+<p>has more complicated rules that that of C since many Unicode tokens are permitted.</p>
+
+<p>e.g. in JavaScript  the symbol for Pi is permitted as a variable name.  <code>ñññ</code> is a valid JavaScript token.</p>
+
+<p>The actaul definision of what characters are permitted in a JavaScript is very complicated, see this thread</p>
+
+<p><a href="http://stackoverflow.com/questions/1661197/valid-characters-for-javascript-variable-names">http://stackoverflow.com/questions/1661197/valid-characters-for-javascript-variable-names</a></p>
+
+<p>This is too complicated for version 0.1 of /bin/js, so for now, all vars must conform to this simple rule.</p>
+
+<pre><code>c == '_' ||
+c == '$' ||
+c == '-' ||
+(c &gt;= 'a' &amp;&amp; c &lt;= 'z') ||
+(c &gt;= 'A' &amp;&amp; c &lt;= 'Z') ||
+(c &gt;= '0' &amp;&amp; c &lt;= '9')
+</code></pre>
+
+<p>This might be fixed to closer match JavaScript strict requirements in a future version.  Anyone with a <code>ç</code> on their keyboard is by now used to the dangers of useing it in code though so dont hold your breath, for now vars (and functions) must be good ol' 7bit ascii chars.</p>
+
+<h3>JSON is not supported syntax</h3>
+
+<p>Creating objects with JSON syntax as follows is, currently, not supported.</p>
+
+<pre><code>{
+  att1 : true,
+  att2 : "string"
+}
+</code></pre>
+
+<p>Because <code>att1</code> is not known to the preparser it wil be treated as Bash. It may be possible to fix this in a future version so avoid nesting Bash statements inside JavaScript objects.  The following code will execute for the wrong reasons and should be avoided.</p>
+
+<pre><code>{ att1 : true
+  cp fil2 file2
+}
+</code></pre>
+<a href="SimpleSyntax.html" class=next>➠</a>
+
+					<br/><br/>
+				</div>
+			</div>
+			<div id="footer"> by teknopaul </div>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

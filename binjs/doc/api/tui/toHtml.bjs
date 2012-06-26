@@ -13,28 +13,28 @@ function makeIndex() {
 
 	cat html/header.html | sed -e "s/@TITLE@/binjs index/g" \
 						 | sed -e "s/@EXTRA_CSS@/tab-selected/g" \
-		 > ./html/index.html
+		 > ./index.html
 	
-	echo '<img src="../../../html/binjs_64x64.png" id="logo"/>' >> ./html/index.html
+	echo '<img src="../../img/binjs_64x64.png" id="logo"/>' >> ./index.html
 	
-	echo "<h1>TUI Index</h1>" >> ./html/index.html
+	echo "<h1>TUI Index</h1>" >> ./index.html
 	
 	echo 'The Text User Interface package contains widgets for use on the command line.  \
-			Objects in the package use the <code>tui.</code> namespace.' >> ./html/index.html
+			Objects in the package use the <code>tui.</code> namespace.' >> ./index.html
 	
-	echo '<ul>' >> ./html/index.html
+	echo '<ul>' >> ./index.html
 
 	for (var i = 0 ; i < toc.length ; i++) {
 	
 		$.setEnv("SRC", toc[i].src);
 		$.setEnv("DEST", toc[i].dest);
-		echo '<li><a href="' $DEST '">' $SRC '</a></li>' >> ./html/index.html
+		echo '<li><a href="'$DEST'">' $SRC '</a></li>' >> ./index.html
 	
 	}
-	echo "</ul>" >> ./html/index.html
-	cat html/footer.html >> ./html/index.html
+	echo "</ul>" >> ./index.html
+	cat html/footer.html >> ./index.html
 	
-	$.info(1,"Generated", "./html/index.html");
+	$.info(1,"Generated", "./index.html");
 }
 
 for (var i = 0 ; i < files.length ; i++) {
@@ -48,25 +48,23 @@ for (var i = 0 ; i < files.length ; i++) {
 		$.setEnv("NEXT", next);
 	}
 	else {
-		$.setEnv("NEXT", "../../../html/References.html");
+		$.setEnv("NEXT", "../../References.html");
 	}
 
 	$.setEnv("SRC", src);
 	$.setEnv("DEST", dest);
 
-	cat html/header.html | sed -e "s/@TITLE@/$SRC/g" > ./html/$DEST
+	cat html/header.html | sed -e "s/@TITLE@/$SRC/g" > ./$DEST
 
-	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./html/$DEST 
+	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./$DEST 
 	
-	perl ../../Markdown.pl  $SRC >> ./html/$DEST
-	
-//	echo '<p class="date">generated ' `date` '</p>' >> ./html/$DEST
+	perl ../../Markdown.pl  $SRC >> ./$DEST
 
-	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./html/$DEST 
+	echo "<a href=\"${NEXT}\" class="next">➠</a>" >> ./$DEST 
 
-	cat html/footer.html >> ./html/$DEST
+	cat html/footer.html >> ./$DEST
 	
-	$.info(1,"Generated", "./html/" + $.env.DEST);
+	$.info(1,"Generated", "./" + $.env.DEST);
 
 }
 
