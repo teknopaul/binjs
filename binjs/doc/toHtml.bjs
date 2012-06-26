@@ -54,7 +54,7 @@ function makeReferences() {
 						 | sed -e "s/@REFS_CSS@/tab-selected/g" \
 			> ./References.html
 
-	echo '<img src="binjs_64x64.png" id="logo"/>' >> ./References.html
+	echo '<img src="img/binjs_64x64.png" id="logo"/>' >> ./References.html
 
 	perl ./Markdown.pl _References.md >> ./References.html
 	

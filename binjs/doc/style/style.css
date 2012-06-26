@@ -172,7 +172,7 @@ table.frame td {
     padding-top: 7px;
 }
 #header span.title {
-    background: url("binjs_22x22.png") no-repeat scroll 9px 0 transparent;
+    background: url("../img/binjs_22x22.png") no-repeat scroll 9px 0 transparent;
     font-size: 1.2em;
     font-weight: normal;
     padding-left: 45px;

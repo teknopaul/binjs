@@ -1,5 +1,5 @@
 <div id="cover">
-<img id="cover-image" src="binjs.png"/> <span class="cover-title">/bin/js</span>
+<img id="cover-image" src="img/binjs.png"/> <span class="cover-title">/bin/js</span>
 
 
 <br/><br/><br/><br/><br/><br/>

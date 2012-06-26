@@ -93,7 +93,6 @@ doc/api/tui/BooleanInput.md
 src/js/tui/Popup.js
 doc/api/tui/html/header.html
 doc/api/tui/html/footer.html
-doc/References.md
 src/js/tui/ValidatedTextInput.js
 src/js/tui/TimeInput.js
 src/js/tui/Throbber.js
@@ -112,3 +111,5 @@ src/js/tui/ComboInput.js
 doc/api/tui/ComboInput.md
 src/js/tui/DateInput.js
 doc/style/style.css
+doc/_CoverPage.md
+doc/_References.md
