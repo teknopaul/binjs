@@ -73,6 +73,13 @@ $.sleep = function(millis) {
 }
 
 /**
+ * Alias for binjs_import, import a js file into the global context.
+ */
+$.import = function(lib) {
+	binjs_import(lilb);
+}
+
+/**
  * Set a variabl into the bash environment, both arguments must be strings.
  */
 $.setEnv = function(name, value) {

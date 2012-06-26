@@ -275,6 +275,9 @@ Handle<Value> FileIsRoot(const Arguments& args) {
 			return False();
 		}
 	}
+	else { // path probably does not exist
+		return False();
+	}
 	
 	return ThrowException(Exception::TypeError(String::New("Unable to determine root")));
 	

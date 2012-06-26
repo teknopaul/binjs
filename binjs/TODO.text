@@ -12,16 +12,11 @@ Signal handling is hard
 import .bjs scripts properly
 i18n
 Interactive mode = false  to disable \r and other escapes
-Widgets 
-  Text (Nb. name clash with Xml)
+Support text formatting in all TUI components in a consistent manner and some global option too
+TUI Widgets 
   Date
-  Time
-  Boolean
-  Editor  Fire up editor for multiline text
-  \|/ spinner
-  Menu
-  File input with Bash's tab completion support?
-perhaps all of the above in a tui. package
+  Time - needs seconds and validation
+
 
 copy nodejs' inspect() method
 Debug on / off that enables Bash debug and $.debug() statements

@@ -90,6 +90,9 @@ tui.Input.prototype.readline = function() {
 					this.text += c;
 					$.print(c);
 				}
+				else {
+					this.complete();
+				}
 				continue;
 			}
 			
@@ -105,6 +108,7 @@ tui.Input.prototype.readline = function() {
 				if ( this.acceptNewLines && this.term.isNewLine(esc) ) {
 					this.newLine();
 				}
+
 			}
 			else if ( ! this.filter || this.filter(c) ) {
 				this.text += c;
@@ -127,4 +131,9 @@ tui.Input.prototype.readline = function() {
 	$.print('\n');
 	
 	return this.text;
+}
+
+// tabcomletion, by default a nooop;
+tui.Input.prototype.complete = function() {
+
 }

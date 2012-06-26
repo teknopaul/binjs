@@ -7,7 +7,7 @@ cd `dirname $0`
 
 var files = new File(".").listFiles(function(name) {
 
-	return /\.md$/.test(name) && name != 'References.md';
+	return /\.md$/.test(name) && name.indexOf('_') != 0;
 
 });
 
@@ -56,9 +56,20 @@ function makeReferences() {
 
 	echo '<img src="binjs_64x64.png" id="logo"/>' >> ./html/References.html
 
-	perl ./Markdown.pl References.md >> ./html/References.html
+	perl ./Markdown.pl _References.md >> ./html/References.html
 	
 	cat html/footer.html >> ./html/References.html
+	
+}
+
+function makeCoverPage() {
+
+	cat html/header.html | sed -e "s/@TITLE@/#!\/bin\/js/g" \
+			> ./html/CoverPage.html
+
+	perl ./Markdown.pl _CoverPage.md >> ./html/CoverPage.html
+	
+	cat html/footer.html >> ./html/CoverPage.html
 	
 }
 
@@ -97,6 +108,7 @@ for (var i = 0 ; i < files.length ; i++) {
 
 makeIndex();
 makeReferences();
+makeCoverPage();
 
 api/toHtml.bjs
 

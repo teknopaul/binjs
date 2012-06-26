@@ -3,9 +3,25 @@
   position:absolute;
   right: 15px;
 }
+#cover {
+	margin-left: 0px;
+	margin-top: 150px;
+	margin-bottom: 50px;
+	text-align: center;
+}
+.cover-title{
+    font-size: 70pt;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    text-shadow: 2px 2px 2px #DDDDDD;
+}
+#cover-image {
+	vertical-align: text-bottom;
+}
 h1 {
     border-bottom: 1px dotted #EEEEEE;
-    font-size: 20pT;
+    font-size: 20pt;
     font-weight: bold;
     margin-bottom: 20px;
     padding-bottom: 15px;

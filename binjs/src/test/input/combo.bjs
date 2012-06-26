@@ -1,0 +1,14 @@
+#!/bin/js
+binjs_import("~lib/tui/ComboInput.js");
+#
+#  Combo box type widget select froa  list of options
+#
+
+var options = ['one', 'two', 'three', 'four', true, false, 10, 11, 12, 13, 14, 15, 16, 17 ,18];
+
+var combo = new tui.ComboInput(options);
+
+var selected = combo.select();
+
+
+$.println("Selected : " + selected);

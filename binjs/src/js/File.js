@@ -130,6 +130,7 @@ File.prototype.getParent = function() {
 File.prototype.getParentFile = function() {
 
 	if ( ! this.exists ) { // change this also change getParent
+		var fullPath = this.getAbsolutePath();
 		var parts = fullPath.split(File.separator);
 		if (parts.length > 2) {
 			parts = parts.splice(1, parts.length -2);
@@ -164,7 +165,7 @@ File.prototype.listFiles = function(filter) {
 	if (typeof filter === 'string') {
 	
 		// method was passed a string use bash to glob ? * and stuff
-		binjs_exec("_binjs_CAPTURE=`/bin/ls -1Ad " + this.path + (this.isDir() ? "/" : "") + filter + "`");
+		binjs_exec("_binjs_CAPTURE=`/bin/ls -1Ad " + this.path + (this.isDir() ? "/" : "") + filter + " 2>/dev/null`");
 		if (errno === 0) {
 			list = $.getEnv("_binjs_CAPTURE").split('\n');
 			$.setEnv("_binjs_CAPTURE");
