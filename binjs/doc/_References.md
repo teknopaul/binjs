@@ -1,4 +1,4 @@
-<img src="binjs_64x64.png" id="logo"/>
+<img src="img/binjs_64x64.png" id="logo"/>
 #References
 
 These are the two github pages that host the code.
