@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Binjs : #!/bin/js is a scripting framework using the best of bash and JavaScript" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Binjs</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/teknopaul/binjs">View on GitHub</a>
+
+          <h1 id="project_title">Binjs</h1>
+          <h2 id="project_tagline">#!/bin/js is a scripting framework using the best of bash and JavaScript</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/teknopaul/binjs/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/teknopaul/binjs/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>/bin/js scripts are a mash-up of JavaScript and bash.</p>
+
+<p>Simple bash code is valid</p>
+
+<pre><code>#!/bin/js
+#
+#  My first /bin/js script
+#
+
+echo Hello World
+</code></pre>
+
+<p>Simple JavaScript code is valid.</p>
+
+<pre><code>#!/bin/js
+//
+// If you prefer use JS style comments
+//
+
+for (var i = 0 ; i &lt; 23 ; i++) {
+
+    $.print("Hello World");
+
+}
+</code></pre>
+
+<p>And you can mash-up both.</p>
+
+<pre><code>#!/bin/js
+/**
+ * Another comment style
+ */
+
+for (var i = 0 ; i &lt; 23 ; i++) {
+
+    echo Hello World
+
+}
+</code></pre>
+
+<p>Pipes and redirects and all the wonders of bash one-liners are available.</p>
+
+<pre><code>#!/bin/js
+
+cat "${HOME}/apache.log" | tail -20 | awk ' {print $7}' | tee.tail.log
+</code></pre>
+
+<p>All the beauty(ehem) of C style syntax from JavaScript is available.</p>
+
+<pre><code>#!/bin/js
+
+...
+
+switch (errno) {
+
+    case 1 : {
+        doThing();
+        break;
+    case 2 :
+        echo found a wrongun &gt;&gt; errs.log
+        break;
+    default :
+        $.error(10, "Unknown option");
+}    
+</code></pre>
+
+<p>switch statements, if/else, while loops, do/while loops, try/catch/finally and others from JavaScript are used, since the bash ones are really ugly.  </p>
+
+<p>The pipes and redirects and even the trailing &amp; from bash are used.</p>
+
+<h2>Simple Usage</h2>
+
+<p>/bin/js syntax should be pretty straight forward if you write JavaScript and are used to working with Linux. The goal is that syntax should be completely natural for developers who are comfortable with C style languages such as JavaScript, C, C++, C# or Java, and work on the bash command line.</p>
+
+<p>The general rule with /bin/js syntax is that each line of the file is interpreted as either JavaScript OR a SINGLE line of bash, but not both.</p>
+
+<p>Thus you can not write</p>
+
+<pre><code>if (true) echo Hello World
+</code></pre>
+
+<p>You have to write the statements on separate line</p>
+
+<pre><code>if (true) {
+    echo Hello World
+}
+</code></pre>
+
+<p>Var statements and functions must be written on a single line, and var is required in /bin/js scripts.</p>
+
+<pre><code>var myVal = new Object();
+
+function myFunc() {
+
+    echo Hello World
+
+}
+</code></pre>
+
+<p>Variables defined this way with <code>function</code> or <code>var</code> are then known to the parser and can be called as JavaScript.</p>
+
+<pre><code>myVal.attribute = 23;
+myFunc();
+</code></pre>
+
+<p>Global vars are NOT supported</p>
+
+<pre><code>globalVar = 23;  // wrong, missing vars
+</code></pre>
+
+<p>Mutli-line vars are NOT supported</p>
+
+<pre><code>var i,j,k;       // wrong only i is known
+</code></pre>
+
+<p>In short, if you don't create a var or a function with the <code>var</code> and <code>function</code> statements at the start of the line the preparser will not treat them as JavaScript.</p>
+
+<pre><code>if (true) var funk = function() {return true;}
+
+funk(); // wrong, parse does not know about "funk" so it is interpreted as bash
+</code></pre>
+
+<p>Just remember, each line is interpreted as EITHER JavaScript OR bash by a preparser which sends the lines to the correct interpreter.  The preparser never compiles the code, it just peaks at the front of the line to see weather v8 or bash should compile it.</p>
+
+<p>The net result of this is a very comfortable way to write scripts, the final code is self-explanatory and  natural, you can increment a variable in a script with <code>i++</code> instead of <code>i=$((i + 1))</code>.  The code you write looks like code, and the lines of bash commands look exactly like you would type them on the command line.</p>
+
+<p>If you know how to write a bit of JavaScript and have minimal bash skills you already know how to write /bin/js scripts. Just Add <code>#!/bin/js</code> as the first line of a text file and make it executable with chmod.</p>
+
+<p>The framework is designed from the ground up for writing command line scripts on Linux.  This video shows a command line Matrix screensaver written as a single /bin/js script in less that 100 lines of code.</p>
+
+<p><a href="http://youtu.be/ilR6TeBfP8o">http://youtu.be/ilR6TeBfP8o</a></p>
+
+<p>And this is a star field screensaver in 50 lines of code.</p>
+
+<p><a href="http://youtu.be/Ea0GtO18FSY">http://youtu.be/Ea0GtO18FSY</a></p>
+
+<h1>Documentation</h1>
+
+<p>Docs generated from source are available 
+here <a href="http://code.abnoctus.com/binjs/CoverPage.html">http://code.abnoctus.com/binjs/CoverPage.html</a></p>
+
+<p>API docs are available here
+<a href="http://code.abnoctus.com/binjs/api/">http://code.abnoctus.com/binjs/api/</a>
+Full details of the parser rules are in the documentation under ParserRules.md.</p>
+
+<p>N.B. /bin/js is a Linux project, it might compile on a Mac or BSD or other versions of Unix, but it will not run on Windoze.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Binjs maintained by <a href="https://github.com/teknopaul">teknopaul</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
