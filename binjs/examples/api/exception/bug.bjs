@@ -1,0 +1,11 @@
+#!/bin/js
+#
+#  Script with a big fat bug in it
+#
+#  v8 prints helpful error messages
+#
+
+echo "bug script"
+
+var forceToBeJS = 0 ; noneExistingVar.broke();
+

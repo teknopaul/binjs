@@ -1,0 +1,52 @@
+#!/bin/js
+#
+# This script contains examples of what NOT to do with global vars
+# that hopefully explains the situation with the implicit 
+# global "gi" varaible
+#
+
+function modGlobalGI() { gi++; }
+
+function modLocalGI() {
+
+	var gi = 999; 		   // create a local scopped gi
+	gi++;         		   // modify it
+	echo scoped gi is $gi  # confuse yourself by refering to global $gi
+	
+}
+
+for (gi = 0 ; gi < 5 ; gi++) {
+
+	modGlobalGI();
+	modLocalGI();
+	echo gi is $gi
+	
+}
+
+// `var` is confusing, notice we dont create a global gi because it already exists
+// in the global scoped
+var gi = 23
+
+$.println("gi is now " + gi);
+ 
+ 
+// Fiddling with the global scope by creating gx 
+// without the preparser knowing
+
+if (true) gx = 23;
+$.watch.push("gx");
+
+echo gx is $gx
+if (true) gx = 24;
+echo gx is $gx
+
+
+// This is the correct pattern.
+// Dont mess with gi outside the global scope and
+// it is very convenient for `for` loops
+
+for (gi = 0 ; gi < 5 ; gi++) {
+
+	echo as expected gi is $gi
+	
+}

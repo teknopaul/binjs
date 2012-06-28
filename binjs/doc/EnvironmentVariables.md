@@ -1,7 +1,9 @@
 
 # Environment Variables
 
-Environment variables from Bash are available in JavaScript via the `$.env` object.  When starting the script any environment variable that starts with an upper case ascii letter is copied to the `$.env` object. This object is updated after everr bash command so you do not have to manually sync the environment.
+Environment variables from bash are available in JavaScript via the `$.env` object.  
+
+When starting the script any environment variable that starts with an upper case ascii letter is copied to the `$.env` object. This object is updated after everr bash command so you do not have to manually sync the environment.
 
     var home = $.env.HOME;
 

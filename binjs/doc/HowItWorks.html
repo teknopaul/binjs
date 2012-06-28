@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="style/style.css" rel="stylesheet"/>
 	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,7 +37,9 @@
 <a href="ImportJavaScript.html" class=next>➠</a>
 <h1>How it works</h1>
 
-<p>The /bin/js mash-up is achieved by preparsing the script and deciding for each line if it needs to be interpreted as JavaScript or Bash.  /bin/js uses the chrome v8 JavaScript runtime and some C++ libraries, Bash 4.2 hacked and compiled as a library with its features exposed as C functions, and a preparser written in C.</p>
+<p>The /bin/js mash-up is achieved by preparsing the script and deciding for each line if it needs to be interpreted as JavaScript or Bash.  </p>
+
+<p>/bin/js uses the chrome v8 JavaScript runtime and some C++ libraries, Bash 4.2 hacked and compiled as a library with its features exposed as C functions, and a preparser written in C.</p>
 
 <p>If this is a /bin/js script</p>
 

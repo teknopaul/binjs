@@ -1,6 +1,6 @@
 # Color
 
-Definitions for constants for coloured output on the console (API uses yank speling).
+Definitions for constants for coloured output on the terminal.
 
 The Color object provides constants for making text appear coloured on the command line, color should be turned off after it is used.
 

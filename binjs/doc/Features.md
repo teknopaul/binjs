@@ -1,5 +1,7 @@
 # Features
 
+This page lists the hight level features of /bin/js.
+
 /bin/js is a mash-up of Bash and JavaScript enabling a very simple script syntax.
 
 It has a recent build of v8 for the JavaScript runtime, and Bash 4.2 for the Bash engine.

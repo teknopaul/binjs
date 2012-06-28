@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../../style/style.css" rel="stylesheet"/>
 	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,8 +37,9 @@
 <a href="ValidatedTextInput.html" class=next>➠</a>
 <h1>TimeInput</h1>
 
-<p>Sublasses tui.Input and only permits time to be entered in the form <code>00:00</code>.
-This input class only validates the String is in the correct form not that the time is valid.
+<p>Sublasses tui.Input and only permits time to be entered in the form <code>00:00</code>.</p>
+
+<p>This input class only validates the String is in the correct form not that the time is valid.
 i.e. <code>25:99</code> is permitted and should be validated by the user.
 Future versions of this class will be more strict with user input.</p>
 

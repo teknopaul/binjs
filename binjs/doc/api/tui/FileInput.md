@@ -1,6 +1,8 @@
 # FileInput
 
-Sublasses tui.Input and accepts any text but additionally provides tab completion for files and directories.  The interface is not exactly the same as bash tab completion but is close enough. Future versions may provide a closer match to bash's features.
+Sublasses tui.Input and accepts any text but additionally provides tab completion for files and directories.
+
+The interface is not exactly the same as bash tab completion but is close enough. Future versions may provide a closer match to bash's features.
 Entering a tilde `~` and pressing tab expands to the user's home directory, but other tilde expansions are not supported.
 
 ----------------------------

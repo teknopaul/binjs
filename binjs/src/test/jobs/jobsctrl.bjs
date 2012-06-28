@@ -1,0 +1,43 @@
+#!/bin/js
+#
+#   We can create jobs with & at the end of the line
+#   Also we can print and manipulate them.
+#
+
+function background() {
+	sleep 1 && echo -n "hello " &
+}
+
+function background2() {
+	sleep 2 && echo world &
+}
+
+
+// N.B JavaScrip stays single threaded througout, it is bash that forks processes
+background();
+sleep 5 && echo cruel &
+background2();
+
+// before sleepint lets print whats going on in the background
+
+var jobsArray = binjs_getJobs();
+
+for (var j = 0 ; j < jobsArray.length ; j++ ) {	
+//	$.println("[" + jobsArray[j].id +"] pid=" + jobsArray[j].pid)
+	$.info(0,"jobs",jobsArray[j].command);
+
+	if ("cruel" == jobsArray[j].command) {
+
+		// delete the jobs with cludgy syntax TODO jobsArray[j].kill()
+		$.setEnv("TO_KILL", jobsArray[j].pid);
+		echo killing id ${TO_KILL}
+		kill %${TO_KILL}
+
+	}
+	
+	// TODO jobsArray[j].kill();
+	// TODO jobsArray[j].hup();
+	// TODO jobsArray[j].waitFor();
+	
+
+}

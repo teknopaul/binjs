@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../../style/style.css" rel="stylesheet"/>
 	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -26,10 +34,10 @@
 				<div id="header"><span class="title">/bin/js handbook</span></div>
 				<div id="content">
 				<div id="main">
-<a href="Table.html" class=next>➠</a>
+<a href="SpinnerInput.html" class=next>➠</a>
 <h1>Progress</h1>
 
-<p>A progress bar, to indicate progress in an ongoing operation.</p>
+<p>A progress bar, to indicate progress in an on-going operation.</p>
 
 <p>The Object should be constructed and used only once, create a new Progress with the <code>new</code> keyword
 to start the progress again.</p>
@@ -110,7 +118,7 @@ $.println("Enter a number");
 
 var text = input.readline();
 </code></pre>
-<a href="Table.html" class=next>➠</a>
+<a href="SpinnerInput.html" class=next>➠</a>
 
 					<br/><br/>
 				</div>

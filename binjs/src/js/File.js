@@ -93,6 +93,8 @@ File.prototype.getAbsolutePath = function() {
 
 File.prototype.getParent = function() {
 
+	if ( this.isRoot() ) return null;
+	
 	var fullPath = this.getAbsolutePath();
 	if (this.exists && this.isFile()) {
 		if (fullPath.lastIndexOf('/') === 0) {
@@ -129,6 +131,8 @@ File.prototype.getParent = function() {
 
 File.prototype.getParentFile = function() {
 
+	if ( this.isRoot() ) return null;
+	
 	if ( ! this.exists ) { // change this also change getParent
 		var fullPath = this.getAbsolutePath();
 		var parts = fullPath.split(File.separator);

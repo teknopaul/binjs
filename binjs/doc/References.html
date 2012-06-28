@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<title>#!/bin/js</title>
+	<title>/bin/js</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="style/style.css" rel="stylesheet"/>
 	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -39,7 +47,7 @@
 <p>These docs you are reading are hosted on code.abnoctus.com and are periodically regenerated from the source code.</p>
 
 <ul>
-<li><a href="http://code.abnoctus.com/binjs/html/">/bin/js online docs</a></li>
+<li><a href="http://code.abnoctus.com/binjs/">/bin/js online docs</a></li>
 </ul>
 
 <p>These are some websites I've been visiting of later related to this project.</p>

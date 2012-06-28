@@ -1,0 +1,20 @@
+#!/bin/js
+#
+# CD works as expected
+#
+
+echo $0
+echo PWD before cd $PWD
+
+cd `dirname $0`
+echo PWD after cd $PWD
+echo pwd after cd `pwd`
+$.println("PWD per JS " + $.env.PWD);
+
+// N.B. JavaScript does behave as we would expect
+
+var cdFile = new File("./cd.bjs");
+
+$.info(0, "cd_behaviour", JSON.stringify(cdFile));
+
+

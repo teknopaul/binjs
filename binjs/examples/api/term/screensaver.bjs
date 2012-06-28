@@ -1,0 +1,92 @@
+#!/bin/js
+binjs_import("~lib/Term.js");
+#
+# Yer classic screen saver
+#
+
+// clear
+
+var term = new Term();
+var width = term.getWidth();
+var height = term.getHeight();
+
+function render(row, col) {
+	term.cursorPosition(row, col);
+	var c = (col % 3 == 0 ? 97 : 65 ) + Math.floor(Math.random() * 26);
+	$.print(String.fromCharCode(c), 'green');
+}
+
+function renderBright(row, col) {
+	term.cursorPosition(row, col);
+	var c = 97 + Math.floor(Math.random() * 26);
+	$.print(String.fromCharCode(c), 'white');
+}
+
+var columns = [];
+for (var i = 0 ; i < width ; i++) {
+	columns.push(0);
+}
+
+function increaseColumns() {
+	for (var c = 0 ; c < width ; c++) {
+		if (columns[c] < height && Math.random() > 0.5) {
+			columns[c] = columns[c] + 1;
+		}
+	}
+}
+
+function renderAll(increase) {
+        for (var c = 0 ; c < width ; c++) {
+		if (dropped.indexOf(c) > -1 || Math.random() > 0.1) continue;
+		for (var r = 0 ; r <= columns[c] ; r++) {
+			render(r, c);
+                }
+		if (increase && Math.random() > 0.9) {
+			for (; r <= columns[c] + 5 ; r++) {
+                        	render(r, c);
+               		}
+			columns[c] = columns[c] + 5;
+		}
+        }
+}
+
+function renderDrop() {
+	var col = Math.floor(Math.random() * width);
+        for (var r = 0 ; r <= columns[col] ; r++) {
+              	renderBright(r, col);
+		if (r - 25 > 0) render(r - 25, col);
+		$.sleep(5);
+        }
+	return col;
+}
+
+var dropped = [];
+
+for (var i = 0 ; i < 100 ; i++) {
+	dropped = [];
+	renderAll(true);
+	increaseColumns();
+	dropped.push(renderDrop());
+	renderAll();
+	renderAll();
+	renderAll();
+	dropped.push(renderDrop());
+	renderAll();
+	renderAll();
+	renderAll();
+	dropped.push(renderDrop());
+	renderAll();
+	renderAll();
+	renderAll();
+	dropped.push(renderDrop());
+	renderAll();
+	renderAll();
+	renderAll();
+	dropped.push(renderDrop());
+	renderAll();
+	renderAll();
+	renderAll();
+	renderAll();
+	//$.sleep(1);
+}
+

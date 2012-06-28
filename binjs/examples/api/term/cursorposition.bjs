@@ -1,0 +1,14 @@
+#!/bin/js
+binjs_import("~lib/Term.js");
+
+var t = new Term();
+
+t.cursorPosition(t.getHeight() / 2, (t.getWidth() / 2 ) - 15);
+$.print("pretty pointless but you get the idea", true);
+
+t.cursorPosition(t.getHeight() , t.getWidth() );
+
+$.println();
+
+
+

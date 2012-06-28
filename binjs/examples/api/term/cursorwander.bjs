@@ -1,0 +1,30 @@
+#!/bin/js
+
+binjs_import("~lib/Term.js");
+
+
+var term = new Term();
+
+function cursorWander() {
+	var methods = [
+		term.cursorUp, 
+		term.cursorBack, 
+		term.cursorForward, 
+		term.cursorDown, 
+		term.cursorForward, 
+		term.cursorUp];
+
+	for ( var i = 0; i < 100 ; i++) {
+		methods[Math.floor(Math.random() * 3)]();
+		$.sleep(50);
+	}
+}
+
+cursorWander();
+
+// bring him back home
+for ( var i = 0; i < 100 ; i++) { 
+	term.cursorDown();
+}
+
+echo A wandering cursor thats eventually comes home

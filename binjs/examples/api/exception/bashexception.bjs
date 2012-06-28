@@ -1,0 +1,46 @@
+#!/bin/js
+binjs_import("~lib/Assert.js");
+#
+# indicate an exception should be thrown in bash
+# by setting the variable _EX 
+#
+
+var assert = new Assert();
+// Bash has a new buildtin "throw"
+
+try {
+
+  echo Hello Bash Builtins && throw "Throw Message"
+  echo never printed
+
+} catch(err) {
+  echo bash throw caught and deleted
+  $.info(23,"Bash throw caught", err.name + ":" + err.message);
+  assert.ok(err instanceof Error);
+  assert.equal("Throw Message", err.message);
+}
+
+
+// setting _EX is exactly the same just does not loook so nice
+
+try {
+
+  echo Hello World Gone Wrong && _EX="World Is Broken"
+  echo never printed
+
+} catch(err) {
+  echo bash ex caught and deleted
+  $.info(23,"Bash ex caught", err.name + ":" + err.message);
+  assert.equal("World Is Broken", err.message);
+}
+
+try {
+
+  echo Hello World Gone Wright
+  echo this is printed
+
+} catch(err) {
+  $.error(24,"Bash ex caught but not thrown", err.name + ":" + err.message);
+  assert.ok(false);
+}
+

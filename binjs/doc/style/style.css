@@ -81,6 +81,7 @@ pre {
     margin-bottom:10px;
     /*box-shadow: 1px 1px 2px #999;*/
 }
+
 /*
 pre code {
 	color: #ccc;
@@ -90,7 +91,12 @@ pre code {
 	display: block;
 }
 */
-
+li.idx a {
+  font-weight: bold;
+}
+li.idx {
+  margin-bottom: 10px;
+}
 code {
 	background : #f6f6f6;
 }
@@ -245,6 +251,7 @@ table.frame td {
   position:absolute;
   padding-top:10px;
   top:500px;
+  height:150px;
 }
 
 .vertical {

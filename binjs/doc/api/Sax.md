@@ -1,10 +1,10 @@
 # Sax
 
-XML Sax parser and implementation
+XML Sax parser.
 
 Sax.js is a copy of nodejs sax.js
 
-See [Xml parsing](../../html/Xml.html)
+See [Xml parsing](../Xml.html)
 
 ----------------------------
 

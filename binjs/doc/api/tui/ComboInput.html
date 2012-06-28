@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../../style/style.css" rel="stylesheet"/>
 	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,7 +37,9 @@
 <a href="DateInput.html" class=next>➠</a>
 <h1>ComboInput</h1>
 
-<p>Provides similar functionality toa combo box widget, i.e. allows the user to selectan option froma list on screen.  the size of the list should fix on screen or an exception is thrown as scrolling is not supported.  Theuser makes the selection with the arrow keys moving the cursor up and down.</p>
+<p>Provides similar functionality to a combo box widget.</p>
+
+<p>Combo allows the user to selectan option froma list on screen.  The size of the list should fix on screen or an exception is thrown as scrolling is not supported.  Theuser makes the selection with the arrow keys moving the cursor up and down.</p>
 
 <hr />
 

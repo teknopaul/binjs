@@ -1,6 +1,6 @@
 # Progress
 
-A progress bar, to indicate progress in an ongoing operation.
+A progress bar, to indicate progress in an on-going operation.
 
 The Object should be constructed and used only once, create a new Progress with the `new` keyword
 to start the progress again.

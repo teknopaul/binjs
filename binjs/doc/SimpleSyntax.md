@@ -1,5 +1,7 @@
 # Simple Syntax
 
+A quick introduction to /bin/js syntax.
+
 /bin/js scripts are a mash-up of JavaScript and bash.
 
 Simple bash code is valid

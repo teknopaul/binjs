@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<title>#!/bin/js</title>
+	<title>/bin/js</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="style/style.css" rel="stylesheet"/>
 	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -30,21 +38,22 @@
 <h1>/bin/js Documentation</h1>
 <h3>Overviews</h3>
 <ul>
-<li><a href=" Arguments.html "> Arguments.md </a></li>
-<li><a href=" EnvironmentVariables.html "> EnvironmentVariables.md </a></li>
-<li><a href=" Exceptions.html "> Exceptions.md </a></li>
-<li><a href=" Features.html "> Features.md </a></li>
-<li><a href=" HowItWorks.html "> HowItWorks.md </a></li>
-<li><a href=" ImportJavaScript.html "> ImportJavaScript.md </a></li>
-<li><a href=" Jobs.html "> Jobs.md </a></li>
-<li><a href=" MagicVars.html "> MagicVars.md </a></li>
-<li><a href=" ParserRules.html "> ParserRules.md </a></li>
-<li><a href=" SimpleSyntax.html "> SimpleSyntax.md </a></li>
-<li><a href=" Xml.html "> Xml.md </a></li>
+<li class="idx"><a href="Arguments.html"> Arguments.md </a> -  When executing a /bin/js scripts command line arguments are passed to both bash and JavaScript. The arguments to bash are available inthe normal manner and in JavaScript they are available via global variables. </li>
+<li class="idx"><a href="EnvironmentVariables.html"> EnvironmentVariables.md </a> -  Environment variables from bash are available in JavaScript via the `$.env` object.   </li>
+<li class="idx"><a href="Exceptions.html"> Exceptions.md </a> -  Bash has exception handling limited to returning error codes, JavaScript supports `try` , `catch` and `finally` syntax. /bin/js merges the two providing bash style error return codes and exceptions that can be thrown from bash commands and caught in JavaScript. </li>
+<li class="idx"><a href="Features.html"> Features.md </a> -  This page lists the hight level features of /bin/js. </li>
+<li class="idx"><a href="HowItWorks.html"> HowItWorks.md </a> -  The /bin/js mash-up is achieved by preparsing the script and deciding for each line if it needs to be interpreted as JavaScript or Bash.   </li>
+<li class="idx"><a href="ImportJavaScript.html"> ImportJavaScript.md </a> -  A global method `binjs_import()` can be used to execute entire JavaScript files. </li>
+<li class="idx"><a href="Jobs.html"> Jobs.md </a> -  /bin/js has job control from bash, JavaScript is single-threaded, bash suports multiple forked processes. </li>
+<li class="idx"><a href="Json.html"> Json.md </a> -  /bin/js has native support for JSON. </li>
+<li class="idx"><a href="MagicVars.html"> MagicVars.md </a> -  /bin/js sets some variable in the global scope at startup that developers should be aware of since they are useful. </li>
+<li class="idx"><a href="ParserRules.html"> ParserRules.md </a> -  Full details of the rules used by the preparser preparser defining /bin/js syntax. </li>
+<li class="idx"><a href="SimpleSyntax.html"> SimpleSyntax.md </a> -  A quick introduction to /bin/js syntax. </li>
+<li class="idx"><a href="Xml.html"> Xml.md </a> -  /bin/js has native support for reading, manipulating and writing XML. </li>
 </ul>
 <br/>
 </br/><br/><br/><div class="created">Generated from source on 
-Tue Jun 26 09:46:32 CEST 2012
+Thu Jun 28 09:50:09 CEST 2012
 </div>
 
 					<br/><br/>

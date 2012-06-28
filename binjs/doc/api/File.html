@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../style/style.css" rel="stylesheet"/>
 	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -264,6 +272,14 @@ When setting the ext the File object is NOT changed a new instance of file is re
 You can not change the extension of a directory or a symlink with this method even if it has one. </p>
 
 <p>There is no requirement that the file exists this method just does string manipulation of the path based on the name.</p>
+
+<h3>getParent()</h3>
+
+<p>Returns the parent file as a String or null if this file points to the root directory.</p>
+
+<h3>getParentFile()</h3>
+
+<p>Returns the parent file as a File object or null if this file points to the root directory.</p>
 <a href="Global.html" class=next>➠</a>
 
 					<br/><br/>

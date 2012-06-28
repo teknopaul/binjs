@@ -1,7 +1,9 @@
 
 # Arguments to the script
 
-When executing a /bin/js scripts command line arguments are passed to both bash and JavaScript. If a script is run as follows.
+When executing a /bin/js scripts command line arguments are passed to both bash and JavaScript. The arguments to bash are available inthe normal manner and in JavaScript they are available via global variables.
+
+If a script is run as follows.
 
     ./myscript.bjs one two three
 

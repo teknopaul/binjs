@@ -1,0 +1,27 @@
+#!/bin/js
+
+
+// $.color marks up text with ESC codes for color
+
+$.println($.color('red', 		"echo red text"));
+$.println($.color('darkgrey', 	"echo darkgrey text"));
+$.println($.color('blue', 		"echo some blue text"));
+
+
+// more simply put
+
+$.println("echo red text", 		 'red');
+$.println("echo darkgrey text",  'darkgrey');
+$.println("echo some blue text", 'blue');
+
+// bold
+
+$.println( $.bold("Some bold text") );
+$.println("Some bold text", true);
+
+
+// underline and blink do not have format shorcuts in $.println()
+
+$.println( $.underline("Some underlined text") );
+$.println ($.blink("Now thats really annoying!") );
+

@@ -1,5 +1,5 @@
 /**
- * C++ functions for calling  libbash's methods.
+ * C++ functions for calling libbash's methods.
  *
  * @author teknopaul
  */
@@ -15,22 +15,26 @@
 #include "util.h"
 #include "librunjs.h"
 
+
 using namespace v8;
 
 static Handle<FunctionTemplate> JOB_TEMPLATE;
 
 static int lastCommandExitValue = 0;
 
-// String values allocated on the heap because they will be reused and dont  benefit from GC
+// TODO String values allocated on the heap because they will be reused and dont benefit from GC
 //static Persistent<String> PS_id = BJS_PSYMBOL("id");
 
-// Extracts a C string from a V8 Utf8Value.
+/**
+ * Extracts a C string from a V8 Utf8Value.
+ */
 static const char* ToCString(const String::Utf8Value& value) {
 	return *value ? *value : "<string conversion failed>";
 }
 
+
 /**
- * Initialise the bash interpreter
+ * Initialise the bash interpreter, override the signal handler.
  */
 int InitBash(int argc, char **argv) {
 
@@ -40,7 +44,7 @@ int InitBash(int argc, char **argv) {
 }
 
 /**
- * Exit the bash shell
+ * Exit the bash shell.
  */
 void ExitBash(int s) {
 
@@ -49,7 +53,16 @@ void ExitBash(int s) {
 }
 
 /**
- * Execute a string as bash
+ * Execute a string as bash.  Calls libbash_run_one_command.
+ * Prior to executing bash, watched vars from the global context are copied to
+ * environment variables.
+ * After execting the command
+ *   env is copied back
+ *   signal handler is reset
+ *   erro not is set
+ *   if cd was called, change directory
+ *   threw builtin is processed
+ *  
  */
 Handle<Value> ExecAsBash(const Arguments& args) {
 	HandleScope scope;
@@ -63,8 +76,6 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 
 	// sync JavaScript variables to Bash env
 	CopyVars();
-	SetSignalHandler();
-
 
 	// exec
 	libbash_run_one_command((char *)cstr);

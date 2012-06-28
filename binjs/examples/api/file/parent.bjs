@@ -1,0 +1,18 @@
+#!/bin/js
+
+$.println(new File("/bin/js").getParent());
+$.println(new File("/bin/js").getParentFile());
+
+mkdir -p /tmp/subdir1/subdir2
+touch /tmp/subdir1/subdir2/file
+
+$.println(new File("/tmp/subdir1/subdir2/file").getParent());
+$.println(new File("/tmp/subdir1/subdir2/file").getParentFile());
+
+$.println(new File("/tmp").getParent());
+$.println(new File("/tmp").getParentFile());
+
+// parent of root is null
+$.println(new File("/").getParent());
+
+

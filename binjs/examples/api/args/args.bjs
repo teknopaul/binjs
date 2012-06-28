@@ -1,0 +1,18 @@
+#!/bin/js
+#
+# Test program argument handling
+
+# Call this script with arguments
+#
+#  e.g.
+#    ./args.bjs one two three
+#
+
+
+$.println("Args according to JavaScript")
+for (var i = 0; i < argc ; i++ ) {
+	$.info(0, "argument", i + ": '" + argv[i] + "'" );
+}
+
+echo "Args according to bash"
+echo "0=$0 1=$1 2=$2 3=$3 4=$4"

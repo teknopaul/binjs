@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../../style/style.css" rel="stylesheet"/>
 	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,7 +37,9 @@
 <a href="EditorInput.html" class=next>➠</a>
 <h1>DateInput</h1>
 
-<p>Sublasses tui.Input and only permits date to be entered in various forms. this is currently quite basic validation. Validation is not very strict, dates must be numbers in the form <code>xx</code> delim <code>yy</code> delim <code>zz</code> where delim is any of <code>" " / \ - .</code> Subseqeunt code should determine which order the integers come in, be it European or US format.</p>
+<p>Sublasses tui.Input and only permits date to be entered in various forms. </p>
+
+<p>This is currently quite basic validation. Validation is not very strict, dates must be numbers in the form <code>xx</code> delim <code>yy</code> delim <code>zz</code> where delim is any of <code>" " / \ - .</code> Subseqeunt code should determine which order the integers come in, be it European or US format.</p>
 
 <hr />
 

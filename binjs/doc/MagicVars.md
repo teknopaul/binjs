@@ -1,3 +1,4 @@
+
 # Magic Vars
 
 /bin/js sets some variable in the global scope at startup that developers should be aware of since they are useful.

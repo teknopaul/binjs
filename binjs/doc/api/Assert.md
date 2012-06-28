@@ -1,7 +1,9 @@
 # Assert
 
-Assert is a CommonJS like library for unit testing.  It closely conforms to the CommonJS spec, but is not identical, code is copied and modified from nodejs.
-    
+Assert is a CommonJS like library for unit testing.  
+
+The library closely conforms to the CommonJS spec, but is not identical, code is copied and modified from nodejs.
+
 ----------------------------
 
 ## Import

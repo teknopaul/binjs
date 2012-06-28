@@ -1,10 +1,10 @@
 # Dom
 
-XML Dom parser and implementation
+XML Dom parser and Document model.
 
-Dom.js is a clone of nodejs dom-js
+Dom.js is a clone of nodejs dom-js.
 
-See [Xml parsing](../../html/Xml.html)
+See [Xml parsing](../Xml.html)
 
 ----------------------------
 

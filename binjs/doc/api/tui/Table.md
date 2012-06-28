@@ -1,6 +1,14 @@
 # Table
 
-Renders a table of data
+Renders a table of data.
+
+    ┌──────┬──────┬──────────┐
+    │title1│title2│title3    │
+    │abc   │def   │ghi       │
+    │klm   │nop   │qrstuvwxyz│
+    │    23│    45│        42│
+    └──────┴──────┴──────────┘
+
 
 ----------------------------
 

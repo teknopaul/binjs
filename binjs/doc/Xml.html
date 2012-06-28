@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="style/style.css" rel="stylesheet"/>
 	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,7 +37,11 @@
 <a href="api/index.html" class=next>➠</a>
 <h1>Xml Support</h1>
 
+<p>/bin/js has native support for reading, manipulating and writing XML.</p>
+
 <p>Modifying XML files in scripts is fiddly with only Linux tools like awk and sed at your disposal so /bin/js comes with an XML parser built in, it is lifted from nodejs code with a couple of changes to make it more fitting for synchronous scripts.</p>
+
+<p>For validating XML use <code>xmllint</code>.</p>
 
 <h2>Usage</h2>
 

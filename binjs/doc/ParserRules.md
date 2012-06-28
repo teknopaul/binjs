@@ -1,9 +1,13 @@
 
-# /bin/js PARSER RULES
+# /bin/js Parser Rules
+
+Full details of the rules used by the preparser preparser defining /bin/js syntax.
+
+Each line of the #!/bin/js script is interpreted as JavaScript OR bash. 
 
 ## Overview
 
-Each line of the #!/bin/js script is interpreted as JavaScript OR bash. The script is interpreted line by line determining if each line is JavaScript or an embedded bash command. The idea is much like embedded SQL, /bin/js is bash embedded in JavaScript.
+The script is interpreted line by line determining if each line is JavaScript or an embedded bash command. The idea is much like embedded SQL, /bin/js is bash embedded in JavaScript.
 
 Thus, the following line is NOT possible, since it would be both bash and JavaScript.
 

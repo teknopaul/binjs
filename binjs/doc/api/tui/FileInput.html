@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../../style/style.css" rel="stylesheet"/>
 	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,7 +37,9 @@
 <a href="FloatInput.html" class=next>➠</a>
 <h1>FileInput</h1>
 
-<p>Sublasses tui.Input and accepts any text but additionally provides tab completion for files and directories.  The interface is not exactly the same as bash tab completion but is close enough. Future versions may provide a closer match to bash's features.
+<p>Sublasses tui.Input and accepts any text but additionally provides tab completion for files and directories.</p>
+
+<p>The interface is not exactly the same as bash tab completion but is close enough. Future versions may provide a closer match to bash's features.
 Entering a tilde <code>~</code> and pressing tab expands to the user's home directory, but other tilde expansions are not supported.</p>
 
 <hr />

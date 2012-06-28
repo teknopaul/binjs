@@ -1,7 +1,7 @@
 # Global 
 
-Global variables and functions 
-    
+Global variables and functions.
+
 ----------------------------
 
 ## Attributes

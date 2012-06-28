@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="style/style.css" rel="stylesheet"/>
 	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,7 +37,9 @@
 <a href="EnvironmentVariables.html" class=next>➠</a>
 <h1>Arguments to the script</h1>
 
-<p>When executing a /bin/js scripts command line arguments are passed to both bash and JavaScript. If a script is run as follows.</p>
+<p>When executing a /bin/js scripts command line arguments are passed to both bash and JavaScript. The arguments to bash are available inthe normal manner and in JavaScript they are available via global variables.</p>
+
+<p>If a script is run as follows.</p>
 
 <pre><code>./myscript.bjs one two three
 </code></pre>

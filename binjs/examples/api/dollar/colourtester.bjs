@@ -1,0 +1,20 @@
+#!/bin/js
+#
+# There are various methods in ~lib/Color.js to show how to print colours
+#
+
+var i = 30;
+for(; i < 40; i++) {
+
+	$.setEnv("i", i);
+
+	echo -e "\033[${i}m${i}:colour test\033[0m"  # syntax of bash is not pretty
+
+}
+
+$.println("something in green",  'green');
+
+$.println("something in orange", 'orange');
+
+$.println("something in yellow", 'yellow');
+

@@ -1,0 +1,19 @@
+#!/bin/js
+#
+# Test for interrupting the script
+#
+# Hit Ctrl + C during execution of this script
+# and it should be possible to exit.
+#
+
+
+sleep  1
+$.println("errno" + errno);
+sleep  1
+$.println("errno" + errno);
+sleep  1
+$.println("errno" + errno);
+
+$.sleep(50000);
+echo $?
+

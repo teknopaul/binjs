@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../../style/style.css" rel="stylesheet"/>
 	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,7 +37,15 @@
 <a href="Throbber.html" class=next>➠</a>
 <h1>Table</h1>
 
-<p>Renders a table of data</p>
+<p>Renders a table of data.</p>
+
+<pre><code>┌──────┬──────┬──────────┐
+│title1│title2│title3    │
+│abc   │def   │ghi       │
+│klm   │nop   │qrstuvwxyz│
+│    23│    45│        42│
+└──────┴──────┴──────────┘
+</code></pre>
 
 <hr />
 

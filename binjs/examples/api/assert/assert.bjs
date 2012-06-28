@@ -1,0 +1,55 @@
+#!/bin/js
+binjs_import("~lib/Assert.js");
+#
+#  CommonJS spec assert library, copied from NodeJS and (and abused)
+#
+
+// binjs style initialization
+var assert = new Assert();
+
+assert.ok(true);
+
+try {
+
+  assert.ok(false);
+  $.error(1, "Assert failure should throw an error");
+  
+}
+catch(err) {
+
+  $.info(0, "Assert correctly threw Exception");
+
+  if (err instanceof Error) {
+
+    $.info(0, "Assert correctly threw Exception of type Error");
+
+  }
+  
+}
+
+
+try {
+
+  assert.fail();
+  
+}
+catch(err) {
+
+  $.info(0, "Assert correctly threw Exception");
+  
+}
+
+try {
+
+  assert.equal("actaul", "expected", "the error message");
+  
+}
+catch(err) {
+
+  $.info(0, "Assert correctly threw Exception");
+  $.info(0, "Assert message", err.message);
+  
+  assert.equal(err.message, "the error message");
+  
+}
+

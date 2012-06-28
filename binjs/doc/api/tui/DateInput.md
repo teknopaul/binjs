@@ -1,6 +1,8 @@
 # DateInput
 
-Sublasses tui.Input and only permits date to be entered in various forms. this is currently quite basic validation. Validation is not very strict, dates must be numbers in the form `xx` delim `yy` delim `zz` where delim is any of `" " / \ - .` Subseqeunt code should determine which order the integers come in, be it European or US format.
+Sublasses tui.Input and only permits date to be entered in various forms. 
+
+This is currently quite basic validation. Validation is not very strict, dates must be numbers in the form `xx` delim `yy` delim `zz` where delim is any of `" " / \ - .` Subseqeunt code should determine which order the integers come in, be it European or US format.
 
 ----------------------------
 

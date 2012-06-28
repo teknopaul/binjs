@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../../style/style.css" rel="stylesheet"/>
 	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,8 +37,9 @@
 <a href="NumberInput.html" class=next>➠</a>
 <h1>Input</h1>
 
-<p>Base class for various Text input types, which accept user input from the console.
-This calss can be constructed on its own and manipulated to control user input.</p>
+<p>Base class for various Text input types, which accept user input from the console.</p>
+
+<p>This calss can be constructed on its own and manipulated to control user input.</p>
 
 <hr />
 

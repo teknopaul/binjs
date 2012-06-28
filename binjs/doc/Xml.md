@@ -1,7 +1,11 @@
 
 # Xml Support
 
+/bin/js has native support for reading, manipulating and writing XML.
+
 Modifying XML files in scripts is fiddly with only Linux tools like awk and sed at your disposal so /bin/js comes with an XML parser built in, it is lifted from nodejs code with a couple of changes to make it more fitting for synchronous scripts.
+
+For validating XML use `xmllint`.
 
 ## Usage
 

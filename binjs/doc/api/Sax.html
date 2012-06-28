@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../style/style.css" rel="stylesheet"/>
 	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -30,11 +38,11 @@
 <a href="Term.html" class=next>➠</a>
 <h1>Sax</h1>
 
-<p>XML Sax parser and implementation</p>
+<p>XML Sax parser.</p>
 
 <p>Sax.js is a copy of nodejs sax.js</p>
 
-<p>See <a href="../../html/Xml.html">Xml parsing</a></p>
+<p>See <a href="../Xml.html">Xml parsing</a></p>
 
 <hr />
 

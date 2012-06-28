@@ -1,6 +1,6 @@
 # Throbber
 
-A Spinning throbber, ala Firefox, to indicate an ongoing operation.
+A Spinning throbber, ala Firefox, to indicate an on-going operation.
 
 The Object should be constructed and used only once, create a new Throbber with the `new` keyword
 to start the throbber again.

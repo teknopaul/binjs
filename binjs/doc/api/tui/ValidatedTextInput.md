@@ -1,6 +1,6 @@
 # ValidatedTextInput
 
-Sublasses `tui.Input` to provide validation of the text entered by the user.
+Sublasses `tui.Input` to accept text entered by the user but validated by a function provided by a script.
 
 ----------------------------
 

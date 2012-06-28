@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="style/style.css" rel="stylesheet"/>
 	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -28,6 +36,8 @@
 				<div id="main">
 <a href="HowItWorks.html" class=next>➠</a>
 <h1>Features</h1>
+
+<p>This page lists the hight level features of /bin/js.</p>
 
 <p>/bin/js is a mash-up of Bash and JavaScript enabling a very simple script syntax.</p>
 

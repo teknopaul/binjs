@@ -6,7 +6,6 @@ These are the two github pages that host the code.
 
 * [/bin/js github home page](http://teknopaul.github.com/binjs/)
 
-
 These docs you are reading are hosted on code.abnoctus.com and are periodically regenerated from the source code.
 
 * [/bin/js online docs](http://code.abnoctus.com/binjs/)

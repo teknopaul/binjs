@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<title>binjs index</title>
+	<title>/bin/js tui index</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../../style/style.css" rel="stylesheet"/>
 	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -30,20 +38,21 @@
 <h1>TUI Index</h1>
 The Text User Interface package contains widgets for use on the command line.   Objects in the package use the <code>tui.</code> namespace.
 <ul>
-<li><a href="BooleanInput.html"> BooleanInput.md </a></li>
-<li><a href="ComboInput.html"> ComboInput.md </a></li>
-<li><a href="DateInput.html"> DateInput.md </a></li>
-<li><a href="EditorInput.html"> EditorInput.md </a></li>
-<li><a href="FileInput.html"> FileInput.md </a></li>
-<li><a href="FloatInput.html"> FloatInput.md </a></li>
-<li><a href="Input.html"> Input.md </a></li>
-<li><a href="NumberInput.html"> NumberInput.md </a></li>
-<li><a href="Popup.html"> Popup.md </a></li>
-<li><a href="Progress.html"> Progress.md </a></li>
-<li><a href="Table.html"> Table.md </a></li>
-<li><a href="Throbber.html"> Throbber.md </a></li>
-<li><a href="TimeInput.html"> TimeInput.md </a></li>
-<li><a href="ValidatedTextInput.html"> ValidatedTextInput.md </a></li>
+<li class="idx"><a href="BooleanInput.html"> BooleanInput.md </a> -  Sublasses `tui.Input` and only permits `y` or `n` to be entered by the user. </li>
+<li class="idx"><a href="ComboInput.html"> ComboInput.md </a> -  Provides similar functionality to a combo box widget. </li>
+<li class="idx"><a href="DateInput.html"> DateInput.md </a> -  Sublasses tui.Input and only permits date to be entered in various forms.  </li>
+<li class="idx"><a href="EditorInput.html"> EditorInput.md </a> -  A class that follows the tui style but launches vi or the users preferred text editor to fetch input. </li>
+<li class="idx"><a href="FileInput.html"> FileInput.md </a> -  Sublasses tui.Input and accepts any text but additionally provides tab completion for files and directories. </li>
+<li class="idx"><a href="FloatInput.html"> FloatInput.md </a> -  Sublasses tui.Input and only permits digits and decimal points to be entered by the user. </li>
+<li class="idx"><a href="Input.html"> Input.md </a> -  Base class for various Text input types, which accept user input from the console. </li>
+<li class="idx"><a href="NumberInput.html"> NumberInput.md </a> -  Sublasses `tui.Input` and only permits digits to be entered by the user. </li>
+<li class="idx"><a href="Popup.html"> Popup.md </a> -  Popup text, a text bubble with some additional info for the user. </li>
+<li class="idx"><a href="Progress.html"> Progress.md </a> -  A progress bar, to indicate progress in an on-going operation. </li>
+<li class="idx"><a href="SpinnerInput.html"> SpinnerInput.md </a> -  Maeks a list of options selectable  with upa nd down keys without the use of a cursor, display is only on one line, as the navigation keys are pressed the list is scrolled through. </li>
+<li class="idx"><a href="Table.html"> Table.md </a> -  Renders a table of data. </li>
+<li class="idx"><a href="Throbber.html"> Throbber.md </a> -  A Spinning throbber, ala Firefox, to indicate an on-going operation. </li>
+<li class="idx"><a href="TimeInput.html"> TimeInput.md </a> -  Sublasses tui.Input and only permits time to be entered in the form `00:00`. </li>
+<li class="idx"><a href="ValidatedTextInput.html"> ValidatedTextInput.md </a> -  Sublasses `tui.Input` to accept text entered by the user but validated by a function provided by a script. </li>
 </ul>
 
 					<br/><br/>

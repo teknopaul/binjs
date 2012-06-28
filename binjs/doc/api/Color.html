@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../style/style.css" rel="stylesheet"/>
 	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -30,7 +38,7 @@
 <a href="Dollar.html" class=next>➠</a>
 <h1>Color</h1>
 
-<p>Definitions for constants for coloured output on the console (API uses yank speling).</p>
+<p>Definitions for constants for coloured output on the terminal.</p>
 
 <p>The Color object provides constants for making text appear coloured on the command line, color should be turned off after it is used.</p>
 

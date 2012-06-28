@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="style/style.css" rel="stylesheet"/>
 	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,7 +37,9 @@
 <a href="Exceptions.html" class=next>➠</a>
 <h1>Environment Variables</h1>
 
-<p>Environment variables from Bash are available in JavaScript via the <code>$.env</code> object.  When starting the script any environment variable that starts with an upper case ascii letter is copied to the <code>$.env</code> object. This object is updated after everr bash command so you do not have to manually sync the environment.</p>
+<p>Environment variables from bash are available in JavaScript via the <code>$.env</code> object.  </p>
+
+<p>When starting the script any environment variable that starts with an upper case ascii letter is copied to the <code>$.env</code> object. This object is updated after everr bash command so you do not have to manually sync the environment.</p>
 
 <pre><code>var home = $.env.HOME;
 </code></pre>

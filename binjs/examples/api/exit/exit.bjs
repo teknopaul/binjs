@@ -1,0 +1,17 @@
+#!/bin/js
+#
+# The exit statement looks like a bash builtin but is actually handled by 
+# /bin/js so the return code is used as /bin/js s exit code
+#
+
+echo "say something" && exit 1
+
+// n.b. no exit but errno is set
+
+$.info(0, "errno", errno);
+
+echo "say something else"
+
+exit 23
+
+// if you type echo $? on the command line you will see 23

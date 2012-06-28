@@ -1,7 +1,7 @@
 
 # Job Control
 
-/bin/js has job control from bash.
+/bin/js has job control from bash, JavaScript is single-threaded, bash suports multiple forked processes.
 
 ## Where is setTimeout()
 

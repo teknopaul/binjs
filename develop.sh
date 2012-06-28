@@ -3,7 +3,7 @@
 # Synlink src tree to installation locations
 #
 
-INST_DIR=/lib/binjs
+INST_DIR=/usr/lib/binjs
 
 if [ `id -u` -ne "0" ] ; then
 	echo -e "\033[93mMust be root \033[0m"
@@ -25,7 +25,7 @@ if [ ! -d binjs/binjs-${VERSION} ] ; then
         exit 2
 fi
 
-# symlink the whole build tree to /lib
+# symlink the whole build tree to /usr/lib
 ln -s ${BASEDIR}/binjs/binjs-${VERSION} ${INST_DIR}
 
 
@@ -42,18 +42,18 @@ do
 	if [ -f /etc/debian_version ] ; then
 
 		echo -e "Assuming \033[35mDebian\033[0m" /lib/${so}
-		ln -s ${INST_DIR}/lib/${so} /lib/${so}
-		ln -s /lib/lib${SO}.so.1 /lib/lib${SO}.so  
+		ln -s ${INST_DIR}/lib/${so} /usr/lib/${so}
+		ln -s /usr/lib/lib${SO}.so.1 /usr/lib/lib${SO}.so  
 
 	elif [ -f /etc/redhat-release ] ; then
 		if [ -d /usr/lib64 ] ; then
-			echo -e "Assuming \033[91mRedHat 64bit\033[0m" /lib64/${so}
-			ln -sv ${INST_DIR}/lib/${so} /lib64/${so} 
-			ln -sv /lib64/lib${SO}.so.1 /lib64/lib${SO}.so  
+			echo -e "Assuming \033[91mRedHat 64bit\033[0m" /usr/lib64/${so}
+			ln -sv ${INST_DIR}/lib/${so} /usr/lib64/${so} 
+			ln -sv /usr/lib64/lib${SO}.so.1 /usr/lib64/lib${SO}.so  
 		else
-			echo -e "Assuming \033[91mRedHat 32bit\033[0m" /lib64/${so}
-			ln -sv ${INST_DIR}/lib/${so} /lib/${so}
-			ln -sv /lib/lib${SO}.so.1 /lib/lib${SO}.so  
+			echo -e "Assuming \033[91mRedHat 32bit\033[0m" /usr/lib64/${so}
+			ln -sv ${INST_DIR}/lib/${so} /usr/lib/${so}
+			ln -sv /usr/lib/lib${SO}.so.1 /usr/lib/lib${SO}.so  
 		fi
 
 	fi

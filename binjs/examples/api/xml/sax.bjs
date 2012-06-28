@@ -1,0 +1,21 @@
+#!/bin/js
+binjs_import("~lib/Sax.js");
+
+cd `dirname $0`
+
+var parser = new Sax().parser(true);
+var text = new File("./doc.xml").read();
+
+$.println(text, 'orange');
+
+var xmlVer = "";
+parser.onopentag = function (node) {
+	if (node.name == "abc") {
+	  xmlVer = node.attributes["version"];
+        }
+};
+
+parser.write(text).close();
+
+$.println("Xml version is: " + xmlVer);
+

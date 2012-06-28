@@ -5,13 +5,17 @@
 
 cd `dirname $0`
 
+binjs_import("../../DocLib.js");
+
+var docLib = new DocLib();
+
 var files = new File(".").listFiles("*.md");
 
 var toc = [];
 
 function makeIndex() {
 
-	cat html/header.html | sed -e "s/@TITLE@/binjs index/g" \
+	cat html/header.html | sed -e "s/@TITLE@/\/bin\/js tui index/g" \
 						 | sed -e "s/@EXTRA_CSS@/tab-selected/g" \
 		 > ./index.html
 	
@@ -28,7 +32,8 @@ function makeIndex() {
 	
 		$.setEnv("SRC", toc[i].src);
 		$.setEnv("DEST", toc[i].dest);
-		echo '<li><a href="'$DEST'">' $SRC '</a></li>' >> ./index.html
+		$.setEnv("BLURB", docLib.getIntro(toc[i].src));
+		echo '<li class="idx"><a href="'$DEST'">' $SRC "</a> - $BLURB</li>" >> ./index.html
 	
 	}
 	echo "</ul>" >> ./index.html

@@ -1,6 +1,7 @@
 # Input
 
 Base class for various Text input types, which accept user input from the console.
+
 This calss can be constructed on its own and manipulated to control user input.
 
 ----------------------------

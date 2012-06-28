@@ -1,0 +1,30 @@
+#!/bin/js
+binjs_import("~lib/tui/SpinnerInput.js");
+
+
+var options = ["start ", "one", "two" , "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven" , "twelve" , "thirteen", "fourteen"];  // N.B: all on one line!
+
+options.push("another");  // alternat syntax
+options.push("one more");
+options.push("end");
+
+
+$.println("Select an option with the arrow keys", true);
+
+var spinner = new tui.SpinnerInput(options);
+
+var selected = spinner.select();
+
+$.println("You selected : " + selected , 'green');
+
+$.println("-");
+$.println("-");
+$.println("-");
+$.println("-");
+
+
+var spinner = new tui.SpinnerInput(options);
+
+var selected = spinner.select();
+$.println("You selected : " + selected , 'green');
+

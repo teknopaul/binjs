@@ -1,6 +1,7 @@
 # EditorInput
 
 A class that follows the tui style but launches vi or the users preferred text editor to fetch input.
+
 ----------------------------
 
 ## Import

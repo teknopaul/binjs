@@ -1,6 +1,8 @@
 # ComboInput
 
-Provides similar functionality toa combo box widget, i.e. allows the user to selectan option froma list on screen.  the size of the list should fix on screen or an exception is thrown as scrolling is not supported.  Theuser makes the selection with the arrow keys moving the cursor up and down.
+Provides similar functionality to a combo box widget.
+
+Combo allows the user to selectan option froma list on screen.  The size of the list should fix on screen or an exception is thrown as scrolling is not supported.  Theuser makes the selection with the arrow keys moving the cursor up and down.
 
 ----------------------------
 

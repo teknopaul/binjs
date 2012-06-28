@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../../style/style.css" rel="stylesheet"/>
 	<link href="../../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "../../CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>	
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -29,7 +37,9 @@
 <a href="FileInput.html" class=next>➠</a>
 <h1>EditorInput</h1>
 
-<h2>A class that follows the tui style but launches vi or the users preferred text editor to fetch input.</h2>
+<p>A class that follows the tui style but launches vi or the users preferred text editor to fetch input.</p>
+
+<hr />
 
 <h2>Import</h2>
 

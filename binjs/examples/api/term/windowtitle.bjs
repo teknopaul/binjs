@@ -1,0 +1,9 @@
+#!/bin/js
+binjs_import("~lib/Term.js");
+
+
+
+new Term().setWindowTitle("hello %w World");
+
+
+sleep 3;

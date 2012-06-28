@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="style/style.css" rel="stylesheet"/>
 	<link href="img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "CoverPage.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
   </head>
 	<body id="pw-body">
 		<div id="tab-container">
@@ -26,10 +34,10 @@
 				<div id="header"><span class="title">/bin/js handbook</span></div>
 				<div id="content">
 				<div id="main">
-<a href="MagicVars.html" class=next>➠</a>
+<a href="Json.html" class=next>➠</a>
 <h1>Job Control</h1>
 
-<p>/bin/js has job control from bash.</p>
+<p>/bin/js has job control from bash, JavaScript is single-threaded, bash suports multiple forked processes.</p>
 
 <h2>Where is setTimeout()</h2>
 
@@ -75,7 +83,7 @@
   state : Integer
 }
 </code></pre>
-<a href="MagicVars.html" class=next>➠</a>
+<a href="Json.html" class=next>➠</a>
 
 					<br/><br/>
 				</div>

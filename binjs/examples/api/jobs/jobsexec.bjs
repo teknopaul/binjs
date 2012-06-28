@@ -1,0 +1,25 @@
+#!/bin/js
+#
+#  Job control ala bash
+#
+#  OMG this is crazy single threqaded scripting language with multi-process support
+#
+#  Thats the way the cookie crumbles
+#
+
+function background() {
+	sleep 1 && echo hello &
+}
+
+function background2() {
+	sleep 2 && echo world &
+}
+
+
+// N.B JavaScrip stays single threaded througout, it is bash that forks processes
+background();
+background2();
+
+// if we dont sleep we kiil sub-processes which is probably not what was wanted
+$.sleep(3000) ;
+

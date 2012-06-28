@@ -1,6 +1,7 @@
 /**
  * Utility Object for printing tables of data
  */
+binjs_import("~lib/Term.js");
  
 if (typeof tui == 'undefined') tui = {};
 
@@ -16,7 +17,7 @@ if (typeof tui == 'undefined') tui = {};
  */
 tui.Table = function(arg0, arg1) {
 	// this is a unicode bar set to  normal pipe or a space for ascii output
-	this.divider = '⎜';
+	this.divider = '│';
 	// consider one or more sequentioal delimters as one
 	this.compress = true;
 	// the column titles, must contain Strings
@@ -25,6 +26,7 @@ tui.Table = function(arg0, arg1) {
 	this.data = [];
 	// this.widths can be set to define the column widths
 	this.widths = undefined;
+	this._blanks = "";
 	
 	if (typeof arg0 === 'string') {
 		this.parse(arg0, ' ');
@@ -60,7 +62,7 @@ tui.Table.prototype.parse = function(string, delim) {
 
 tui.Table.prototype.center = function(text, width) {
 	var indent = Math.floor((width - text.length) / 2);
-	var spaces = "                                        ".substring(0, indent);
+	var spaces = this._blanks.substring(0, indent);
 	return (spaces + text + spaces) + ( (text.length + (indent*2) < width) ? " " : "");
 }
 
@@ -76,9 +78,9 @@ tui.Table.prototype.align = function(obj, width) {
 	}
 	var indent = width - string.length;
 	return left ? 
-				string + "                                                                                ".substring(0, indent)
+				string + this._blanks.substring(0, indent)
 				:
-				"                                                                        ".substring(0, indent) + string
+				this._blanks.substring(0, indent) + string
 }
 	
 tui.Table.prototype.print = function() {
@@ -107,6 +109,66 @@ tui.Table.prototype.print = function() {
 	}
 	$.println();
 }
+	
+tui.Table.prototype.printUnicode = function() {
+	if (typeof this.widths == 'undefined')  {
+		this.setDefaultWidths(5);
+	}
+	
+	// ─┌┐└┘│┬
+	var totalWidth = 0
+	for (var i = 0; i < this.widths.length ; i++) totalWidth += this.widths[i];
+	totalWidth += (this.widths.length - 1);
+	
+	// print top border
+	$.print('┌');
+	for (var i = 0; i < this.widths.length ; i++) {
+		var ci = 0;
+		for (; ci < this.widths[i] ; ci++) {
+			$.print('─');
+		}
+		if ( i < this.widths.length  - 1) {
+			$.print('┬');
+		}
+	}
+	$.println('┐');
+	
+
+	// print headers
+	for (var i = 0; i < this.titles.length ; i++) {
+		$.print('│');
+		$.print(Color.UNDERLINE);
+		$.print(this.align(this.titles[i], this.widths[i]), true);
+	}
+	$.print(Color.COLOR_OFF);
+	$.println('│');
+
+	// print data
+	for (var r = 0; r < this.data.length ; r++) {
+		$.print('│');
+		for (var c = 0; c < this.data[r].length ; c++) {
+			$.print( this.align(this.data[r][c], this.widths[c]) );
+			$.print('│');
+		}
+		$.println();
+	}
+
+	// print bottom border
+	$.print('└');
+	for (var i = 0; i < this.widths.length ; i++) {
+		var ci = 0;
+		for (; ci < this.widths[i] ; ci++) {
+			$.print('─');
+		}
+		if ( i < this.widths.length  - 1) {
+			$.print('┴');
+		}
+	}
+
+	$.print('┘');
+	$.println();
+	
+}
 
 tui.Table.prototype.toString = function() {
 	if (typeof this.widths == 'undefined')  {
@@ -116,17 +178,17 @@ tui.Table.prototype.toString = function() {
 	var buf = "";
 	// print headers
 	for (var i = 0; i < this.titles.length ; i++) {
-		buf += this.divider;
+		buf += '|';
 		buf += this.align(this.titles[i], this.widths[i]);
 	}
-	buf += this.divider + '\n';
+	buf += '|' + '\n';
 
 	// print data
 	for (var r = 0; r < this.data.length ; r++) {
-		buf += (this.divider);
+		buf += '|';
 		for (var c = 0; c < this.data[r].length ; c++) {
 			buf += this.align(this.data[r][c], this.widths[c]);
-			buf += this.divider;
+			buf += '|';
 		}
 		buf += '\n';
 	}
@@ -139,10 +201,9 @@ tui.Table.prototype.toString = function() {
 tui.Table.prototype.setDefaultWidths = function(min) {
 	this.widths = [];
 	for (var c = 0; c < this.titles.length ; c++) {
-		this.widths[c] = Math.max(this.titles[c].length, min);
+		this.widths.push(Math.max(this.titles[c].length, min));
 	}
-	
-	
+
 	for (var r = 0; r < this.data.length ; r++) {
 
 		for (var c = 0; c < this.data[r].length ; c++) {
@@ -151,8 +212,38 @@ tui.Table.prototype.setDefaultWidths = function(min) {
 		}
 
 	}
+	
+	// create padding spaces needed for aligning tables
+	var maxWidth = this.widths[0]
+	for (var i = 1; i < this.widths.length ; i++) {
+		maxWidth = Math.max(maxWidth, this.widths[i]);
+	}
+	for (var i = 0; i < maxWidth ; i++) {
+		this._blanks += " ";
+	}
+	
 }
 
+tui.Table.prototype.pack = function(columnToCrop) {
+	var term = new Term();
+	var fullWidth = 1;
+	for (var i = 0; i < this.widths.length ; i++) {
+		fullWidth += this.widths[i];
+		fullWidth++;
+	}
+	
+	if ( fullWidth > term.getWidth() ) {  // we need to crop some data
+		var newColWidth = this.widths[columnToCrop];
+		newColWidth -= (fullWidth - term.getWidth());
+		this.widths[columnToCrop] = newColWidth;
+		for (var r = 0; r < this.data.length ; r++) {
+			// TODO detect cropping and add singel char unicode elipse ⋯
+			this.data[r][columnToCrop] = String(this.data[r][columnToCrop]).substring(0, newColWidth);
+		}
+	}
+	
+	// TODO throw if we still dont have enough space and this.throwOnError is set
+}
 
 
 

@@ -1,0 +1,20 @@
+#!/bin/js
+#
+#  Test various print methods
+#
+
+binjs_println("string");
+binjs_println(23);
+binjs_println(new Date());
+binjs_println('string');
+binjs_println(null);
+binjs_println(true);
+
+try {
+	binjs_println("some undef" + undef);
+} catch (err) {
+	binjs_println(err);
+}
+
+
+

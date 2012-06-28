@@ -1,6 +1,7 @@
 # TimeInput
 
 Sublasses tui.Input and only permits time to be entered in the form `00:00`.
+
 This input class only validates the String is in the correct form not that the time is valid.
 i.e. `25:99` is permitted and should be validated by the user.
 Future versions of this class will be more strict with user input.

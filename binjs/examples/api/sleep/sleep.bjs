@@ -1,0 +1,13 @@
+#!/bin/js
+#
+#  sleep for a while with bash
+#
+
+function loop() {
+	echo sleeping...
+	sleep 5
+	echo up again
+}
+
+loop();
+

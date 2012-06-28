@@ -1,7 +1,9 @@
 # Term
 
-Provides access to features of the terminal the script is running in.
-    
+Provides access to features of the terminal the script is running in, such as terminal width, height and cursor position.
+
+This Object provides access to the terminal via ESC codes wrapped as JavaScript method calls, to make interacting with ther terminal easy.
+
 ----------------------------
 
 ## Import

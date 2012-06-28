@@ -1,0 +1,47 @@
+#!/bin/js
+binjs_import("~lib/tui/Table.js")
+
+cd `dirname $0`
+
+var table = new tui.Table(new File("./table.data").read());
+
+$.println("Using the default print() ", true);
+table.print();
+
+$.println();
+
+table.divider = "   ";
+
+$.println("Using the default print() with spaces for the divider", true);
+table.print();
+
+
+table.data.push(['totals','','']);
+table.data.push([23,45,42]);
+
+
+$.println("Using the print() method", true);
+table.print();
+
+$.println("Using the toString() method", true);
+$.println(table.toString());
+
+
+$.println("Using the unicode() method", true);
+$.println(table.printUnicode());
+
+// the pack methods allows tables that are too big to fit on screen to be cropped// the pack methods allows tables that are too big to fit on screen to be cropped  
+
+table.data.push([200, 123456, "http://www.myvberylogdomain.com/somepath/that/is/not/interestingattheends?withparameters=true&json={fooo:true,bar,false}&yagetme"]);
+
+table.setDefaultWidths(5);
+
+$.println("Using the unicode() method, unpacked", true);
+$.println(table.printUnicode());
+
+table.pack(2);
+
+$.println("Using the unicode() method, packed", true);
+$.println(table.printUnicode());
+
+

@@ -1,7 +1,9 @@
- 
+
 # How it works
 
-The /bin/js mash-up is achieved by preparsing the script and deciding for each line if it needs to be interpreted as JavaScript or Bash.  /bin/js uses the chrome v8 JavaScript runtime and some C++ libraries, Bash 4.2 hacked and compiled as a library with its features exposed as C functions, and a preparser written in C.
+The /bin/js mash-up is achieved by preparsing the script and deciding for each line if it needs to be interpreted as JavaScript or Bash.  
+
+/bin/js uses the chrome v8 JavaScript runtime and some C++ libraries, Bash 4.2 hacked and compiled as a library with its features exposed as C functions, and a preparser written in C.
 
 If this is a /bin/js script
 

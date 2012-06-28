@@ -63,7 +63,7 @@ void ReportException(TryCatch* try_catch);
 static bool IsLoaded(const char* library);
 
 // constants
-static const char* JS_LIBRARY_PATH = "/lib/binjs/lib";
+static const char* JS_LIBRARY_PATH = "/usr/lib/binjs/lib";
 
 static std::vector<const char*> *loadedLibraries = new std::vector<const char*>(); 
 static bool bashInitialized = false;

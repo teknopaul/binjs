@@ -4,11 +4,15 @@
 #
 # This script copys everything needed to /lib/binjs then creates symlinks
 #
-# Run checkdeps.sh to verify if you have therequired build tools to install
+# Run checkdeps.sh to verify if you have the required build tools to install
 #
 
 # per HFS if the binary is /bin/js the libraries are in /lib/
-INST_DIR=/lib/binjs
+# but we put everything in /usr/lib and symlink /bin/js
+# since this code uses C++ it can not run with only
+# deps from /lib
+PREFIX=/usr
+INST_DIR=${PREFIX}/lib/binjs
 
 
 
@@ -34,7 +38,7 @@ if [ ! -d binjs/binjs-${VERSION} ] ; then
         exit 2
 fi
 
-# copy the whole build tree to /lib
+# copy the whole build tree to /usr/lib
 cd "${BASEDIR}/binjs/binjs-${VERSION}"
 cp -Rv * ${INST_DIR}
 
@@ -50,19 +54,19 @@ do
 	# Linking ${so}
 	if [ -f /etc/debian_version ] ; then
 
-		echo -e "Assuming \033[35mDebian\033[0m" /lib/${so}
-		ln -s ${INST_DIR}/lib/${so} /lib/${so} 
-		ln -s /lib/lib${SO}.so.1 /lib/lib${SO}.so  
+		echo -e "Assuming \033[35mDebian\033[0m" /usr/lib/${so}
+		ln -s ${INST_DIR}/lib/${so} /usr/lib/${so} 
+		ln -s /usr/lib/lib${SO}.so.1 /usr/lib/lib${SO}.so  
 
 	elif [ -f /etc/redhat-release ] ; then
 		if [ -d /usr/lib64 ] ; then
-			echo -e "Assuming \033[91mRedHat 64bit\033[0m" /lib64/${so}
-			ln -s ${INST_DIR}/lib/${so} /lib64/${so} 
-			ln -s /lib64/lib${SO}.so.1 /lib64/lib${SO}.so  
+			echo -e "Assuming \033[91mRedHat 64bit\033[0m" /usr/lib64/${so}
+			ln -s ${INST_DIR}/lib/${so} /usr/lib64/${so} 
+			ln -s /usr/lib64/lib${SO}.so.1 /usr/lib64/lib${SO}.so  
 		else
-			echo -e "Assuming \033[91mRedHat 32bit\033[0m" /lib64/${so}
-			ln -s ${INST_DIR}/lib/${so} /lib/${so}
-			ln -s /lib/lib${SO}.so.1 /lib/lib${SO}.so
+			echo -e "Assuming \033[91mRedHat 32bit\033[0m" /usr/lib/${so}
+			ln -s ${INST_DIR}/lib/${so} /usr/lib/${so}
+			ln -s /usr/lib/lib${SO}.so.1 /usr/lib/lib${SO}.so
 		fi
 
 	fi

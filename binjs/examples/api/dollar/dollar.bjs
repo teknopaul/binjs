@@ -1,0 +1,36 @@
+#!/bin/js
+#
+# Tester for the $. functions
+#
+
+
+$.println("text");
+$.println("bold text", true);
+$.println("orange text", 'orange');
+$.print("testing the error() function");
+
+$.error(23, "Something bad happened");
+$.warn(24, "Threat level orange");
+$.info(0, "Blue for OK", $.env.HOME);
+
+// env vars that dont start with an upppercase 
+// ascii char are not in $.env, get them like this
+
+$.println("Last set = " + $.getEnv("_"));
+
+// JavaScript vars in the global space can be "watched" i.e. copied to bash
+
+var someVar = 0;  // unwatched
+
+echo "some unwatched var=$someVar";
+
+$.watch.push("someVar");
+
+someVar = 2;
+echo "some watched var=$someVar";
+
+delete $.watch;
+
+someVar=3;
+echo "unwatched, no change, but not deleted var=$someVar";
+

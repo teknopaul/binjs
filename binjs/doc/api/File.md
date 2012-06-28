@@ -225,3 +225,11 @@ When setting the ext the File object is NOT changed a new instance of file is re
 You can not change the extension of a directory or a symlink with this method even if it has one. 
 
 There is no requirement that the file exists this method just does string manipulation of the path based on the name.
+
+### getParent()
+  
+Returns the parent file as a String or null if this file points to the root directory.
+
+### getParentFile()
+  
+Returns the parent file as a File object or null if this file points to the root directory.

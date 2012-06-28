@@ -1,0 +1,27 @@
+#!/bin/js
+#
+# File.list()
+#
+
+// File.list() returns strings, unsorted
+$.println("Listing ./", true);
+$.println( new File(".").list().join("\n") );
+
+$.println("Listing as File objects ./", true);
+$.println( new File(".").listFiles().join("\n") );
+
+$.println("Listing as File objects ~/Do*", true);
+var fileArr = new File("~").listFiles("Do*");
+for (var i = 0 ; i < fileArr.length ; i++ ) {
+	$.println( fileArr[i].path );
+}
+
+// listing gives relativepaths
+$.println("Listing as File objects ./*", true);
+var fileArr = new File(".").listFiles("*");
+for (var i = 0 ; i < fileArr.length ; i++ ) {
+	$.println( fileArr[i].path );
+}
+
+
+
