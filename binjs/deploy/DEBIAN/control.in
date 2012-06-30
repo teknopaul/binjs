@@ -1,0 +1,20 @@
+Package: binjs
+Version: @PACKAGE_VERSION@
+Section: 
+Priority: optional
+Architecture: all
+Essential: no
+Depends: glibc (>= 2.14), libstdc++ (>=4.6)
+Pre-Depends: 
+Recommends: perl
+Suggests: 
+Installed-Size: 8692
+Maintainer: teknopaul [me@teknopaul.com]
+Conflicts: 
+Replaces: 
+Provides: binjs
+Description: /bin/js is a shell scripting language which permits JavaScript syntax and embeded lines of bash commands. Its a simple intuitive way to write scripts.
+
+
+
+

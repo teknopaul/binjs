@@ -1,0 +1,5 @@
+#!/bin/js
+
+binjs_import("~lib/Runtime.js");
+
+$.println("isatty " + Runtime.isatty, true);

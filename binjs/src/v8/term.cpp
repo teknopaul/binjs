@@ -39,10 +39,6 @@ Handle<Value> TermHeight(const Arguments& args) {
 	
 }
 
-Handle<Value> TermV8Version(const Arguments& args) {
-	return String::New(V8::GetVersion());
-}
-
 Handle<Value> TermMakeRaw(const Arguments& args) {
 	HandleScope scope;
 
@@ -77,7 +73,21 @@ Handle<Value> TermReset(const Arguments& args) {
 	HandleScope scope;
 	
 	DoTermReset();
-
+	
+	// put cursor on if JS code left it off 
+	// TODO not working why not?
+	/*
+	unsigned int cursorOn[6];
+	cursorOn[0] = 27;
+	cursorOn[1] = 91;
+	cursorOn[2] = 63;
+	cursorOn[3] = 50;
+	cursorOn[4] = 53;
+	cursorOn[5] = 104;
+	int i = 0;
+	for(i = 0 ; i < 6 ; i++) putc(cursorOn[i] & 0xff, stdout);
+	*/
+	
 	return Undefined();
 }
 

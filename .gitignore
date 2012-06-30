@@ -20,5 +20,15 @@ bash-4.2/libbash.h
 bash-4.2/libbash.o
 bash-4.2/libbash.so
 bash-4.2/libbash.so.1
+binjs-0.1-1.x86_64.deb
+binjs-0.1-1.x86_64.rpm
+Makefile
+Makefile.in
+aclocal.m4
+autom4te.cache/
+config.status
+configure
+stamp-h1
+
 
 

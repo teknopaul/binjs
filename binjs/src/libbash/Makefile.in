@@ -1,0 +1,41 @@
+#
+# Makefile for libbash.c
+#
+# Assumes you have not changed tha bash source code itself
+# if you have,  touch libbash.c
+#
+# Assumes you have not changed the autoconf setup,
+# if you have,  touch bash-4.2/Makefile.in
+#
+BASEDIR=$(CURDIR)
+BASH_SRC=../../../bash-4.2
+
+.PHONY: clean
+
+$(BASH_SRC)/libbash.so.1 : $(BASH_SRC)/Makefile $(BASH_SRC)/libbash.c $(BASH_SRC)/libbash.h
+	
+	touch $(BASH_SRC)/shell.c
+	cd $(BASH_SRC) && make
+
+	test -f $(BASH_SRC)/libbash.so.1
+
+	rm -f ../../contrib/libbash.*
+
+	cp -v $(BASH_SRC)/libbash.so.1 $(BASH_SRC)/libbash.a  ../../contrib
+	cd ../../contrib && ln -s libbash.so.1 libbash.so
+
+	gcc -Wall -fPIC  test/test_libbash.c -o test/test_libbash -lbash -L../../contrib
+
+	test -f  test/test_libbash
+
+$(BASH_SRC)/Makefile : $(BASH_SRC)/Makefile.in
+	cd $(BASH_SRC) && ./configure CFLAGS=-fPIC 
+
+$(BASH_SRC)/libbash.c : libbash.c
+	cd $(BASH_SRC) && cp -v $(BASEDIR)/libbash.c .
+
+$(BASH_SRC)/libbash.h : libbash.h
+	cd $(BASH_SRC) && cp -v $(BASEDIR)/libbash.h .
+
+clean:
+	rm -vf test/test_libbash

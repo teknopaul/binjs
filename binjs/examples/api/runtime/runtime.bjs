@@ -1,0 +1,7 @@
+#!/bin/js
+
+binjs_import("~lib/Runtime.js")
+
+$.println("/bin/js ver = " + Runtime.binjsVersion) ;
+$.println("bash ver = " + Runtime.bashVersion) ;
+$.println("v8 ver = " + Runtime.javaScriptVersion) ;

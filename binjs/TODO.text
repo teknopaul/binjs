@@ -1,4 +1,25 @@
 # TODO LIST #
+ 
+  Add Assert to every script still in src/test or move it
+ 
+  Standardize use of $.info for output, in both sets of scripts
+  
+  Perhap importing Term should give you a static Term  called with Term.getWidth() same was $ does and Color does.
+  Assert could work this way too? htat might be too non standard
+
+Consistency of APIs, go through each and every att and method and ensure it conforms to some expected value be that from c / C++ or JavaScript w3c or Java.
+
+Make API kipple private  with _
+
+Copy and Merge code/doc comments so they are consistent.
+
+Tidy up all C and C++ code, espcially preparser.  reorder methods and atts an dcomments
+
+Make preparser sufficiently abstract that it can export HTML.
+
+Get and apply GPL.
+
+Static link bash and v8 so we have only one binary file
 
 ### Bugs
 
@@ -7,19 +28,31 @@ Signal handling is hard
 	need to detect when bash has returned because of a signal
 	sleep returns 128 + sig but any command can return andy 8bit code so that is not specific enough
 
+Bug in exit handler, probably need a clena exit handler, that returns cursor and term state
+current handelr will not turn cursor back on, why?
+Term in C++ land needs a reliable pattern for sendinf ESC codes
+
+Non-useful error messages coming from assert where one arg of equals in null
+	~lib/Assert.js:85: <string conversion failed>
+		throw new AssertionError({
+
+
 ### Features
 
+add all colours to color even the wishy-washy ones	
 import .bjs scripts properly
 i18n
 Interactive mode = false  to disable \r and other escapes
 Support text formatting in all TUI components in a consistent manner and some global option too
+
 TUI Widgets 
   Date
   Time - needs seconds and validation
+  Table should have UTF-8 borders as an option
 
-
-copy nodejs' inspect() method
+copy nodejs' inspect() method but add colour
 Debug on / off that enables Bash debug and $.debug() statements
+  bash debug is jus tsetting echo_command_at_execute from flags.h
 
 ### General
 
@@ -27,9 +60,11 @@ add asserts to scripts in src/test
 
 ### Build 
 
-Options on where to deploy the code /lib  or /usr/lib
-build for RPM and DEB
-Replace all build.sh with Make files
+build for RPM should make
+build for DEB
+make Makefile.in has TODOs
+do make install
+
 curl github.com/teknopaul/binjs/install.sh | bash style script
 Find way to apply patches to bash
 Use correct Ubuntu / Fedora versions of bash
@@ -51,4 +86,4 @@ README.md
 
 ### Command line debugger
 
-Some optional ncusrses based TUI for debugging scripts
+Some optional ncusrses based TUI for debugging scripts.

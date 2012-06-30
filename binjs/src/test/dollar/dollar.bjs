@@ -2,32 +2,30 @@
 #
 # Tester for the $. functions
 #
+binjs_import("~lib/Assert.js");
+var assert = new Assert();
 
-
-$.println("text");
-$.println("bold text", true);
-$.println("orange text", 'orange');
-$.print("testing the error() function");
-$.error(23, "Something bad happened");
-
-$.info(0,"Var from environment", $.env.HOME);
-
-var format = "";
-$.println(typeof format);
-
-$.println("Last set = " + $.getEnv("_"));
 
 var someVar = 0;  // unwatched
 
-echo "some unwatched var=$someVar";
+BASH_VIEW=`echo "$someVar"`
+
+assert.equal($.env.BASH_VIEW, "");
 
 $.watch.push("someVar");
 
 someVar = 2;
-echo "some watched var=$someVar";
+
+BASH_VIEW=`echo "$someVar"`
+
+assert.equal($.env.BASH_VIEW, "2");
 
 delete $.watch;
 
 someVar=3;
-echo "some unwatched var=$someVar";
 
+BASH_VIEW=`echo "$someVar"`
+
+assert.equal($.env.BASH_VIEW, "2");
+
+$.println("Done.", 'green');

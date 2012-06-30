@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<title>Json.md</title>
+	<title>Runtime.md</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<link href="../style/style.css" rel="stylesheet"/>
 	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
@@ -35,61 +35,56 @@
 				<div id="content">
 				<div id="main">
 			
-<a href="Runtime.html" class=next>➠</a>
-<h1>Json</h1>
+<a href="Sax.html" class=next>➠</a>
+<h1>Runtime</h1>
 
-<p>Syntactic sugar around v8's native JSON parser and a pretty printer.</p>
+<p>Runtime allows the script to interface with the environment in which it is running.</p>
 
-<p><code>JSON.stringify()</code> and <code>JSON.parse()</code> also work as expected, without any need for imports.</p>
+<p>Code is odeled on Java's java.lang.Runtime</p>
 
 <hr />
 
 <h2>Import</h2>
 
-<p><code>binjs_import("~lib/Json.js")</code></p>
+<p><code>binjs_import("~lib/Runtimejs")</code></p>
 
 <hr />
 
 <h2>Provides</h2>
 
 <ul>
-<li>Json</li>
+<li>Runtime</li>
 </ul>
+
+<hr />
 
 <h2>Constructor</h2>
 
-<p>The constructor takes no arguments.</p>
-
-<pre><code>var json = new Json();
-</code></pre>
+<p>Class can not be instantiated</p>
 
 <hr />
 
 <h2>Attributes</h2>
 
-<p>None</p>
+<h3>binjsVersion</h3>
+
+<p>Returns a String for the /bin/js version. 
+e.g. 0.1</p>
+
+<h3>bashVersion</h3>
+
+<p>Returns a String for the bash version. 
+e.g. 4.2</p>
+
+<h3>javaScriptVersion</h3>
+
+<p>Returns the v8 version a String as returned by v8::V8::GetVersion
+e.g. 3.11.9 (candidate)</p>
 
 <hr />
 
 <h2>Methods</h2>
-
-<h3>parse</h3>
-
-<p>Parse a String and return a JavaScript object. This method delegates to v8s native JSON obejct.</p>
-
-<h3>toJson</h3>
-
-<p>Convert the first argument passed to the method to a Json String. This method delegates to v8s native JSON obejct.
-If the second argument is a boolena true the output is indented with strings.</p>
-
-<h3>prettyPrint</h3>
-
-<p>Prints a colourised output of the Json object to the console.  The arguments should be a String.</p>
-
-<h3>prettyPrintObject</h3>
-
-<p>Prints a colourised output of the Json object to the console.  The arguments should be a JavaScript Object.</p>
-<a href="Runtime.html" class=next>➠</a>
+<a href="Sax.html" class=next>➠</a>
 
 					<br/><br/>
 				</div>

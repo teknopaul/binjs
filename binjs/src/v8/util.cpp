@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <cstring>
+#include <unistd.h>
 
 #include "util.h"
 
 #include <v8.h>
 
 using namespace v8;
+
 
 //static const char* ToCString(const String::Utf8Value& value) {
 //	return *value ? *value : "<string conversion failed>";

@@ -1,0 +1,39 @@
+%define buildroot /tmp
+#
+# Spec file for /bin/js 64bit Fedora
+#
+Name: binjs
+Version: @PACKAGE_VERSION@
+Release: 1
+Summary: /bin/js provides the ability to write shell scripts with a mash-up of JavaScript and bash.
+Group: Development/Languages
+License: GPL
+#URL: http://code.abnoctus.com/binjs/
+Source: binjs-0.1.tar.gz
+#BuildRequires:
+#Requires:
+#Vendor: teknopaul
+#Packager: teknopaul <me@teknopaul.org>
+
+%description
+/bin/js is a shell scripting language which permits JavaScript syntax and 
+embeded lines of bash commands. Its a simple intuitive way to write scripts.
+
+## this created from ALL files to be deployed
+%files
+@FILES_LIST@
+
+%post
+cd /usr/lib64
+ln -s -f /usr/lib/binjs/lib/libbash.so.1  /usr/lib64/libbash.so.1
+ln -s -f libbash.so.1  libbash.so
+ln -s -f /usr/lib/binjs/lib/libv8.so.1  /usr/lib64/libv8.so.1
+ln -s -f libv8.so.1  libv8.so
+ln -s -f /usr/lib/binjs/lib/librunjs.so.1  /usr/lib64/librunjs.so.1
+ln -s -f librunjs.so.1  librunjs.so
+ln -s -f /usr/lib/binjs/bin/binjs  /bin/js
+
+%postun
+rm -f /usr/lib64/libbash.so.1 /usr/lib64/libbash.so /usr/lib64/libv8.so.1 /usr/lib64/libv8.so /usr/lib64/librunjs.so.1 /usr/lib64/librunjs.so
+rm -f /bin/js
+

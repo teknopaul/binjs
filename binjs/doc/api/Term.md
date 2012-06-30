@@ -28,21 +28,6 @@ The constructor takes no arguments.
 
 ## Attributes
 
-### binjsVersion
-
-Returns a String for the /bin/js version. 
-e.g. 0.1
-
-### bashVersion
-
-Returns a String for the bash version. 
-e.g. 4.2
-
-### javaScriptVersion
-
-Returns the v8 version a String as returned by v8::V8::GetVersion
-e.g. 3.11.9 (candidate)
-
 ------------------------
 
 ## Methods
@@ -83,7 +68,7 @@ Write text to the console that is twice as big as normal, this only works in DEC
 
 ### setWindowTitle
 
-Set the title window of the terminal, works in xterm but not Konsole (potentially a bug)
+Set the title window of the terminal, Konsole by defautl does not show this, change the window title or the tabl tile to %w and scripts are able to set the title. Double click on the tab to change the settings.
 
 ### cursorOff
 

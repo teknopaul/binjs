@@ -1,0 +1,56 @@
+#
+#  N.B. make CDs back to CURDIR all the bloody time!! use absolute paths for everyting
+#
+BASEDIR=$(CURDIR)
+BUILD_PREP=$(CURDIR)/build_prep
+BUILD_OUTPUT=$(CURDIR)/binjs-@PACKAGE_VERSION@
+
+.PHONY: clean all package
+
+all :
+	# copys everything to ./build then remanes to binjs-0.1
+
+	rm -rf $(BUILD_PREP)
+	mkdir -p $(BUILD_PREP)
+	cd $(BUILD_PREP) && mkdir -p bin lib examples doc
+
+	# make libbash tests to see if you have made bash as default  or if the -fPIC build has been done
+	cd src/libbash && make -s
+
+	# make runjs v8 JavaScript runner
+	cd src/v8 && make -s
+
+	cp src/v8/librunjs.so.1 $(BUILD_PREP)/lib
+	cp src/v8/runjs $(BUILD_PREP)/bin
+
+	# make binjs  and preparser tools
+	cd src/c && make -s
+	cp src/c/binjs src/c/binjs_preparser $(BUILD_PREP)/bin
+
+	cd src/js && cp -R --archive * $(BUILD_PREP)/lib
+	
+	cd contrib && cp *.so.1 $(BUILD_PREP)/lib
+
+	cd examples && cp -R * $(BUILD_PREP)/examples
+
+	cd doc && cp -R --archive * $(BUILD_PREP)/doc
+	
+	rm -rf binjs-@PACKAGE_VERSION@
+	mv $(BUILD_PREP) binjs-@PACKAGE_VERSION@
+
+	echo -e "\033[32mDone.\033[0m"
+
+package: all
+	echo "Makeing binjs-@PACKAGE_VERSION@.tar.gz"
+	rm -f binjs-@PACKAGE_VERSION@.tar.gz
+	tar cvfz binjs-@PACKAGE_VERSION@.tar.gz binjs-@PACKAGE_VERSION@
+
+clean:
+	echo Cleaning from $(CURDIR)
+	rm -rf contrib/*
+	rm -rf binjs-@PACKAGE_VERSION@ 2>/dev/null
+	rm -f  binjs-@PACKAGE_VERSION@.tar.gz 2>/dev/null
+	rm -f examples/*~ 2>/dev/null
+	cd src/c && make clean
+	cd src/v8 && make clean
+	cd src/libbash && make clean

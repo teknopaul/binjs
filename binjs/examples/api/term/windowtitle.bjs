@@ -3,7 +3,7 @@ binjs_import("~lib/Term.js");
 
 
 
-new Term().setWindowTitle("hello %w World");
+new Term().setWindowTitle("Hello World");
 
 
 sleep 3;

@@ -1,21 +1,27 @@
 #!/bin/js
+binjs_import("~lib/Assert.js");
+var assert = new Assert();
 
-function modGlobalI() {i++;}
-function modLocalI() {
-	var gi = 999; // createa local scopped i
+
+function modGlobalGI() { 
+	if (true) gi++; 
+	BASH_VIEW=`echo "$gi"`
+	assert.equal("6", $.env.BASH_VIEW); 
+}
+
+function modLocalGI() {
+	var gi = 999; // create a local scopped gi
 	gi++;       // modify it
-	echo scoped gi is $gi  # confuse yourself by refering to global $i
+	
+	BASH_VIEW=`echo "X$gi"`  # confuse yourself by refering to global $gi
+	assert.equal("X5", $.env.BASH_VIEW);
 }
 
-for (gi = 0 ; gi < 5 ; gi++) {
-	modGlobalGI();
-	modLocalGI();
-	echo gi is $gi
-}
+gi = 5;
+modGlobalGI();
 
-var gi = 23
-
-$.println("local i is now " + gi);
+gi = 5;
+modLocalGI();
  
 // Fiddling with the global scope
 // This is deliberatly nasty syntax we dont want you to do this
@@ -23,7 +29,7 @@ $.println("local i is now " + gi);
 if (true) gx = 23;
 $.watch.push("gx");
 
-echo gx is $gx
-if (true) gx = 24;
-echo gx is $gx
+BASH_VIEW=`echo "X$gx"`
+
+assert.equal("X23", $.env.BASH_VIEW);
 

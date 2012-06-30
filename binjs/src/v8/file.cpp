@@ -31,7 +31,7 @@
  *
  * var modNow = file.stat().lastModifiedDate;
  *
- * This is dones so that when creating a JSON object for a list of files
+ * This is done so that when creating a JSON object for a list of files
  * we dont call stat() for every access to every attribute of every file.
  */
  
@@ -51,6 +51,9 @@ static const char* ToCString(const String::Utf8Value& value) {
 
 static Handle<FunctionTemplate> FILE_TEMPLATE;
 
+/**
+ * Sets up the File object template.
+ */
 void InitialiseFile(Handle<FunctionTemplate> fileTemplate) {
 
 	FILE_TEMPLATE = fileTemplate;
@@ -70,6 +73,9 @@ void InitialiseFile(Handle<FunctionTemplate> fileTemplate) {
 
 }
 
+/**
+ * Constructor executed from JavaScript with `new`.
+ */
 Handle<Value> FileConstructor(const Arguments& args) {
 	HandleScope scope;
 	
@@ -89,6 +95,15 @@ Handle<Value> FileConstructor(const Arguments& args) {
 	return Undefined(); 
 }
 
+/**
+ * Sets the `path` attrubute from a string, usually passed from the constructor, also
+ * after rename.
+ *
+ * The method does tilde expansion to the supplied path and sets the attribute `name` based on the
+ * last entry in the path.
+ *
+ * The name of the root File is "/"
+ */
 static void SetPath(Handle<String> pathString, Handle<Object> self) {
 	HandleScope scope;
 
@@ -158,7 +173,9 @@ static void SetPath(Handle<String> pathString, Handle<Object> self) {
 	
 }
 
-
+/**
+ * Call stat() and set the attributes of this File Object.
+ */
 static void DoStat(Handle<String> pathString, Handle<Object> self) {
 	HandleScope scope;
 
@@ -256,7 +273,7 @@ Handle<Value> FileIsSymlink(const Arguments& args) {
 
 /**
  * Returns true if this path points to the root.
- e.g.  /bin/..  points to the root.
+ * e.g.  /bin/..  points to the root.
  */
 Handle<Value> FileIsRoot(const Arguments& args) { 
 	HandleScope scope;
@@ -283,6 +300,9 @@ Handle<Value> FileIsRoot(const Arguments& args) {
 	
 }
 
+/**
+ * Call stat() from JavaScript
+ */
 Handle<Value> FileStat(const Arguments& args) { 
 	HandleScope scope;
 	
@@ -292,6 +312,9 @@ Handle<Value> FileStat(const Arguments& args) {
 	
 }
 
+/**
+ * Touch this file and call stat().
+ */
 Handle<Value> FileTouch(const Arguments& args) {
 	HandleScope scope;
 
@@ -315,6 +338,9 @@ Handle<Value> FileTouch(const Arguments& args) {
 	
 }
 
+/**
+ * Rename this file, and call stat().
+ */
 Handle<Value> FileRename(const Arguments& args) {
 	HandleScope scope;
 	
@@ -344,6 +370,9 @@ Handle<Value> FileRename(const Arguments& args) {
 
 }
 
+/**
+ * Delete this file and call stat().
+ */
 Handle<Value> FileDelete(const Arguments& args) { 
 	HandleScope scope;
 
@@ -362,6 +391,7 @@ Handle<Value> FileDelete(const Arguments& args) {
 }
 
 /**
+ * Lists a directory.
  * Returns a list of strings.
  */
 Handle<Value> FileList(const Arguments& args) { 

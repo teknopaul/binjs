@@ -79,3 +79,7 @@ Color.fromModifier = function(colour) {
 		  throw new Error("invalid colour choose from black,white,grey,darkgrey,blue,green,red,yellow,cyan,magenta,orange");
 	}
 }
+
+if ( ! binjs_isatty() ) {
+	Color.disable();
+}

@@ -13,10 +13,6 @@ var binjs_TERM_IS_RAW = false;
  * @constructor
  */
 Term = function() {
-	this.binjsVersion = "0.1";
-	this.bashVersion = "4.2";
-	this.javaScriptVersion = binjs_termV8Version();
-	
 };
 
 Term.INVALID_ESC = "Invalid escape sequence";
@@ -189,7 +185,10 @@ Term.prototype.consumeAnsiEscape = function() {
 	// TODO ESC O ESC _
 }
 
-// set the window title in xterm, Konsole does not like this??
+/**
+ * set the window title in xterm, 
+ * Konsole needs the tab title replaced by %w for this to work.
+ */
 Term.prototype.setWindowTitle = function(title) {
 	binjs_termWriteByte(27, 93, 50, 59); // ESC]2;
 	$.print(title);

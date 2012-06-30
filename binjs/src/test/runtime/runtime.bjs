@@ -1,0 +1,10 @@
+#!/bin/js
+
+binjs_import("~lib/Runtime.js");
+binjs_import("~lib/Assert.js");
+
+var assert = new Assert();
+
+assert.ok(Runtime.binjsVersion.length > 0);
+assert.ok(Runtime.bashVersion.length > 0);
+assert.ok(Runtime.javaScriptVersion.length > 0);
