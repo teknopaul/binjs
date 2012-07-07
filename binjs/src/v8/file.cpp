@@ -15,7 +15,7 @@
 #include <dirent.h>
 
 #include "file.h"
-#include "../libbash/libbash.h"
+#include "libbash.h"
 
 #include <v8.h>
 
@@ -49,14 +49,10 @@ static const char* ToCString(const String::Utf8Value& value) {
 	return *value ? *value : "<string conversion failed>";
 }
 
-static Handle<FunctionTemplate> FILE_TEMPLATE;
-
 /**
  * Sets up the File object template.
  */
 void InitialiseFile(Handle<FunctionTemplate> fileTemplate) {
-
-	FILE_TEMPLATE = fileTemplate;
 
 	fileTemplate->PrototypeTemplate()->Set( String::New("stat"),		FunctionTemplate::New(FileStat));
 	fileTemplate->PrototypeTemplate()->Set( String::New("isFile"),		FunctionTemplate::New(FileIsFile));

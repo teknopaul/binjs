@@ -7,25 +7,22 @@ BUILD_OUTPUT=$(CURDIR)/binjs-@PACKAGE_VERSION@
 
 .PHONY: clean all package
 
+# copys everything to ./build then renames to binjs-0.1
 all :
-	# copys everything to ./build then remanes to binjs-0.1
 
 	rm -rf $(BUILD_PREP)
 	mkdir -p $(BUILD_PREP)
 	cd $(BUILD_PREP) && mkdir -p bin lib examples doc
 
-	# make libbash tests to see if you have made bash as default  or if the -fPIC build has been done
-	cd src/libbash && make -s
+	cd ../bash-4.2 && make -s
+	cd ../bash-4.2 && make -s test_libbash
+	cd ../bash-4.2 && make -s binjs_preparser
+	cp src/c/binjs_preparser $(BUILD_PREP)/bin
 
-	# make runjs v8 JavaScript runner
 	cd src/v8 && make -s
 
-	cp src/v8/librunjs.so.1 $(BUILD_PREP)/lib
-	cp src/v8/runjs $(BUILD_PREP)/bin
-
-	# make binjs  and preparser tools
-	cd src/c && make -s
-	cp src/c/binjs src/c/binjs_preparser $(BUILD_PREP)/bin
+	cd ../bash-4.2 && make -s binjs
+	cp src/c/binjs $(BUILD_PREP)/bin
 
 	cd src/js && cp -R --archive * $(BUILD_PREP)/lib
 	
@@ -41,7 +38,7 @@ all :
 	echo -e "\033[32mDone.\033[0m"
 
 package: all
-	echo "Makeing binjs-@PACKAGE_VERSION@.tar.gz"
+	echo "Making binjs-@PACKAGE_VERSION@.tar.gz"
 	rm -f binjs-@PACKAGE_VERSION@.tar.gz
 	tar cvfz binjs-@PACKAGE_VERSION@.tar.gz binjs-@PACKAGE_VERSION@
 
@@ -51,6 +48,5 @@ clean:
 	rm -rf binjs-@PACKAGE_VERSION@ 2>/dev/null
 	rm -f  binjs-@PACKAGE_VERSION@.tar.gz 2>/dev/null
 	rm -f examples/*~ 2>/dev/null
-	cd src/c && make clean
+	cd ../bash-4.2 && make clean
 	cd src/v8 && make clean
-	cd src/libbash && make clean

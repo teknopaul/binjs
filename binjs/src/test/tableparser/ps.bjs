@@ -1,0 +1,28 @@
+#!/bin/js
+binjs_import("~lib/util/TableParser.js");
+binjs_import("~lib/tui/Table.js");
+binjs_import("~lib/Json.js");
+#
+#
+#
+
+
+var textParser = new util.TableParser();
+
+PSEF=`ps -ef| egrep 'UID|root' | head -5`
+
+var table = textParser.parseFixedSpacedTable($.env.PSEF);
+
+textParser.convertNumbers(table);
+
+new Json().prettyPrintObject(table);
+
+var tuiTable = new tui.Table();
+
+tuiTable.titles = table.titles;
+tuiTable.data = table.data;
+tuiTable.pack(7);
+tuiTable.printUnicode();
+
+
+

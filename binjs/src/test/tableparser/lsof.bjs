@@ -1,0 +1,17 @@
+#!/bin/js
+binjs_import("~lib/util/TableParser.js");
+binjs_import("~lib/Json.js");
+#
+#
+#
+
+
+var tableParser = new util.TableParser();
+
+LSOF=`lsof| egrep 'COMMAND|kio_file' | head -5`
+
+var table = tableParser.parseFixedSpacedTable($.env.LSOF);
+
+
+new Json().prettyPrintObject(table);
+

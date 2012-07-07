@@ -6,21 +6,18 @@
  
 #include <string.h>
 #include <unistd.h>
+#include <pthread.h>
 
 #include <v8.h>
 
 #include "bashexec.h"
 
-#include "../libbash/libbash.h"
+#include "libbash.h"
 #include "util.h"
 #include "librunjs.h"
 
 
 using namespace v8;
-
-static Handle<FunctionTemplate> JOB_TEMPLATE;
-
-static int lastCommandExitValue = 0;
 
 // TODO String values allocated on the heap because they will be reused and dont benefit from GC
 //static Persistent<String> PS_id = BJS_PSYMBOL("id");
@@ -81,8 +78,7 @@ Handle<Value> ExecAsBash(const Arguments& args) {
 	libbash_run_one_command((char *)cstr);
 		
 	// set return value
-	lastCommandExitValue = libbash_last_command_exit_value();
-	global->Set(String::New("errno"), Integer::New(lastCommandExitValue));
+	global->Set(String::New("errno"), Integer::New(libbash_last_command_exit_value()));
 
 	// set last asyncrnonous pid
 	global->Set(String::New("lastpid"), Integer::New(libbash_last_asynchronous_pid()));
@@ -169,19 +165,7 @@ Handle<Value> GetVariable(const Arguments& args) {
 	return String::New(value);
 }
 
-/**
- * Return the exit value of the last command run by bash.
- */
-Handle<Value> LastCommandExitValue(const Arguments& args) {
-	HandleScope scope;
-	
-	return Integer::New(lastCommandExitValue);
-}
-
-
 void InitialiseJob(Handle<FunctionTemplate> jobTemplate) {
-
-	JOB_TEMPLATE = jobTemplate;
 
 }
 /**
@@ -193,6 +177,11 @@ void InitialiseJob(Handle<FunctionTemplate> jobTemplate) {
 Handle<Value> GetJobs(const Arguments& args) {
 	HandleScope scope;
 
+	Local<Context> context = args.This()->CreationContext();
+	Local<Object> global = context->Global();
+	
+	Local<Value> jfun = global->Get(String::New("Job"));
+	Local<Function> jobTemplate = Local<Function>::Cast(jfun);	
 	
 	Local<Array> jsArray = Array::New(0);
 	Local<Value> fun = jsArray->Get(String::New("push"));
@@ -202,7 +191,7 @@ Handle<Value> GetJobs(const Arguments& args) {
 	int j = 1;
 	while(jobs != NULL) {
 	
-		Handle<Object> jobsObject = JOB_TEMPLATE->GetFunction()->NewInstance();
+		Handle<Object> jobsObject = jobTemplate->NewInstance();
 		jobsObject->Set(String::New("id"),		Integer::New(j++));
 		jobsObject->Set(String::New("pid"),		Integer::New(jobs->pid));
 		jobsObject->Set(String::New("command"),	String::New(jobs->command));
@@ -266,16 +255,18 @@ void CopyVars() {
 	if (dollar->IsObject()) {
 		Local<Object> dollarObj = dollar->ToObject();
 		Handle<Value> watch = dollarObj->Get(String::New("watch"));
+		Handle<Value> watchUpper = dollarObj->Get(String::New("watchUpper"));
+
+		// Process watch list array inc gi, gj, gk
 		if ( watch->IsArray()) {
-			
 			
 			Local<Array> watchListObj(Array::Cast(*watch));
 			//Local<Object> watchListObj = watch->ToObject();
 			//Local<Array> names = watchListObj->GetPropertyNames();
 			
 			//printf("Found watch %d\n", names->Length());
-			
-			for ( uint32_t  i = 0 ; i < watchListObj->Length() ; i++) {
+			uint32_t limit = watchListObj->Length();
+			for ( uint32_t  i = 0 ; i < limit ; i++) {
 				Handle<Value> var = watchListObj->Get(i);
 				Handle<Value> value = global->Get(var);
 				
@@ -290,9 +281,33 @@ void CopyVars() {
 				}
 			}
 		}
+		
+		// process ALL uppercase Vars in the global context
+		if ( watchUpper->IsTrue() ) {
+			// Find the global variables
+			Local<Array> propertyNames = global->GetPropertyNames();
+			if ( propertyNames->IsArray()) {
+				uint32_t limit = propertyNames->Length();
+				for ( uint32_t  i = 0 ; i < limit ; i++) {
+					Handle<Value> var = propertyNames->Get(i);
+					String::Utf8Value varStr(var);
+					const char* varChars = ToCString(varStr);
+					if ( *varChars >= 65 && *varChars <= 90 ) { // ascii uppercase
+						Handle<Value> value = global->Get(var);
+						if ( value->IsString() ) {
+							String::Utf8Value valueStr(value);
+							libbash_set_variable(
+								ToCString(varStr), 
+								const_cast<char *>(ToCString(valueStr))
+								);
+						}
+					}
+					
+				}
+			}
+		}
 	}
 }
-
 
 
 

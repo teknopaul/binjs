@@ -1,5 +1,5 @@
 /**
- * binjs.c preparses a /bin/js file and passes the resulting JavaSciript to librunjs.
+ * binjs.c preparses a /bin/js file and passes the resulting JavaScript to librunjs.
  *
  * @author teknopaul
  */

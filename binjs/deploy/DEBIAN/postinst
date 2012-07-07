@@ -1,9 +1,5 @@
 #!/bin/sh
 cd /usr/lib
-ln -s -f /usr/lib/binjs/lib/libbash.so.1  /usr/lib/libbash.so.1
-ln -s -f libbash.so.1  libbash.so
 ln -s -f /usr/lib/binjs/lib/libv8.so.1  /usr/lib/libv8.so.1
 ln -s -f libv8.so.1  libv8.so
-ln -s -f /usr/lib/binjs/lib/librunjs.so.1  /usr/lib/librunjs.so.1
-ln -s -f librunjs.so.1  librunjs.so
 ln -s -f /usr/lib/binjs/bin/binjs  /bin/js

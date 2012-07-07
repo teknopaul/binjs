@@ -74,11 +74,15 @@ $.println("Created /tmp/binjs_rpmbuild/SPECS/binjs-" + $.env.VERSION + "-1.spec"
 
 rpmbuild -bb --rcfile /tmp/binjs_rpmbuild/rpmrcs /tmp/binjs_rpmbuild/SPECS/binjs-${VERSION}-1.spec
 
-if ( new File("/tmp/binjs_rpmbuild/RPMS/x86_64/binjs-0.1-1.x86_64.rpm").exists ) {
+if ( new File("/tmp/binjs_rpmbuild/RPMS/x86_64/binjs-" +$.env.VERSION  + "-1.x86_64.rpm").exists ) {
 
 	rm $PROJECT_ROOT/binjs-0.1-1.x86_64.rpm 2>/dev/null
-	mv /tmp/binjs_rpmbuild/RPMS/x86_64/binjs-0.1-1.x86_64.rpm $PROJECT_ROOT
-	$.println("Done.", 'green');
+	mv /tmp/binjs_rpmbuild/RPMS/x86_64/binjs-${VERSION}-1.x86_64.rpm $PROJECT_ROOT
+	if (errno === 0) $.println("Done.", 'green');
+	
+}
+else {
+	$.println("File not created", 'red');
 }
 
 #rm -rf /tmp/binjs_rpmbuild

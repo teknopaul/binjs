@@ -4,8 +4,12 @@
  
   Standardize use of $.info for output, in both sets of scripts
   
-  Perhap importing Term should give you a static Term  called with Term.getWidth() same was $ does and Color does.
-  Assert could work this way too? htat might be too non standard
+  Everything should have a constructor sicne it makes the preparser happy.
+  var term = new Term()
+  and
+  new Term()
+  are both interpreted correctly
+  Term.foo()  is not
 
 Consistency of APIs, go through each and every att and method and ensure it conforms to some expected value be that from c / C++ or JavaScript w3c or Java.
 
@@ -23,28 +27,27 @@ Static link bash and v8 so we have only one binary file
 
 ### Bugs
 
+Json pretty printer should detect misuse  if you pass a non string to prettyPrint() it prints nothing
+
 Signal handling is hard
 	parse_and_exec call set_signal_handler in Bash
 	need to detect when bash has returned because of a signal
 	sleep returns 128 + sig but any command can return andy 8bit code so that is not specific enough
 
-Bug in exit handler, probably need a clena exit handler, that returns cursor and term state
-current handelr will not turn cursor back on, why?
-Term in C++ land needs a reliable pattern for sendinf ESC codes
-
-Non-useful error messages coming from assert where one arg of equals in null
-	~lib/Assert.js:85: <string conversion failed>
-		throw new AssertionError({
+Bug in exit handler, probably need a clean exit handler, that returns cursor and term state
+current handler will not turn cursor back on, why?
+Term in C++ land needs a reliable pattern for sending ESC codes
 
 
 ### Features
 
+Export all objects of type String that start with an uppercase letter from JS to BASH
 add all colours to color even the wishy-washy ones	
 import .bjs scripts properly
 i18n
 Interactive mode = false  to disable \r and other escapes
 Support text formatting in all TUI components in a consistent manner and some global option too
-
+Dynamic C++ lib loading so Objects get properl  lass
 TUI Widgets 
   Date
   Time - needs seconds and validation
@@ -53,6 +56,12 @@ TUI Widgets
 copy nodejs' inspect() method but add colour
 Debug on / off that enables Bash debug and $.debug() statements
   bash debug is jus tsetting echo_command_at_execute from flags.h
+  
+Shell Script helpers
+	TextParser
+		lsof table type
+		support"grepping" tables where headers are always parsed btu data is grepped
+		Table Joining like a Database does
 
 ### General
 
@@ -62,8 +71,6 @@ add asserts to scripts in src/test
 
 build for RPM should make
 build for DEB
-make Makefile.in has TODOs
-do make install
 
 curl github.com/teknopaul/binjs/install.sh | bash style script
 Find way to apply patches to bash

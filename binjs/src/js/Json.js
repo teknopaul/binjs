@@ -51,9 +51,9 @@ Json.prototype.colorize = function(json) {
 		var c = json.charAt(i);
 		switch (c) {
 			case '{':
-				sb += Color.MAGENTA;
+				if (!inString) sb += Color.MAGENTA;
 				sb += c;
-				sb += Color.COLOR_OFF;
+				if (!inString) sb += Color.COLOR_OFF;
 				if (!inString) {
 					sb += '\n';
 					objDepth++;
@@ -66,9 +66,9 @@ Json.prototype.colorize = function(json) {
 					objDepth--;
 					sb += this.printDepth(objDepth);
 				}
-				sb += Color.MAGENTA;
+				if (!inString) sb += Color.MAGENTA;
 				sb += c;
-				sb += Color.COLOR_OFF;
+				if (!inString) sb += Color.COLOR_OFF;
 				break;
 			case '\"':
 				if (json.charAt(i-1) !== '\\') {
@@ -104,25 +104,25 @@ Json.prototype.colorize = function(json) {
 				if (!inString) {
 					arrayDepth++;
 				}
-				sb += Color.RED;
+				if (!inString) sb += Color.RED;
 				sb += c;
-				sb += Color.COLOR_OFF;
+				if (!inString) sb += Color.COLOR_OFF;
 				break;
 			case ']':
 				if (!inString) {
 					arrayDepth--;
 				}
-				sb += Color.RED;
+				if (!inString) sb += Color.RED;
 				sb += c;
-				sb += Color.COLOR_OFF;
+				if (!inString) sb += Color.COLOR_OFF;
 				break;
 			case ':':
 				if (!inString && json.charAt(i-1) != ' ') {
 					sb += '\t';
 				}
-				sb += Color.RED;
+				if (!inString) sb += Color.RED;
 				sb += c;
-				sb += Color.COLOR_OFF;
+				if (!inString) sb += Color.COLOR_OFF;
 				if (!inString && json.charAt(i-1) != ' ') {
 					sb += ' ';
 				}

@@ -1,8 +1,20 @@
-Makefile
 libbash.a
 libbash.c
 libbash.h
 libbash.o
-libbash.so
+.build
+.made
+bash
+bashbug
+bashversion
+libbash.flags
 libbash.so.1
+lsignames.h
+mksignames
+mksyntax
+preconfigured
+signames.h
+syntax.c
+test_libbash
+version.h
 

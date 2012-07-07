@@ -8,7 +8,6 @@
 
 using namespace v8;
 
-
 //static const char* ToCString(const String::Utf8Value& value) {
 //	return *value ? *value : "<string conversion failed>";
 //}

@@ -13,6 +13,7 @@ var binjs_TERM_IS_RAW = false;
  * @constructor
  */
 Term = function() {
+	this.throwOnError = false;
 };
 
 Term.INVALID_ESC = "Invalid escape sequence";
@@ -103,7 +104,27 @@ Term.prototype.isViTwitch= function(codes) {
 			codes[1] === 27;
 }
 
-// TODO (CSI in UTF-8 is 0xC2, 0x9B) but not on my terminal
+Term.prototype._consumeCSI = function(ret) {
+	var i = 0;
+	do {
+		var b = binjs_termReadByte();
+		
+		if (i++ === 0 && b === 91 ) { // ESC[[ = function keys, generally ignored
+			ret.push(b);
+			ret.push(binjs_termReadByte());
+			return ret;
+		}
+
+		ret.push(b);
+	} while (b >= 32 && b < 64);
+	
+	if (b >= 64 && b <= 126) {
+		return ret;
+	}
+	if (this.throwOnError) throw new Error( Term.INVALID_ESC );
+	else return;
+}
+
 
 /**
  * Reads Ansii ESC sequences off the stream, the whole sequence is read
@@ -118,38 +139,29 @@ Term.prototype.isViTwitch= function(codes) {
  * Warning: dont use this in bjs scripts, this should be C++ code integrated 
  * into binjs_TermReadChar() when that is done all ~libs will need to be migrated.
  *
- * 
  */
 Term.prototype.consumeAnsiEscape = function() {
-	
+
 	var code =  binjs_termReadByte();
 	
 	// non-standard, catch people with a vi twitch, double ESC == exit
 	if (code === 27) return [27, 27];
 	
-	if (code < 64 || code > 95) { // 2 char sequence
-		throw new Error( Term.INVALID_ESC );
+	if ( code === 155 ) { // Single UTF CSI
+		return this._consumeCSI([27, code]);
 	}
-
-	if (code === 91) { // CIS codes  ESC[ 32 to 47 terminated by a single 64 to 126 char
-		var ret = [27, 91];
-		var i = 0;
-		do {
-			var b = binjs_termReadByte();
-			
-			if (i++ === 0 && b === 91 ) { // ESC[[ = function keys, generally ignored
-				ret.push(b);
-				ret.push(binjs_termReadByte());
-				return ret;
-			}
-
-			ret.push(b);
-		} while (b >= 32 && b < 64);
-		
-		if (b >= 64 && b <= 126) {
-			return ret;
+	
+	else if ( code === 194 ) { // Unicdoe CSI 0xC2, 0x9B
+		var b = binjs_termReadByte();
+		if ( b === 155 ) {
+			return this._consumeCSI([27, code, b]);
 		}
-		throw new Error( Term.INVALID_ESC );
+		else if (this.throwOnError) throw new Error( Term.INVALID_ESC + " " + code + " " + b);
+		else return [27, code, b];
+	}
+	
+	else if (code === 91) { // CIS codes  ESC[ 32 to 47 terminated by a single 64 to 126 char
+		return this._consumeCSI([27, 91]);
 	}
 	
 	else if (code === 93 ||  // OSC codes  ESC]  read to BEL or ST  ESC\
@@ -165,7 +177,10 @@ Term.prototype.consumeAnsiEscape = function() {
 		} while ( b !== 7 && b !== 27); // BEL or ESC
 		if (b === 27) {
 			var stt = binjs_termReadByte();
-			if (stt !== 92) throw new Error( Term.INVALID_ESC );
+			if (stt !== 92) {
+				if (this.throwOnError) throw new Error( Term.INVALID_ESC );
+				return;
+			}
 			ret.push(stt); 
 		}
 		return ret;
@@ -177,6 +192,11 @@ Term.prototype.consumeAnsiEscape = function() {
 	
 	else if (code === 79) {  // SS3 code ESCO (capital O) read one more char
 		return [27, code, binjs_termReadByte()];
+	}
+	
+	else if (code < 64 || code > 95) { // 2 char sequence
+		if (this.throwOnError) throw new Error( Term.INVALID_ESC );
+		return [27, code];
 	}
 	
 	else {  // 2 char ESC code
@@ -261,8 +281,14 @@ Term.prototype.getCursorPosition = function() {
 	var codes = this.query(27, 91, 54, 110); // ESC[6n
 	
 	if (codes.length === 0) return [-1 , -1];
-	if ( codes[0] !== 27 ) throw new Error( Term.INVALID_ESC );
-	if ( codes[1] !== 91 ) throw new Error( Term.INVALID_ESC );
+	if ( codes[0] !== 27 ) {
+		if (this.throwOnError) throw new Error( Term.INVALID_ESC );
+		return;
+	}
+	if ( codes[1] !== 91 ) {
+		if (this.throwOnError) throw new Error( Term.INVALID_ESC );
+		return;
+	}
 	
 	var num = "";
 	for (var i = 2 ; i < codes.length ; i++) {
@@ -277,9 +303,12 @@ Term.prototype.getCursorPosition = function() {
 		else if (codes[i] >= 48 && codes[i] <= 57) {
 			num += String.fromCharCode(codes[i]);
 		}
-		else throw new Error( Term.INVALID_ESC );
+		else {
+			if (this.throwOnError) throw new Error( Term.INVALID_ESC );
+			return;
+		}
 	}
-	throw new Error( Term.INVALID_ESC );
+	if (this.throwOnError) throw new Error( Term.INVALID_ESC );
 }
 
 Term.prototype.query = function(argv) {

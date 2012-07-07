@@ -1,0 +1,27 @@
+#!/bin/js
+binjs_import("~lib/Json.js");
+binjs_import("~lib/Assert.js");
+binjs_import("~lib/util/TableParser.js");
+#
+#
+#
+var assert = new Assert();
+
+var data = "tit1   tit2 tit3       tit4\n"
+	 + "data1 data2 data3 data4\n"
+	 + "data1 data2 data3\n"
+	 + "data1 data2 data3 data4 data5\n"
+	 + "\n"
+	 + "data1 data2 data3 data4\n"
+
+var textParser = new util.TableParser();
+
+var tableData = textParser.parseSpacedTable(data, true);
+
+assert.equal(4, tableData.data.length);
+
+$.println(tableData.titles.join("_"));
+
+new Json().prettyPrintObject(tableData);
+
+

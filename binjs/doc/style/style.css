@@ -93,6 +93,7 @@ pre code {
 */
 li.idx a {
   font-weight: bold;
+  text-shadow: 0px 0px 0px;
 }
 li.idx {
   margin-bottom: 10px;
@@ -136,6 +137,7 @@ a img {
 a {
     color: #111111;
     text-decoration: none;
+    text-shadow: 0px 0px 1px #faa;
 }
 a:hover {
     color: #111111;

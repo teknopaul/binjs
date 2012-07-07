@@ -1,0 +1,50 @@
+#!/bin/js
+binjs_import("~lib/Assert.js");
+var assert = new Assert();
+
+#
+# Test for copying of uppercase global Strings, bools and ints not ccopied
+#
+
+function scopedBefore() {
+	$.print("scoped GLOBAL_STRING=" + GLOBAL_STRING + " ");
+	if (true) GLOBAL_STRING="changed in a scope"; // works but if (true) needed becauwse preparser does not know GLOBAL_STRING
+	echo GLOBAL_STRING=$GLOBAL_STRING  # prints "changed in a scope"
+	GLOBAL_STRING="fubar";   # treated as bash and change lost, since JS overrwites it
+	echo GLOBAL_STRING=$GLOBAL_STRING  # prints "changed in a scope"
+
+}
+
+$.watchUpper=false;
+$.println("$.watchUpper = false", true);
+
+var GLOBAL_STRING="hello world";
+var GLOBAL_BOOLEAN=true;
+var GLOBAL_INTEGER=23;
+
+echo GLOBAL_STRING=$GLOBAL_STRING
+echo GLOBAL_BOOLEAN=$GLOBAL_BOOLEAN
+echo GLOBAL_INTEGER=$GLOBAL_INTEGER
+
+$.watchUpper=true;
+$.println("$.watchUpper = true", true);
+
+echo GLOBAL_STRING=$GLOBAL_STRING
+echo GLOBAL_BOOLEAN=$GLOBAL_BOOLEAN
+echo GLOBAL_INTEGER=$GLOBAL_INTEGER
+
+
+assert.equal("hello world", $.env.GLOBAL_STRING);
+assert.ok(typeof $.env.GLOBAL_BOOLEAN == 'undefined');
+assert.ok(typeof $.env.GLOBAL_INTEGER == 'undefined');
+
+scopedBefore();
+
+function scopedAfter() {
+	$.print("scoped GLOBAL_STRING=" + GLOBAL_STRING + " ");
+	GLOBAL_STRING="changed in a scope";  // correct, references GLOBAL_STRING from global closue
+	echo GLOBAL_STRING=$GLOBAL_STRING    # prints "changed in a scope"
+}
+
+scopedAfter();
+

@@ -43,10 +43,15 @@ AssertionError = function AssertionError(options) {
   this.actual = options.actual;
   this.expected = options.expected;
   this.operator = options.operator;
+  if ( ! this.message ) {
+    message = this.truncate(JSON.stringify(this.actual), 128) + " " +
+              this.operator + " " +
+              this.truncate(JSON.stringify(this.expected), 128) 
+  }
 };
 $.inherits(AssertionError, Error);
 
-AssertionError.truncate = function(s, n) {
+AssertionError.prototype.truncate = function(s, n) {
   if (typeof s == 'string') {
     return s.length < n ? s : s.slice(0, n);
   } else {
@@ -55,14 +60,7 @@ AssertionError.truncate = function(s, n) {
 }
 
 AssertionError.prototype.toString = function() {
-  if (this.message) {
-    return this.name + ':' + this.message
-  } else {
-    return this.name + ':' +
-      this.truncate(JSON.stringify(this.actual), 128) + " " +
-      this.operator + " " +
-      this.truncate(JSON.stringify(this.expected), 128) 
-  }
+  return this.name + ':' + this.message
 };
 
 // assert.AssertionError instanceof Error
@@ -127,7 +125,7 @@ Assert.prototype.deepEqual = function(actual, expected, message) {
   }
 };
 
-Assert.prototype._deepEqua = function(actual, expected) {
+Assert.prototype._deepEqual = function(actual, expected) {
   // 7.1. All identical values are equivalent, as determined by ===.
   if (actual === expected) {
     return true;

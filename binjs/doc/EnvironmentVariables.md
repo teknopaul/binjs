@@ -1,9 +1,9 @@
 
 # Environment Variables
 
-Environment variables from bash are available in JavaScript via the `$.env` object.  
+Environment variables from bash are available in JavaScript via the `$.env` object.
 
-When starting the script any environment variable that starts with an upper case ascii letter is copied to the `$.env` object. This object is updated after everr bash command so you do not have to manually sync the environment.
+When starting the script any environment variable that starts with an upper case ascii letter is copied to the `$.env` object. This object is updated after every bash command so you do not have to manually sync the environment.
 
     var home = $.env.HOME;
 
@@ -19,7 +19,6 @@ Variables can be added or changed in the bash environment with `$.setEnv(name, v
         echo "Number${i}"
     }
 
-
 Some variables are automatically synced from JavaScript to bash, there is a list of Strings in the `$.watch` array that defines which global vars ar copied to Bash before executing a command.  This list can be manipulated.
 
     $.watch.push("myVar");
@@ -32,4 +31,16 @@ By default it contains `["gi", "gj", "gk"]` so that simple for loop variables ar
 
 It can be removed if you dont want any variables copied to the Bash environment.
 
-Passing variables to bash via the `$.watch` list only works in the global scope and currently does not work inside a function.
+Passing variables to bash via the `$.watch` list only works for variable declared int ehglobal scope.
+
+All UPPER_CASE JavaScript variables in the global scope are copied to the bash environment by default. This is controlled by the `$.watchUpper` boolean flag.
+
+	$.watchUpper = true;
+	
+The variable can be set to false to prevent copying global variables from JavaScript to bash.
+
+It is recommeded to declare global variables that you wish to be available in bash at the start of the script, for example
+
+    var MY_FILE_NAME = null;
+
+This makes it clear that the variable is in the global scope.

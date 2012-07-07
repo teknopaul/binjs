@@ -1,35 +1,20 @@
 #
-# Makefile for v8 modifications
+# Makefile for v8 modifications, just builds *.o  files
 #
 # TODO some of this config should come from autoconf
 #
 
-CC=g++
-CONTLINKS=-lv8 -lpthread
-CONTINCS=-I../../contrib/include
-CONTLIBS=-L../../contrib
-DEPS = file.h util.h term.h bashexec.h runtime.h
-OBJS = file.o util.o term.o bashexec.o runtime.o
+CONTINCS=-I../../contrib/include -I../../../bash-4.2 -I.
+DEPS = file.h util.h term.h bashexec.h runtime.h librunjs.h
+OBJS = file.o util.o term.o bashexec.o runtime.o librunjs.o
 GINCS=`pkg-config --cflags glib-2.0`
-GLIBS=`pkg-config --libs glib-2.0`
 
-all : librunjs.so runjs
+all : $(OBJS)
 
-runjs : runjs.c $(OBJS)
-	g++ -Wall -fPIC runjs.c librunjs.o $(OBJS) $(CONTLINKS) $(CONTINCS) $(CONTLIBS) -lbash \
-		-o runjs
-		
-librunjs.so : librunjs.cpp $(OBJS)
-	g++ -Wall -fPIC -c librunjs.cpp $(CONTINCS) $(GINCS) 
-	g++ -Wall -fPIC -shared librunjs.cpp $(OBJS) $(CONTLINKS) $(GINCS) $(CONTINCS) $(CONTLIBS) -lbash \
-		-o librunjs.so.1
-	rm -f librunjs.so
-	ln -s librunjs.so.1 librunjs.so
-
-%.o: %.cpp $(DEPS) librunjs.h
-	$(CC) -Wall -fPIC -c -o $@ $< $(CONTINCS)
+%.o: %.cpp $(DEPS) 
+	g++ -Wall -fPIC -c -o $@ $< $(CONTINCS) $(GINCS)
 
 .PHONY: clean
 
 clean:
-	rm -f *.o runjs librunjs.so.1 librunjs.so librunjs.o
+	rm -f *.o

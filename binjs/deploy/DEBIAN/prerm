@@ -1,2 +1,2 @@
 #!/bin/sh
-rm -f /usr/lib/libbash.so.1 /usr/lib/libbash.so /usr/lib/libv8.so.1 /usr/lib/libv8.so /usr/lib/librunjs.so.1 /usr/lib/librunjs.so /bin/js
+rm -f /usr/lib/libv8.so.1 /usr/lib/libv8.so /bin/js

@@ -1,1 +1,3 @@
 Makefile
+binjs
+binjs_preparser

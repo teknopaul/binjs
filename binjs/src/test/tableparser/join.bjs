@@ -1,0 +1,28 @@
+#!/bin/js
+binjs_import("~lib/util/TableParser.js");
+binjs_import("~lib/Json.js");
+
+
+var t1 = "id foo1 baa2\n"
+	+"01 foo1 baa1\n"
+	+"02 foo2 baa2\n"
+	+"05 foo3 baa3\n";
+
+var t2 = "id  quxx\n"
+	+"01 quxx1\n"
+	+"02 quxx2\n"
+	+"04 quxx3\n";
+
+var dataTable1 = new util.TableParser().parseSpacedTable(t1, true);
+var dataTable2 = new util.TableParser().parseSpacedTable(t2, true);
+
+
+
+new Json().prettyPrintObject(dataTable1.innerJoin(dataTable2, "id", "id"));
+
+new Json().prettyPrintObject(dataTable1.leftOuterJoin(dataTable2, "id", "id"));
+
+new Json().prettyPrintObject(dataTable1.rightOuterJoin(dataTable2, "id", "id"));
+
+
+

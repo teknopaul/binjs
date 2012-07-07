@@ -27,6 +27,13 @@ if ( typeof $ === 'undefined' ) {
   */
  $.watch = [];
  
+ /**
+  * Watch all  UPPERCASE JavaScript variables in the global scope.
+  *
+  * delete $.watchUpper if you dont want any syncing of variables.
+  */
+ $.watchUpper = true;
+ 
  // copy the default bash envirionment to JavaScript land
  binjs_copyEnv();
  

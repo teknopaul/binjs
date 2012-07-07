@@ -1,0 +1,29 @@
+#!/bin/js
+binjs_import("~lib/Json.js");
+binjs_import("~lib/Assert.js");
+binjs_import("~lib/util/TableParser.js");
+#
+#
+#
+var assert = new Assert();
+
+var data = "tit1   tit2  tit3  tit4\n"
+	 + "data1  data2 data3 data4\n"
+	 + "data01 data2 data3\n"
+	 + "data1  data2 data3 should be one\n"
+	 + "\n"
+	 + "data1  data2 data3 data4\n"
+
+var textParser = new util.TableParser();
+
+var tableData = textParser.parseFixedWidthTable(data, true);
+
+$.println(tableData.titles.join("_"));
+
+new Json().prettyPrintObject(tableData);
+
+$.println(tableData.data[2][3], true);
+assert.equal(4, tableData.data.length);
+assert.equal("should be one", tableData.data[2][3]);
+
+

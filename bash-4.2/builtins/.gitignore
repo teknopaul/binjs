@@ -1,0 +1,6 @@
+builtext.h
+builtins.c
+mkbuiltins
+pipesize.h
+psize.aux
+

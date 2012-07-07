@@ -7,29 +7,33 @@ var term = new Term();
 term.cursorOff();
 
 term.makeRaw();
+term.throwOnError = false;
 
-while (true) {
-	
-	var c = term.readChar();
-	if (term.isEscape(c)) {
-		var esc = term.consumeAnsiEscape();
-		$.print("ESC=[");
-		for ( var i = 0 ; i < esc.length ; i++) {
-			if ( i > 0 ) $.print(", ");
-			$.print("" + esc[i]);
+try {
+	while (true) {
+		
+		var c = term.readChar();
+		if (term.isEscape(c)) {
+			var esc = term.consumeAnsiEscape();
+			$.print("ESC=[");
+			for ( var i = 0 ; i < esc.length ; i++) {
+				if ( i > 0 ) $.print(", ");
+				$.print("" + esc[i]);
+			}
+			$.println("]\r");
 		}
-		$.println("]\r");
-	}
-	else if ('\r' == c) {
-		break;
-	}
-	else {
-		$.print(c);
+		else if ('\r' == c) {
+			break;
+		}
+		else {
+			$.print(c);
+		}
+
 	}
 
 }
-
-term.reset();
-term.cursorOn();
-
+finally {
+	term.reset();
+	term.cursorOn();
+}
 

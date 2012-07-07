@@ -63,7 +63,7 @@ void ReportException(TryCatch* try_catch);
 
 static bool IsLoaded(const char* library);
 
-// constants
+// constants TODO must comf from autoconf
 static const char* JS_LIBRARY_PATH = "/usr/lib/binjs/lib";
 
 static std::vector<const char*> *loadedLibraries = new std::vector<const char*>(); 
@@ -329,7 +329,7 @@ Persistent<Context> CreateShellContext() {
 	global->Set(String::New("binjs_sleep"),		FunctionTemplate::New(Sleep));
 	global->Set(String::New("binjs_exit"),		FunctionTemplate::New(Exit));
 	global->Set(String::New("binjs_trim"),		FunctionTemplate::New(Trim));
-	global->Set(String::New("binjs_scopeDump"),		FunctionTemplate::New(ScopeDump));
+	global->Set(String::New("binjs_scopeDump"),	FunctionTemplate::New(ScopeDump));
 
 	// libbash functions
 	global->Set(String::New("binjs_exec"),		FunctionTemplate::New(ExecAsBash));
@@ -404,7 +404,7 @@ void ProcessArgs(Handle<Object> global, int argc , char* argv[]) {
 Handle<Value> Print(const Arguments& args) {
 	HandleScope handle_scope;
 
-	Handle<String> sss = SafeToString(args[0]);
+	Handle<String> sss = SafeToString(args[0]); // TODO there is a Builtin for this
 	String::Utf8Value str(sss);
 	const char* cstr = ToCString(str);
 	printf("%s", cstr);

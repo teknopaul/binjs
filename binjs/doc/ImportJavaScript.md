@@ -11,7 +11,7 @@ The files must contain valid JavaScript, not /bin/js syntax files.  The files wi
 
 ### ~lib/
 
-The prefix "~lib/" is used to define the global script location which is hardcoded as `/lib/binjs/lib`. If you want a different default lib dir you need to create symlinks.
+The prefix `~lib/` is used to define the global script location which is hardcoded as `/lib/binjs/lib`. If you want a different default lib dir you need to create symlinks.
 
 Your own libraries can be loaded from anywhere on the file system from the current directory or with an absolute path.  
 
@@ -68,3 +68,4 @@ If you need that feature now, call the preparser directly
 
     cat myscript.bjs | /lib/binjs/bin/binjs_preparser > /tmp/bjs.tmp
     binjs_import("/tmp/bjs.tmp");
+

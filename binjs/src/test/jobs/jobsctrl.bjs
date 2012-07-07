@@ -9,29 +9,29 @@ function background() {
 }
 
 function background2() {
-	sleep 2 && echo world &
+	sleep 3 && echo "world" &
 }
 
 
-// N.B JavaScrip stays single threaded througout, it is bash that forks processes
+// N.B JavaScript stays single threaded througout, it is bash that forks processes
 background();
-sleep 5 && echo cruel &
+sleep 2 && echo -n "cruel " &
 background2();
 
-// before sleepint lets print whats going on in the background
+// before sleeping lets print whats going on in the background
 
 var jobsArray = binjs_getJobs();
 
 for (var j = 0 ; j < jobsArray.length ; j++ ) {	
 //	$.println("[" + jobsArray[j].id +"] pid=" + jobsArray[j].pid)
-	$.info(0,"jobs",jobsArray[j].command);
+	$.info(0, "jobs", jobsArray[j].command);
 
-	if ("cruel" == jobsArray[j].command) {
+	if ( jobsArray[j].command.indexOf("cruel") > -1 ) {
 
 		// delete the jobs with cludgy syntax TODO jobsArray[j].kill()
 		$.setEnv("TO_KILL", jobsArray[j].pid);
 		echo killing id ${TO_KILL}
-		kill %${TO_KILL}
+		kill ${TO_KILL}
 
 	}
 	

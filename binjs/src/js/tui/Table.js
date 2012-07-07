@@ -7,18 +7,18 @@ if (typeof tui == 'undefined') tui = {};
 
 /**
  * Create a Table.
- * Optional parameters are a String contaiing the table to be parsed 
+ * Optional parameters are a String containing the table to be parsed 
  * or an array of title strings and a 2d array of data.
  *
- * this is pretty simple code, feel free to contribute some features, hin thint
- * TODO full screen width, no max padding, Unicode borders. ascii mode
+ * This is pretty simple code, feel free to contribute some features, hint hint.
+ * TODO full screen width
  *
  * @constructor
  */
 tui.Table = function(arg0, arg1) {
 	// this is a unicode bar set to  normal pipe or a space for ascii output
 	this.divider = '│';
-	// consider one or more sequentioal delimters as one
+	// consider one or more sequential delimters as one
 	this.compress = true;
 	// the column titles, must contain Strings
 	this.titles = [];
@@ -47,12 +47,12 @@ tui.Table.prototype.parse = function(string, delim) {
 	this.titles = lines[0].split(delim);
 	if (lines.length > 1) {
 		for (var r = 1; r < lines.length ; r++) {
-			if ( lines[r] == "" ) continue;
+			if ( lines[r] === "" ) continue;
 			
 			var lineArray = lines[r].split(delim);
 			var lineData =  [];
 			for (var c = 0; c < lineArray.length ; c++) {
-				if (this.compress && lineArray[c] == "") continue;
+				if (this.compress && lineArray[c] === "") continue;
 				lineData.push(lineArray[c]);
 			}
 			this.data.push(lineData);
@@ -199,6 +199,8 @@ tui.Table.prototype.toString = function() {
 
 
 tui.Table.prototype.setDefaultWidths = function(min) {
+	if ( typeof min === 'undefined' ) min = 5;
+	
 	this.widths = [];
 	for (var c = 0; c < this.titles.length ; c++) {
 		this.widths.push(Math.max(this.titles[c].length, min));
@@ -225,6 +227,9 @@ tui.Table.prototype.setDefaultWidths = function(min) {
 }
 
 tui.Table.prototype.pack = function(columnToCrop) {
+	if ( typeof this.widths === 'undefined' ) this.setDefaultWidths(5);
+	if ( typeof columnToCrop === 'undefined' ) columnToCrop = this.widths.length - 1;
+	
 	var term = new Term();
 	var fullWidth = 1;
 	for (var i = 0; i < this.widths.length ; i++) {
@@ -237,7 +242,7 @@ tui.Table.prototype.pack = function(columnToCrop) {
 		newColWidth -= (fullWidth - term.getWidth());
 		this.widths[columnToCrop] = newColWidth;
 		for (var r = 0; r < this.data.length ; r++) {
-			// TODO detect cropping and add singel char unicode elipse ⋯
+			// TODO detect cropping and add single char unicode elipse ⋯
 			this.data[r][columnToCrop] = String(this.data[r][columnToCrop]).substring(0, newColWidth);
 		}
 	}

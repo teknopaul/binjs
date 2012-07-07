@@ -568,9 +568,29 @@ $(Program):  .build $(OBJECTS) $(BUILTINS_DEP) $(LIBDEP)
 lib$(Program).so.1:  .build $(LIBBASH_OBJECTS) $(BUILTINS_DEP) $(LIBDEP)
 	$(RM) $@
 	$(PURIFY) $(CC) -shared -fPIC $(BUILTINS_LDFLAGS) $(LIBRARY_LDFLAGS) $(LDFLAGS) -o lib$(Program).so.1 $(LIBBASH_OBJECTS) $(LIBS)
-	#ls -l lib$(Program).so.1
-	#-$(SIZE) lib$(Program).so.1
-	ar -r libbash.a $(LIBBASH_OBJECTS)
+
+
+test_libbash : examples/test_libbash.c
+	gcc -Wall -c examples/test_libbash.c
+	gcc -Wall test_libbash.o \
+		$(BUILTINS_LDFLAGS) $(LIBRARY_LDFLAGS) $(LDFLAGS) \
+		-o test_libbash \
+		$(LIBBASH_OBJECTS) $(LIBS)
+	test -f test_libbash
+
+binjs_preparser: ../binjs/src/c/binjs_preparser.c
+	gcc -Wall -c ../binjs/src/c/libpreparser.c -I../binjs/src/c `pkg-config --cflags glib-2.0`
+	gcc -Wall libpreparser.o ../binjs/src/c/binjs_preparser.c -I../binjs/src/c `pkg-config --cflags glib-2.0` \
+		-o ../binjs/src/c/binjs_preparser `pkg-config --libs glib-2.0`
+
+binjs:
+	gcc -Wall -c ../binjs/src/c/binjs.c -I../binjs/src/c `pkg-config --cflags glib-2.0`
+	g++ -Wall binjs.o libpreparser.o \
+		$(BUILTINS_LDFLAGS) $(LIBRARY_LDFLAGS) $(LDFLAGS) `pkg-config --libs glib-2.0` -L../binjs/contrib \
+		 ../binjs/src/v8/bashexec.o ../binjs/src/v8/file.o ../binjs/src/v8/util.o ../binjs/src/v8/term.o ../binjs/src/v8/librunjs.o ../binjs/src/v8/runtime.o \
+		-o ../binjs/src/c/binjs \
+		$(LIBBASH_OBJECTS) $(LIBS) -lpthread -lv8 -ldl
+	test -f ../binjs/src/c/binjs
 
 .build:	$(SOURCES) config.h Makefile version.h $(VERSPROG)
 	@echo "`$(BUILD_DIR)/$(VERSPROG) -l`"

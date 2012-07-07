@@ -37,9 +37,9 @@
 <a href="Exceptions.html" class=next>➠</a>
 <h1>Environment Variables</h1>
 
-<p>Environment variables from bash are available in JavaScript via the <code>$.env</code> object.  </p>
+<p>Environment variables from bash are available in JavaScript via the <code>$.env</code> object.</p>
 
-<p>When starting the script any environment variable that starts with an upper case ascii letter is copied to the <code>$.env</code> object. This object is updated after everr bash command so you do not have to manually sync the environment.</p>
+<p>When starting the script any environment variable that starts with an upper case ascii letter is copied to the <code>$.env</code> object. This object is updated after every bash command so you do not have to manually sync the environment.</p>
 
 <pre><code>var home = $.env.HOME;
 </code></pre>
@@ -72,7 +72,21 @@ for ( ; i &lt; 10 ; i++) {
 
 <p>It can be removed if you dont want any variables copied to the Bash environment.</p>
 
-<p>Passing variables to bash via the <code>$.watch</code> list only works in the global scope and currently does not work inside a function.</p>
+<p>Passing variables to bash via the <code>$.watch</code> list only works for variable declared int ehglobal scope.</p>
+
+<p>All UPPER_CASE JavaScript variables in the global scope are copied to the bash environment by default. This is controlled by the <code>$.watchUpper</code> boolean flag.</p>
+
+<pre><code>$.watchUpper = true;
+</code></pre>
+
+<p>The variable can be set to false to prevent copying global variables from JavaScript to bash.</p>
+
+<p>It is recommeded to declare global variables that you wish to be available in bash at the start of the script, for example</p>
+
+<pre><code>var MY_FILE_NAME = null;
+</code></pre>
+
+<p>This makes it clear that the variable is in the global scope.</p>
 <a href="Exceptions.html" class=next>➠</a>
 
 					<br/><br/>
