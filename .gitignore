@@ -6,7 +6,6 @@
 *.deb
 .directory
 Makefile
-aclocal.m4
 autom4te.cache/
 config.status
 stamp-h1

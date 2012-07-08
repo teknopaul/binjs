@@ -8,7 +8,7 @@
 cd `dirname $0`
 PROJECT_ROOT=`pwd`/../../
 NAME=binjs
-ARCH=`uname -m`
+ARCH=`uname -i`
 . $PROJECT_ROOT/binjs/version
 
 # make and empty RPM build setup
