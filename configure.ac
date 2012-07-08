@@ -39,7 +39,7 @@ AC_DEFUN([AX_PREFIX_DEFAULT],
 #AC_INIT([binjs], m4_esyscmd([ cat ./binjs/version | tr -d 'a-zA-Z= \n' ]) , [me@teknopaul.com], [binjs], [http://code.abnoctus.com/binjs/])
 
 # this is thus the golden source of the /bin/js version 
-AC_INIT([binjs],[0.8],[me@teknopaul.com],[binjs],[http://code.abnoctus.com/binjs/])
+AC_INIT([binjs],[0.9.HEAD],[me@teknopaul.com],[binjs],[http://code.abnoctus.com/binjs/])
 
 # copy to something more readable
 echo "export VERSION=${PACKAGE_VERSION}" > ./binjs/version
