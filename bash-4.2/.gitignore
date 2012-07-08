@@ -1,6 +1,4 @@
 libbash.a
-libbash.c
-libbash.h
 libbash.o
 .build
 .made

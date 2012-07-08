@@ -520,7 +520,7 @@ install:
 	test `id -u` -eq "0" || ( echo -e "Must be root \ntry  sudo make install" && exit 1 )
 	test -d binjs/binjs-@PACKAGE_VERSION@ || ( echo -e "run make all first" && exit 1 )
 	mkdir -p ${prefix}
-	cd binjs/binjs-@PACKAGE_VERSION@ && cp -Rv * ${prefix}
+	cd binjs/binjs-@PACKAGE_VERSION@ && cp -R * ${prefix}
 	chmod -R ugo+r ${prefix}
 	chmod -R go-w ${prefix}
 	find ${prefix} -name "*.so" -exec chmod ugo+x {} \;
