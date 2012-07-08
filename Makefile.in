@@ -520,7 +520,7 @@ install:
 	test `id -u` -eq "0" || ( echo -e "Must be root \ntry  sudo make install" && exit 1 )
 	test -d binjs/binjs-@PACKAGE_VERSION@ || ( echo -e "run make all first" && exit 1 )
 	mkdir -p ${prefix}
-	cd binjs/binjs-@PACKAGE_VERSION@ && cp -R * ${prefix}
+	cd binjs/binjs-@PACKAGE_VERSION@ && cp -Rv * ${prefix}
 	chmod -R ugo+r ${prefix}
 	chmod -R go-w ${prefix}
 	find ${prefix} -name "*.so" -exec chmod ugo+x {} \;
@@ -571,6 +571,7 @@ clean:
 	cd v8 && make clean
 	cd binjs && make clean
 	cd bash-4.2 && make clean
+	rm bash-4.2/test_libbash
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
