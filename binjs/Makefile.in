@@ -8,7 +8,7 @@ BUILD_OUTPUT=$(CURDIR)/binjs-@PACKAGE_VERSION@
 .PHONY: clean all package
 
 # copys everything to ./build then renames to binjs-0.1
-all : Makefile
+all : ../bash-4.2/Makefile
 
 	rm -rf $(BUILD_PREP)
 	mkdir -p $(BUILD_PREP)
@@ -37,7 +37,7 @@ all : Makefile
 
 	echo -e "\033[32mDone.\033[0m"
 
-Makefile : 
+../bash-4.2/Makefile : 
 	cd ../bash-4.2 && ./configure
 	
 package: all
