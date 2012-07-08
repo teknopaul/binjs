@@ -9,10 +9,11 @@
 
 // This needs to be global since there may be multiple instances of Term
 var binjs_TERM_IS_RAW = false;
+
 /**
  * @constructor
  */
-Term = function() {
+var Term = function() {
 	this.throwOnError = false;
 };
 

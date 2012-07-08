@@ -11,6 +11,7 @@
   are both interpreted correctly
   Term.foo()  is not
 
+
 Consistency of APIs, go through each and every att and method and ensure it conforms to some expected value be that from c / C++ or JavaScript w3c or Java.
 
 Make API kipple private  with _

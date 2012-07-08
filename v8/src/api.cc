@@ -990,6 +990,12 @@ Local<Signature> Signature::New(Handle<FunctionTemplate> receiver,
 }
 
 
+Local<AccessorSignature> AccessorSignature::New(
+      Handle<FunctionTemplate> receiver) {
+  return Utils::AccessorSignatureToLocal(Utils::OpenHandle(*receiver));
+}
+
+
 Local<TypeSwitch> TypeSwitch::New(Handle<FunctionTemplate> type) {
   Handle<FunctionTemplate> types[1] = { type };
   return TypeSwitch::New(1, types);
@@ -1057,7 +1063,8 @@ static i::Handle<i::AccessorInfo> MakeAccessorInfo(
       AccessorSetter setter,
       v8::Handle<Value> data,
       v8::AccessControl settings,
-      v8::PropertyAttribute attributes) {
+      v8::PropertyAttribute attributes,
+      v8::Handle<AccessorSignature> signature) {
   i::Handle<i::AccessorInfo> obj = FACTORY->NewAccessorInfo();
   ASSERT(getter != NULL);
   SET_FIELD_WRAPPED(obj, set_getter, getter);
@@ -1069,6 +1076,9 @@ static i::Handle<i::AccessorInfo> MakeAccessorInfo(
   if (settings & ALL_CAN_WRITE) obj->set_all_can_write(true);
   if (settings & PROHIBITS_OVERWRITING) obj->set_prohibits_overwriting(true);
   obj->set_property_attributes(static_cast<PropertyAttributes>(attributes));
+  if (!signature.IsEmpty()) {
+    obj->set_expected_receiver_type(*Utils::OpenHandle(*signature));
+  }
   return obj;
 }
 
@@ -1079,7 +1089,8 @@ void FunctionTemplate::AddInstancePropertyAccessor(
       AccessorSetter setter,
       v8::Handle<Value> data,
       v8::AccessControl settings,
-      v8::PropertyAttribute attributes) {
+      v8::PropertyAttribute attributes,
+      v8::Handle<AccessorSignature> signature) {
   i::Isolate* isolate = Utils::OpenHandle(this)->GetIsolate();
   if (IsDeadCheck(isolate,
                   "v8::FunctionTemplate::AddInstancePropertyAccessor()")) {
@@ -1088,9 +1099,9 @@ void FunctionTemplate::AddInstancePropertyAccessor(
   ENTER_V8(isolate);
   i::HandleScope scope(isolate);
 
-  i::Handle<i::AccessorInfo> obj = MakeAccessorInfo(name,
-                                                    getter, setter, data,
-                                                    settings, attributes);
+  i::Handle<i::AccessorInfo> obj = MakeAccessorInfo(name, getter, setter, data,
+                                                    settings, attributes,
+                                                    signature);
   i::Handle<i::Object> list(Utils::OpenHandle(this)->property_accessors());
   if (list->IsUndefined()) {
     list = NeanderArray().value();
@@ -1275,7 +1286,8 @@ void ObjectTemplate::SetAccessor(v8::Handle<String> name,
                                  AccessorSetter setter,
                                  v8::Handle<Value> data,
                                  AccessControl settings,
-                                 PropertyAttribute attribute) {
+                                 PropertyAttribute attribute,
+                                 v8::Handle<AccessorSignature> signature) {
   i::Isolate* isolate = Utils::OpenHandle(this)->GetIsolate();
   if (IsDeadCheck(isolate, "v8::ObjectTemplate::SetAccessor()")) return;
   ENTER_V8(isolate);
@@ -1289,7 +1301,8 @@ void ObjectTemplate::SetAccessor(v8::Handle<String> name,
                                                     setter,
                                                     data,
                                                     settings,
-                                                    attribute);
+                                                    attribute,
+                                                    signature);
 }
 
 
@@ -3018,6 +3031,17 @@ Local<String> v8::Object::ObjectProtoToString() {
 }
 
 
+Local<Value> v8::Object::GetConstructor() {
+  i::Isolate* isolate = Utils::OpenHandle(this)->GetIsolate();
+  ON_BAILOUT(isolate, "v8::Object::GetConstructor()",
+             return Local<v8::Function>());
+  ENTER_V8(isolate);
+  i::Handle<i::JSObject> self = Utils::OpenHandle(this);
+  i::Handle<i::Object> constructor(self->GetConstructor());
+  return Utils::ToLocal(constructor);
+}
+
+
 Local<String> v8::Object::GetConstructorName() {
   i::Isolate* isolate = Utils::OpenHandle(this)->GetIsolate();
   ON_BAILOUT(isolate, "v8::Object::GetConstructorName()",
@@ -3079,9 +3103,10 @@ bool Object::SetAccessor(Handle<String> name,
   ON_BAILOUT(isolate, "v8::Object::SetAccessor()", return false);
   ENTER_V8(isolate);
   i::HandleScope scope(isolate);
-  i::Handle<i::AccessorInfo> info = MakeAccessorInfo(name,
-                                                     getter, setter, data,
-                                                     settings, attributes);
+  v8::Handle<AccessorSignature> signature;
+  i::Handle<i::AccessorInfo> info = MakeAccessorInfo(name, getter, setter, data,
+                                                     settings, attributes,
+                                                     signature);
   bool fast = Utils::OpenHandle(this)->HasFastProperties();
   i::Handle<i::Object> result = i::SetAccessor(Utils::OpenHandle(this), info);
   if (result.is_null() || result->IsUndefined()) return false;
@@ -6256,6 +6281,11 @@ int HeapProfiler::GetPersistentHandleCount() {
 }
 
 
+size_t HeapProfiler::GetMemorySizeUsedByProfiler() {
+  return i::HeapProfiler::GetMemorySizeUsedByProfiler();
+}
+
+
 v8::Testing::StressType internal::Testing::stress_type_ =
     v8::Testing::kStressTypeOpt;
 
@@ -6355,11 +6385,27 @@ char* HandleScopeImplementer::RestoreThread(char* storage) {
 
 
 void HandleScopeImplementer::IterateThis(ObjectVisitor* v) {
+#ifdef DEBUG
+  bool found_block_before_deferred = false;
+#endif
   // Iterate over all handles in the blocks except for the last.
   for (int i = blocks()->length() - 2; i >= 0; --i) {
     Object** block = blocks()->at(i);
-    v->VisitPointers(block, &block[kHandleBlockSize]);
+    if (last_handle_before_deferred_block_ != NULL &&
+        (last_handle_before_deferred_block_ < &block[kHandleBlockSize]) &&
+        (last_handle_before_deferred_block_ >= block)) {
+      v->VisitPointers(block, last_handle_before_deferred_block_);
+      ASSERT(!found_block_before_deferred);
+#ifdef DEBUG
+      found_block_before_deferred = true;
+#endif
+    } else {
+      v->VisitPointers(block, &block[kHandleBlockSize]);
+    }
   }
+
+  ASSERT(last_handle_before_deferred_block_ == NULL ||
+         found_block_before_deferred);
 
   // Iterate over live handles in the last block (if any).
   if (!blocks()->is_empty()) {
@@ -6369,6 +6415,12 @@ void HandleScopeImplementer::IterateThis(ObjectVisitor* v) {
   if (!saved_contexts_.is_empty()) {
     Object** start = reinterpret_cast<Object**>(&saved_contexts_.first());
     v->VisitPointers(start, start + saved_contexts_.length());
+  }
+
+  for (DeferredHandles* deferred = deferred_handles_head_;
+       deferred != NULL;
+       deferred = deferred->next_) {
+    deferred->Iterate(v);
   }
 }
 
@@ -6387,5 +6439,89 @@ char* HandleScopeImplementer::Iterate(ObjectVisitor* v, char* storage) {
   scope_implementer->IterateThis(v);
   return storage + ArchiveSpacePerThread();
 }
+
+
+DeferredHandles* HandleScopeImplementer::Detach(Object** prev_limit) {
+  DeferredHandles* deferred = new DeferredHandles(
+      deferred_handles_head_, isolate()->handle_scope_data()->next, this);
+
+  while (!blocks_.is_empty()) {
+    Object** block_start = blocks_.last();
+    Object** block_limit = &block_start[kHandleBlockSize];
+    // We should not need to check for NoHandleAllocation here. Assert
+    // this.
+    ASSERT(prev_limit == block_limit ||
+           !(block_start <= prev_limit && prev_limit <= block_limit));
+    if (prev_limit == block_limit) break;
+    deferred->blocks_.Add(blocks_.last());
+    blocks_.RemoveLast();
+  }
+
+  // deferred->blocks_ now contains the blocks installed on the
+  // HandleScope stack since BeginDeferredScope was called, but in
+  // reverse order.
+
+  ASSERT(prev_limit == NULL || !blocks_.is_empty());
+
+  ASSERT(!blocks_.is_empty() && prev_limit != NULL);
+  deferred_handles_head_ = deferred;
+  ASSERT(last_handle_before_deferred_block_ != NULL);
+  last_handle_before_deferred_block_ = NULL;
+  return deferred;
+}
+
+
+void HandleScopeImplementer::DestroyDeferredHandles(DeferredHandles* deferred) {
+#ifdef DEBUG
+  DeferredHandles* deferred_iterator = deferred;
+  while (deferred_iterator->previous_ != NULL) {
+    deferred_iterator = deferred_iterator->previous_;
+  }
+  ASSERT(deferred_handles_head_ == deferred_iterator);
+#endif
+  if (deferred_handles_head_ == deferred) {
+    deferred_handles_head_ = deferred_handles_head_->next_;
+  }
+  if (deferred->next_ != NULL) {
+    deferred->next_->previous_ = deferred->previous_;
+  }
+  if (deferred->previous_ != NULL) {
+    deferred->previous_->next_ = deferred->next_;
+  }
+  for (int i = 0; i < deferred->blocks_.length(); i++) {
+#ifdef DEBUG
+    HandleScope::ZapRange(deferred->blocks_[i],
+                          &deferred->blocks_[i][kHandleBlockSize]);
+#endif
+    if (spare_ != NULL) DeleteArray(spare_);
+    spare_ = deferred->blocks_[i];
+  }
+}
+
+
+void HandleScopeImplementer::BeginDeferredScope() {
+  ASSERT(last_handle_before_deferred_block_ == NULL);
+  last_handle_before_deferred_block_ = isolate()->handle_scope_data()->next;
+}
+
+
+DeferredHandles::~DeferredHandles() {
+  impl_->DestroyDeferredHandles(this);
+}
+
+
+void DeferredHandles::Iterate(ObjectVisitor* v) {
+  ASSERT(!blocks_.is_empty());
+
+  ASSERT((first_block_limit_ >= blocks_.first()) &&
+         (first_block_limit_ < &(blocks_.first())[kHandleBlockSize]));
+
+  v->VisitPointers(blocks_.first(), first_block_limit_);
+
+  for (int i = 1; i < blocks_.length(); i++) {
+    v->VisitPointers(blocks_[i], &blocks_[i][kHandleBlockSize]);
+  }
+}
+
 
 } }  // namespace v8::internal

@@ -200,12 +200,12 @@ class BufferedZoneList {
   // Adds element at end of list. This element is buffered and can
   // be read using last() or removed using RemoveLast until a new Add or until
   // RemoveLast or GetList has been called.
-  void Add(T* value) {
+  void Add(T* value, Zone* zone) {
     if (last_ != NULL) {
       if (list_ == NULL) {
-        list_ = new ZoneList<T*>(initial_size);
+        list_ = new(zone) ZoneList<T*>(initial_size, zone);
       }
-      list_->Add(last_);
+      list_->Add(last_, zone);
     }
     last_ = value;
   }
@@ -250,12 +250,12 @@ class BufferedZoneList {
     return length + ((last_ == NULL) ? 0 : 1);
   }
 
-  ZoneList<T*>* GetList() {
+  ZoneList<T*>* GetList(Zone* zone) {
     if (list_ == NULL) {
-      list_ = new ZoneList<T*>(initial_size);
+      list_ = new(zone) ZoneList<T*>(initial_size, zone);
     }
     if (last_ != NULL) {
-      list_->Add(last_);
+      list_->Add(last_, zone);
       last_ = NULL;
     }
     return list_;
@@ -270,7 +270,7 @@ class BufferedZoneList {
 // Accumulates RegExp atoms and assertions into lists of terms and alternatives.
 class RegExpBuilder: public ZoneObject {
  public:
-  RegExpBuilder();
+  explicit RegExpBuilder(Zone* zone);
   void AddCharacter(uc16 character);
   // "Adds" an empty expression. Does nothing except consume a
   // following quantifier
@@ -285,7 +285,7 @@ class RegExpBuilder: public ZoneObject {
   void FlushCharacters();
   void FlushText();
   void FlushTerms();
-  Zone* zone() { return zone_; }
+  Zone* zone() const { return zone_; }
 
   Zone* zone_;
   bool pending_empty_;
@@ -306,11 +306,13 @@ class RegExpParser {
  public:
   RegExpParser(FlatStringReader* in,
                Handle<String>* error,
-               bool multiline_mode);
+               bool multiline_mode,
+               Zone* zone);
 
   static bool ParseRegExp(FlatStringReader* input,
                           bool multiline,
-                          RegExpCompileData* result);
+                          RegExpCompileData* result,
+                          Zone* zone);
 
   RegExpTree* ParsePattern();
   RegExpTree* ParseDisjunction();
@@ -368,9 +370,10 @@ class RegExpParser {
    public:
     RegExpParserState(RegExpParserState* previous_state,
                       SubexpressionType group_type,
-                      int disjunction_capture_index)
+                      int disjunction_capture_index,
+                      Zone* zone)
         : previous_state_(previous_state),
-          builder_(new RegExpBuilder()),
+          builder_(new(zone) RegExpBuilder(zone)),
           group_type_(group_type),
           disjunction_capture_index_(disjunction_capture_index) {}
     // Parser state of containing expression, if any.
@@ -397,7 +400,7 @@ class RegExpParser {
   };
 
   Isolate* isolate() { return isolate_; }
-  Zone* zone() { return isolate_->zone(); }
+  Zone* zone() const { return zone_; }
 
   uc32 current() { return current_; }
   bool has_more() { return has_more_; }
@@ -407,6 +410,7 @@ class RegExpParser {
   void ScanForCaptures();
 
   Isolate* isolate_;
+  Zone* zone_;
   Handle<String>* error_;
   ZoneList<RegExpCapture*>* captures_;
   FlatStringReader* in_;
@@ -430,7 +434,7 @@ class SingletonLogger;
 
 class Parser {
  public:
-  Parser(Handle<Script> script,
+  Parser(CompilationInfo* info,
          int parsing_flags,  // Combination of ParsingFlags
          v8::Extension* extension,
          ScriptDataImpl* pre_data);
@@ -440,8 +444,8 @@ class Parser {
   }
 
   // Returns NULL if parsing failed.
-  FunctionLiteral* ParseProgram(CompilationInfo* info);
-  FunctionLiteral* ParseLazy(CompilationInfo* info);
+  FunctionLiteral* ParseProgram();
+  FunctionLiteral* ParseLazy();
 
   void ReportMessageAt(Scanner::Location loc,
                        const char* message,
@@ -541,12 +545,12 @@ class Parser {
 
 
 
-  FunctionLiteral* ParseLazy(CompilationInfo* info,
-                             Utf16CharacterStream* source,
+  FunctionLiteral* ParseLazy(Utf16CharacterStream* source,
                              ZoneScope* zone_scope);
 
   Isolate* isolate() { return isolate_; }
-  Zone* zone() { return isolate_->zone(); }
+  Zone* zone() const { return zone_; }
+  CompilationInfo* info() const { return info_; }
 
   // Called by ParseProgram after setting up the scanner.
   FunctionLiteral* DoParseProgram(CompilationInfo* info,
@@ -834,6 +838,8 @@ class Parser {
   // so never lazily compile it.
   bool parenthesized_function_;
 
+  Zone* zone_;
+  CompilationInfo* info_;
   friend class BlockState;
   friend class FunctionState;
 };

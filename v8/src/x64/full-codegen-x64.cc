@@ -310,10 +310,6 @@ void FullCodeGenerator::EmitProfilingCounterReset() {
     // Self-optimization is a one-off thing; if it fails, don't try again.
     reset_value = Smi::kMaxValue;
   }
-  if (isolate()->IsDebuggerActive()) {
-    // Detect debug break requests as soon as possible.
-    reset_value = 10;
-  }
   __ movq(rbx, profiling_counter_, RelocInfo::EMBEDDED_OBJECT);
   __ movq(kScratchRegister,
           reinterpret_cast<uint64_t>(Smi::FromInt(reset_value)),
@@ -508,12 +504,20 @@ void FullCodeGenerator::EffectContext::Plug(Handle<Object> lit) const {
 
 void FullCodeGenerator::AccumulatorValueContext::Plug(
     Handle<Object> lit) const {
-  __ Move(result_register(), lit);
+  if (lit->IsSmi()) {
+    __ SafeMove(result_register(), Smi::cast(*lit));
+  } else {
+    __ Move(result_register(), lit);
+  }
 }
 
 
 void FullCodeGenerator::StackValueContext::Plug(Handle<Object> lit) const {
-  __ Push(lit);
+  if (lit->IsSmi()) {
+    __ SafePush(Smi::cast(*lit));
+  } else {
+    __ Push(lit);
+  }
 }
 
 
@@ -779,10 +783,11 @@ void FullCodeGenerator::VisitVariableDeclaration(
   bool hole_init = mode == CONST || mode == CONST_HARMONY || mode == LET;
   switch (variable->location()) {
     case Variable::UNALLOCATED:
-      globals_->Add(variable->name());
+      globals_->Add(variable->name(), zone());
       globals_->Add(variable->binding_needs_init()
                         ? isolate()->factory()->the_hole_value()
-                        : isolate()->factory()->undefined_value());
+                    : isolate()->factory()->undefined_value(),
+                    zone());
       break;
 
     case Variable::PARAMETER:
@@ -837,12 +842,12 @@ void FullCodeGenerator::VisitFunctionDeclaration(
   Variable* variable = proxy->var();
   switch (variable->location()) {
     case Variable::UNALLOCATED: {
-      globals_->Add(variable->name());
+      globals_->Add(variable->name(), zone());
       Handle<SharedFunctionInfo> function =
           Compiler::BuildFunctionInfo(declaration->fun(), script());
       // Check for stack-overflow exception.
       if (function.is_null()) return SetStackOverflow();
-      globals_->Add(function);
+      globals_->Add(function, zone());
       break;
     }
 
@@ -894,8 +899,8 @@ void FullCodeGenerator::VisitModuleDeclaration(ModuleDeclaration* declaration) {
   switch (variable->location()) {
     case Variable::UNALLOCATED: {
       Comment cmnt(masm_, "[ ModuleDeclaration");
-      globals_->Add(variable->name());
-      globals_->Add(instance);
+      globals_->Add(variable->name(), zone());
+      globals_->Add(instance, zone());
       Visit(declaration->module());
       break;
     }
@@ -1567,9 +1572,9 @@ void FullCodeGenerator::VisitObjectLiteral(ObjectLiteral* expr) {
   // Mark all computed expressions that are bound to a key that
   // is shadowed by a later occurrence of the same key. For the
   // marked expressions, no store code is emitted.
-  expr->CalculateEmitStore();
+  expr->CalculateEmitStore(zone());
 
-  AccessorTable accessor_table(isolate()->zone());
+  AccessorTable accessor_table(zone());
   for (int i = 0; i < expr->properties()->length(); i++) {
     ObjectLiteral::Property* property = expr->properties()->at(i);
     if (property->IsCompileTimeValue()) continue;
@@ -4459,15 +4464,50 @@ void FullCodeGenerator::EnterFinallyBlock() {
   __ subq(rdx, rcx);
   __ Integer32ToSmi(rdx, rdx);
   __ push(rdx);
+
   // Store result register while executing finally block.
   __ push(result_register());
+
+  // Store pending message while executing finally block.
+  ExternalReference pending_message_obj =
+      ExternalReference::address_of_pending_message_obj(isolate());
+  __ Load(rdx, pending_message_obj);
+  __ push(rdx);
+
+  ExternalReference has_pending_message =
+      ExternalReference::address_of_has_pending_message(isolate());
+  __ Load(rdx, has_pending_message);
+  __ push(rdx);
+
+  ExternalReference pending_message_script =
+      ExternalReference::address_of_pending_message_script(isolate());
+  __ Load(rdx, pending_message_script);
+  __ push(rdx);
 }
 
 
 void FullCodeGenerator::ExitFinallyBlock() {
   ASSERT(!result_register().is(rdx));
   ASSERT(!result_register().is(rcx));
+  // Restore pending message from stack.
+  __ pop(rdx);
+  ExternalReference pending_message_script =
+      ExternalReference::address_of_pending_message_script(isolate());
+  __ Store(pending_message_script, rdx);
+
+  __ pop(rdx);
+  ExternalReference has_pending_message =
+      ExternalReference::address_of_has_pending_message(isolate());
+  __ Store(has_pending_message, rdx);
+
+  __ pop(rdx);
+  ExternalReference pending_message_obj =
+      ExternalReference::address_of_pending_message_obj(isolate());
+  __ Store(pending_message_obj, rdx);
+
+  // Restore result register from stack.
   __ pop(result_register());
+
   // Uncook return address.
   __ pop(rdx);
   __ SmiToInteger32(rdx, rdx);

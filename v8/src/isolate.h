@@ -307,7 +307,6 @@ class ThreadLocalTop BASE_EMBEDDED {
 
 #define ISOLATE_INIT_ARRAY_LIST(V)                                             \
   /* SerializerDeserializer state. */                                          \
-  V(Object*, serialize_partial_snapshot_cache, kPartialSnapshotCacheCapacity)  \
   V(int, jsregexp_static_offsets_vector, kJSRegexpStaticOffsetsVectorSize)     \
   V(int, bad_char_shift_table, kUC16AlphabetSize)                              \
   V(int, good_suffix_shift_table, (kBMMaxShift + 1))                           \
@@ -315,11 +314,13 @@ class ThreadLocalTop BASE_EMBEDDED {
   V(uint32_t, private_random_seed, 2)                                          \
   ISOLATE_INIT_DEBUG_ARRAY_LIST(V)
 
-typedef List<HeapObject*, PreallocatedStorage> DebugObjectCache;
+typedef List<HeapObject*, PreallocatedStorageAllocationPolicy> DebugObjectCache;
 
 #define ISOLATE_INIT_LIST(V)                                                   \
   /* SerializerDeserializer state. */                                          \
   V(int, serialize_partial_snapshot_cache_length, 0)                           \
+  V(int, serialize_partial_snapshot_cache_capacity, 0)                         \
+  V(Object**, serialize_partial_snapshot_cache, NULL)                          \
   /* Assembler state. */                                                       \
   /* A previously allocated buffer of kMinimalBufferSize bytes, or NULL. */    \
   V(byte*, assembler_spare_buffer, NULL)                                       \
@@ -578,6 +579,20 @@ class Isolate {
   MaybeObject** scheduled_exception_address() {
     return &thread_local_top_.scheduled_exception_;
   }
+
+  Address pending_message_obj_address() {
+    return reinterpret_cast<Address>(&thread_local_top_.pending_message_obj_);
+  }
+
+  Address has_pending_message_address() {
+    return reinterpret_cast<Address>(&thread_local_top_.has_pending_message_);
+  }
+
+  Address pending_message_script_address() {
+    return reinterpret_cast<Address>(
+        &thread_local_top_.pending_message_script_);
+  }
+
   MaybeObject* scheduled_exception() {
     ASSERT(has_scheduled_exception());
     return thread_local_top_.scheduled_exception_;
@@ -595,6 +610,9 @@ class Isolate {
     return (exception != Failure::OutOfMemoryException()) &&
         (exception != heap()->termination_exception());
   }
+
+  // Serializer.
+  void PushToPartialSnapshotCache(Object* obj);
 
   // JS execution stack (see frames.h).
   static Address c_entry_fp(ThreadLocalTop* thread) {
@@ -708,7 +726,7 @@ class Isolate {
   // Re-throw an exception.  This involves no error reporting since
   // error reporting was handled when the exception was thrown
   // originally.
-  Failure* ReThrow(MaybeObject* exception, MessageLocation* location = NULL);
+  Failure* ReThrow(MaybeObject* exception);
   void ScheduleThrow(Object* exception);
   void ReportPendingMessages();
   Failure* ThrowIllegalOperation();
@@ -836,7 +854,7 @@ class Isolate {
     ASSERT(handle_scope_implementer_);
     return handle_scope_implementer_;
   }
-  Zone* zone() { return &zone_; }
+  Zone* runtime_zone() { return &runtime_zone_; }
 
   UnicodeCache* unicode_cache() {
     return unicode_cache_;
@@ -1182,7 +1200,7 @@ class Isolate {
   v8::ImplementationUtilities::HandleScopeData handle_scope_data_;
   HandleScopeImplementer* handle_scope_implementer_;
   UnicodeCache* unicode_cache_;
-  Zone zone_;
+  Zone runtime_zone_;
   PreallocatedStorage in_use_list_;
   PreallocatedStorage free_list_;
   bool preallocated_storage_preallocated_;
@@ -1394,7 +1412,6 @@ class PostponeInterruptsScope BASE_EMBEDDED {
 #define HEAP (v8::internal::Isolate::Current()->heap())
 #define FACTORY (v8::internal::Isolate::Current()->factory())
 #define ISOLATE (v8::internal::Isolate::Current())
-#define ZONE (v8::internal::Isolate::Current()->zone())
 #define LOGGER (v8::internal::Isolate::Current()->logger())
 
 

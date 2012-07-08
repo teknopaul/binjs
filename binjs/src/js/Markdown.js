@@ -16,7 +16,10 @@
  */
 binjs_import("~lib/Term.js");
 
-Markdown = function(){
+/**
+ * @constructor
+ */
+var Markdown = function(){
 	this.padding = "";
 	for (var i = 0 ; i < Markdown.lineLength / 2 ; i++) this.padding += " ";
 };

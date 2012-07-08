@@ -11,4 +11,7 @@ binjs_import("~lib/File.js");
  *  - argc  - count of command line args
  *  - argv  - Array of comand line args passed tothe script argv[0] is the script name
  *  - errno - Exit value of the last command executed by Bash
+ *  - pid
+ *  - lastpid
  */
+

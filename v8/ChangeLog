@@ -1,3 +1,142 @@
+2012-07-06: Version 3.12.9
+
+        Correctly advance the scanner when scanning unicode regexp flag.
+        (Chromium issue 136084)
+
+        Fixed unhandlified code calling Harmony Proxy traps.
+        (issue 2219)
+
+        Performance and stability improvements on all platforms.
+
+
+2012-07-05: Version 3.12.8
+
+        Implemented TypedArray.set and ArrayBuffer.slice in d8.
+
+        Performance and stability improvements on all platforms.
+
+
+2012-07-03: Version 3.12.7
+
+        Fixed lazy compilation for strict eval scopes.
+        (Chromium issue 135066)
+
+        Made MACOSX_DEPLOYMENT_TARGET configurable in GYP.
+        (issue 2151)
+
+        Report "hidden properties" in heap profiler for properties case.
+        (issue 2212)
+
+        Activated optimization of packed arrays by default.
+
+        Performance and stability improvements on all platforms.
+
+
+2012-06-29: Version 3.12.6
+
+        Cleaned up hardfp ABI detection for ARM (V8 issue 2140).
+
+        Extended TypedArray support in d8.
+
+
+2012-06-28: Version 3.12.5
+
+        Fixed lazy parsing heuristics to respect outer scope.
+        (Chromium issue 135008)
+
+        Allow using test-wrapper-gypbuild.py on Windows when no python
+        interpreter is registered.
+
+        Performance and stability improvements on all platforms.
+
+
+2012-06-27: Version 3.12.4
+
+        Removed -fomit-frame-pointer flag from Release builds to make
+        the stack walkable by TCMalloc (Chromium issue 133723).
+
+        Ported r7868 (constant masking) to x64 (issue 1374).
+
+        Expose more detailed memory statistics (issue 2201).
+
+        Fixed Harmony Maps and WeakMaps for undefined values
+        (Chromium issue 132744).
+
+        Correctly throw reference error in strict mode with ICs disabled
+        (issue 2119).
+
+        Performance and stability improvements on all platforms.
+
+
+2012-06-25: Version 3.12.3
+
+        Reverted r11835 'Unify promotion and allocation limit computation' due
+        to V8 Splay performance regression on Mac.  (Chromium issue 134183)
+
+        Fixed sharing of literal boilerplates for optimized code.  (issue 2193)
+
+        Performance and stability improvements on all platforms.
+
+
+2012-06-22: Version 3.12.2
+
+        Made near-jump check more strict in LoadNamedFieldPolymorphic on
+        ia32/x64. (Chromium issue 134055)
+
+        Fixed lazy sweeping heuristics to prevent old-space expansion.
+        (issue 2194)
+
+        Performance and stability improvements on all platforms.
+
+
+2012-06-21: Version 3.12.1
+
+        Performance and stability improvements on all platforms.
+
+
+2012-06-20: Version 3.12.0
+
+        Fixed Chromium issues:
+        115100, 129628, 131994, 132727, 132741, 132742, 133211
+
+        Fixed V8 issues:
+        915, 1914, 2034, 2087, 2094, 2134, 2156, 2166, 2172, 2177, 2179, 2185
+
+        Added --extra-code flag to mksnapshot to load JS code into the VM
+        before creating the snapshot.
+
+        Support 'restart call frame' command in the debugger.
+
+        Performance and stability improvements on all platforms.
+
+
+2012-06-13: Version 3.11.10
+
+        Implemented heap profiler memory usage reporting.
+
+        Preserved error message during finally block in try..finally.
+        (Chromium issue 129171)
+
+        Fixed EnsureCanContainElements to properly handle double values.
+        (issue 2170)
+
+        Improved heuristics to keep objects in fast mode with inherited
+        constructors.
+
+        Performance and stability improvements on all platforms.
+
+
+2012-06-06: Version 3.11.9
+
+        Implemented ES5-conformant semantics for inherited setters and read-only
+        properties. Currently behind --es5_readonly flag, because it breaks
+        WebKit bindings.
+
+        Exposed last seen heap object id via v8 public api.
+
+        Performance and stability improvements on all platforms.
+
+
 2012-05-31: Version 3.11.8
 
         Avoid overdeep recursion in regexp where a guarded expression with a

@@ -210,6 +210,9 @@ namespace internal {
   SC(compute_entry_frame, V8.ComputeEntryFrame)                       \
   SC(generic_binary_stub_calls, V8.GenericBinaryStubCalls)            \
   SC(generic_binary_stub_calls_regs, V8.GenericBinaryStubCallsRegs)   \
+  SC(fast_new_closure_total, V8.FastNewClosureTotal)                  \
+  SC(fast_new_closure_try_optimized, V8.FastNewClosureTryOptimized)   \
+  SC(fast_new_closure_install_optimized, V8.FastNewClosureInstallOptimized) \
   SC(string_add_runtime, V8.StringAddRuntime)                         \
   SC(string_add_native, V8.StringAddNative)                           \
   SC(string_add_runtime_ext_to_ascii, V8.StringAddRuntimeExtToAscii)  \
@@ -240,14 +243,33 @@ namespace internal {
   SC(transcendental_cache_miss, V8.TranscendentalCacheMiss)           \
   SC(stack_interrupts, V8.StackInterrupts)                            \
   SC(runtime_profiler_ticks, V8.RuntimeProfilerTicks)                 \
-  SC(other_ticks, V8.OtherTicks)                                      \
-  SC(js_opt_ticks, V8.JsOptTicks)                                     \
-  SC(js_non_opt_ticks, V8.JsNonoptTicks)                              \
-  SC(js_other_ticks, V8.JsOtherTicks)                                 \
   SC(smi_checks_removed, V8.SmiChecksRemoved)                         \
   SC(map_checks_removed, V8.MapChecksRemoved)                         \
   SC(quote_json_char_count, V8.QuoteJsonCharacterCount)               \
-  SC(quote_json_char_recount, V8.QuoteJsonCharacterReCount)
+  SC(quote_json_char_recount, V8.QuoteJsonCharacterReCount)           \
+  SC(new_space_bytes_available, V8.MemoryNewSpaceBytesAvailable)      \
+  SC(new_space_bytes_committed, V8.MemoryNewSpaceBytesCommitted)      \
+  SC(new_space_bytes_used, V8.MemoryNewSpaceBytesUsed)                \
+  SC(old_pointer_space_bytes_available,                               \
+     V8.MemoryOldPointerSpaceBytesAvailable)                          \
+  SC(old_pointer_space_bytes_committed,                               \
+     V8.MemoryOldPointerSpaceBytesCommitted)                          \
+  SC(old_pointer_space_bytes_used, V8.MemoryOldPointerSpaceBytesUsed) \
+  SC(old_data_space_bytes_available, V8.MemoryOldDataSpaceBytesAvailable) \
+  SC(old_data_space_bytes_committed, V8.MemoryOldDataSpaceBytesCommitted) \
+  SC(old_data_space_bytes_used, V8.MemoryOldDataSpaceBytesUsed)       \
+  SC(code_space_bytes_available, V8.MemoryCodeSpaceBytesAvailable)    \
+  SC(code_space_bytes_committed, V8.MemoryCodeSpaceBytesCommitted)    \
+  SC(code_space_bytes_used, V8.MemoryCodeSpaceBytesUsed)              \
+  SC(map_space_bytes_available, V8.MemoryMapSpaceBytesAvailable)      \
+  SC(map_space_bytes_committed, V8.MemoryMapSpaceBytesCommitted)      \
+  SC(map_space_bytes_used, V8.MemoryMapSpaceBytesUsed)                \
+  SC(cell_space_bytes_available, V8.MemoryCellSpaceBytesAvailable)    \
+  SC(cell_space_bytes_committed, V8.MemoryCellSpaceBytesCommitted)    \
+  SC(cell_space_bytes_used, V8.MemoryCellSpaceBytesUsed)              \
+  SC(lo_space_bytes_available, V8.MemoryLoSpaceBytesAvailable)        \
+  SC(lo_space_bytes_committed, V8.MemoryLoSpaceBytesCommitted)        \
+  SC(lo_space_bytes_used, V8.MemoryLoSpaceBytesUsed)
 
 
 // This file contains all the v8 counters that are in use.

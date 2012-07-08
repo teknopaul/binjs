@@ -1,17 +1,27 @@
 /**
- * Runtime allows the script to interface with the environment in which it is running, modeled on Java's
- * java.lang.Runtime
+ * Runtime allows the script to interface with the environment in which it is running.
  */
 
-
-Runtime = function() {
-	throw new Error("Runtime can not be instantiated");
+/**
+ * @constructor
+ */
+var Runtime = function() {
+	this.binjsVersion = binjs_binjsVersion();
+	this.bashVersion = binjs_bashVersion();
+	this.javaScriptVersion = binjs_v8Version();
+	this.isatty = binjs_isatty();
 }
 
-Runtime.binjsVersion = binjs_binjsVersion();
+Runtime.prototype.exec = function(cmd) {
+	binjs_exec(cmd);
+}
 
-Runtime.bashVersion = binjs_bashVersion();
+// WARNING the exit routines are not well defined yet.
 
-Runtime.javaScriptVersion = binjs_v8Version();
+Runtime.prototype.exit = function(status) {
+	binjs_exit(status);
+}
 
-Runtime.isatty = binjs_isatty();
+Runtime.prototype.halt = function(status) {
+	binjs_exit(status);
+}

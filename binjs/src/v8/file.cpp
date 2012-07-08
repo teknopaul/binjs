@@ -351,7 +351,7 @@ Handle<Value> FileRename(const Arguments& args) {
 	String::Utf8Value path(args.This()->Get(String::New("path")));
 	const char* cpath = ToCString(path);
 
-	if (rename(cpath, cnewpath) == 0) {
+	if ( rename(cpath, cnewpath) == 0 ) {
 	
 		SetPath(args[0]->ToString(), args.This());
 		
@@ -361,7 +361,7 @@ Handle<Value> FileRename(const Arguments& args) {
 	else {
 		return ThrowException(Exception::TypeError(String::New("Error renaming file")));
 	}
-	
+
 	return args.This();
 
 }

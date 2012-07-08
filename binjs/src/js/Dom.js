@@ -50,7 +50,8 @@ Dom.escape = function(string) {
 				 .replace(/"/g, '&quot;')
 				 .replace(/'/g, '&apos;');
 };
-
+Dom.prototype.escape = Dom.escape;
+ 
 Dom.prototype.parser = function () { 
 	var DOMParser = function() {
 		/**
@@ -169,7 +170,7 @@ Dom.prototype.parser = function () {
  * 
  * @constructor Element
  */
-Element = function(name, attributes, children ) {
+var Element = function(name, attributes, children ) {
 	this.name = name;
 	this.attributes = attributes || [];
 	this.children = children || [];
@@ -219,21 +220,21 @@ Element.prototype.text = function() {
 	return null;
 };
 
-Text = function(data){
+var Text = function(data){
 	this.text = data;
 };
 Text.prototype.toXml = function(sb) {
 	sb.buf += Dom.escape(this.text);
 };
 
-Comment = function(comment) {
+var Comment = function(comment) {
 	this.comment = comment;
 };
 Comment.prototype.toXml = function(sb) {
 	sb.buf += '<!--' + this.comment + '-->';
 };
 
-ProcessingInstruction = function(name, body) {
+var ProcessingInstruction = function(name, body) {
   this.name = name;
   this.body = body;
 };
@@ -241,7 +242,7 @@ ProcessingInstruction.prototype.toXml = function(sb) {
   sb.buf += '<?' + this.name + ' ' + this.body + '?>';
 };
 
-CDATASection = function(data){
+var CDATASection = function(data){
 	this.text = data || '';
 };
 CDATASection.prototype.toXml = function(sb) {

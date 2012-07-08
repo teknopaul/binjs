@@ -61,9 +61,11 @@ TypeInfo TypeInfo::TypeFromValue(Handle<Object> value) {
 
 TypeFeedbackOracle::TypeFeedbackOracle(Handle<Code> code,
                                        Handle<Context> global_context,
-                                       Isolate* isolate) {
+                                       Isolate* isolate,
+                                       Zone* zone) {
   global_context_ = global_context;
   isolate_ = isolate;
+  zone_ = zone;
   BuildDictionary(code);
   ASSERT(reinterpret_cast<Address>(*dictionary_.location()) != kHandleZapValue);
 }
@@ -95,7 +97,7 @@ bool TypeFeedbackOracle::LoadIsMonomorphicNormal(Property* expr) {
     Handle<Code> code = Handle<Code>::cast(map_or_code);
     return code->is_keyed_load_stub() &&
         code->ic_state() == MONOMORPHIC &&
-        Code::ExtractTypeFromFlags(code->flags()) == NORMAL &&
+        Code::ExtractTypeFromFlags(code->flags()) == Code::NORMAL &&
         code->FindFirstMap() != NULL &&
         !CanRetainOtherContext(code->FindFirstMap(), *global_context_);
   }
@@ -127,7 +129,7 @@ bool TypeFeedbackOracle::StoreIsMonomorphicNormal(Expression* expr) {
     return code->is_keyed_store_stub() &&
         !allow_growth &&
         code->ic_state() == MONOMORPHIC &&
-        Code::ExtractTypeFromFlags(code->flags()) == NORMAL &&
+        Code::ExtractTypeFromFlags(code->flags()) == Code::NORMAL &&
         code->FindFirstMap() != NULL &&
         !CanRetainOtherContext(code->FindFirstMap(), *global_context_);
   }
@@ -212,7 +214,8 @@ Handle<Map> TypeFeedbackOracle::StoreMonomorphicReceiverType(Expression* expr) {
 void TypeFeedbackOracle::LoadReceiverTypes(Property* expr,
                                            Handle<String> name,
                                            SmallMapList* types) {
-  Code::Flags flags = Code::ComputeMonomorphicFlags(Code::LOAD_IC, NORMAL);
+  Code::Flags flags =
+      Code::ComputeMonomorphicFlags(Code::LOAD_IC, Code::NORMAL);
   CollectReceiverTypes(expr->id(), name, flags, types);
 }
 
@@ -220,7 +223,8 @@ void TypeFeedbackOracle::LoadReceiverTypes(Property* expr,
 void TypeFeedbackOracle::StoreReceiverTypes(Assignment* expr,
                                             Handle<String> name,
                                             SmallMapList* types) {
-  Code::Flags flags = Code::ComputeMonomorphicFlags(Code::STORE_IC, NORMAL);
+  Code::Flags flags =
+      Code::ComputeMonomorphicFlags(Code::STORE_IC, Code::NORMAL);
   CollectReceiverTypes(expr->id(), name, flags, types);
 }
 
@@ -237,7 +241,7 @@ void TypeFeedbackOracle::CallReceiverTypes(Call* expr,
       CallIC::Contextual::encode(call_kind == CALL_AS_FUNCTION);
 
   Code::Flags flags = Code::ComputeMonomorphicFlags(Code::CALL_IC,
-                                                    NORMAL,
+                                                    Code::NORMAL,
                                                     extra_ic_state,
                                                     OWN_MAP,
                                                     arity);
@@ -501,15 +505,16 @@ void TypeFeedbackOracle::CollectReceiverTypes(unsigned ast_id,
     // we need a generic store (or load) here.
     ASSERT(Handle<Code>::cast(object)->ic_state() == MEGAMORPHIC);
   } else if (object->IsMap()) {
-    types->Add(Handle<Map>::cast(object));
+    types->Add(Handle<Map>::cast(object), zone());
   } else if (FLAG_collect_megamorphic_maps_from_stub_cache &&
       Handle<Code>::cast(object)->ic_state() == MEGAMORPHIC) {
-    types->Reserve(4);
+    types->Reserve(4, zone());
     ASSERT(object->IsCode());
     isolate_->stub_cache()->CollectMatchingMaps(types,
                                                 *name,
                                                 flags,
-                                                global_context_);
+                                                global_context_,
+                                                zone());
   }
 }
 
@@ -548,11 +553,12 @@ bool TypeFeedbackOracle::CanRetainOtherContext(JSFunction* function,
 }
 
 
-static void AddMapIfMissing(Handle<Map> map, SmallMapList* list) {
+static void AddMapIfMissing(Handle<Map> map, SmallMapList* list,
+                            Zone* zone) {
   for (int i = 0; i < list->length(); ++i) {
     if (list->at(i).is_identical_to(map)) return;
   }
-  list->Add(map);
+  list->Add(map, zone);
 }
 
 
@@ -571,7 +577,7 @@ void TypeFeedbackOracle::CollectKeyedReceiverTypes(unsigned ast_id,
       if (object->IsMap()) {
         Map* map = Map::cast(object);
         if (!CanRetainOtherContext(map, *global_context_)) {
-          AddMapIfMissing(Handle<Map>(map), types);
+          AddMapIfMissing(Handle<Map>(map), types, zone());
         }
       }
     }
@@ -591,7 +597,7 @@ byte TypeFeedbackOracle::ToBooleanTypes(unsigned ast_id) {
 // infos before we process them.
 void TypeFeedbackOracle::BuildDictionary(Handle<Code> code) {
   AssertNoAllocation no_allocation;
-  ZoneList<RelocInfo> infos(16);
+  ZoneList<RelocInfo> infos(16, zone());
   HandleScope scope;
   GetRelocInfos(code, &infos);
   CreateDictionary(code, &infos);
@@ -606,7 +612,7 @@ void TypeFeedbackOracle::GetRelocInfos(Handle<Code> code,
                                        ZoneList<RelocInfo>* infos) {
   int mask = RelocInfo::ModeMask(RelocInfo::CODE_TARGET_WITH_ID);
   for (RelocIterator it(*code, mask); !it.done(); it.next()) {
-    infos->Add(*it.rinfo());
+    infos->Add(*it.rinfo(), zone());
   }
 }
 

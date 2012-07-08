@@ -85,6 +85,8 @@ void ToNumberStub::Generate(MacroAssembler* masm) {
 void FastNewClosureStub::Generate(MacroAssembler* masm) {
   // Create a new closure from the given function info in new
   // space. Set the context to the current context in cp.
+  Counters* counters = masm->isolate()->counters();
+
   Label gc;
 
   // Pop the function info from the stack.
@@ -98,6 +100,8 @@ void FastNewClosureStub::Generate(MacroAssembler* masm) {
                         &gc,
                         TAG_OBJECT);
 
+  __ IncrementCounter(counters->fast_new_closure_total(), 1, r6, r7);
+
   int map_index = (language_mode_ == CLASSIC_MODE)
       ? Context::FUNCTION_MAP_INDEX
       : Context::STRICT_MODE_FUNCTION_MAP_INDEX;
@@ -106,27 +110,103 @@ void FastNewClosureStub::Generate(MacroAssembler* masm) {
   // as the map of the allocated object.
   __ ldr(r2, MemOperand(cp, Context::SlotOffset(Context::GLOBAL_INDEX)));
   __ ldr(r2, FieldMemOperand(r2, GlobalObject::kGlobalContextOffset));
-  __ ldr(r2, MemOperand(r2, Context::SlotOffset(map_index)));
-  __ str(r2, FieldMemOperand(r0, HeapObject::kMapOffset));
+  __ ldr(r5, MemOperand(r2, Context::SlotOffset(map_index)));
+  __ str(r5, FieldMemOperand(r0, HeapObject::kMapOffset));
 
   // Initialize the rest of the function. We don't have to update the
   // write barrier because the allocated object is in new space.
   __ LoadRoot(r1, Heap::kEmptyFixedArrayRootIndex);
-  __ LoadRoot(r2, Heap::kTheHoleValueRootIndex);
-  __ LoadRoot(r4, Heap::kUndefinedValueRootIndex);
+  __ LoadRoot(r5, Heap::kTheHoleValueRootIndex);
   __ str(r1, FieldMemOperand(r0, JSObject::kPropertiesOffset));
   __ str(r1, FieldMemOperand(r0, JSObject::kElementsOffset));
-  __ str(r2, FieldMemOperand(r0, JSFunction::kPrototypeOrInitialMapOffset));
+  __ str(r5, FieldMemOperand(r0, JSFunction::kPrototypeOrInitialMapOffset));
   __ str(r3, FieldMemOperand(r0, JSFunction::kSharedFunctionInfoOffset));
   __ str(cp, FieldMemOperand(r0, JSFunction::kContextOffset));
   __ str(r1, FieldMemOperand(r0, JSFunction::kLiteralsOffset));
-  __ str(r4, FieldMemOperand(r0, JSFunction::kNextFunctionLinkOffset));
 
   // Initialize the code pointer in the function to be the one
   // found in the shared function info object.
+  // But first check if there is an optimized version for our context.
+  Label check_optimized;
+  Label install_unoptimized;
+  if (FLAG_cache_optimized_code) {
+    __ ldr(r1,
+           FieldMemOperand(r3, SharedFunctionInfo::kOptimizedCodeMapOffset));
+    __ tst(r1, r1);
+    __ b(ne, &check_optimized);
+  }
+  __ bind(&install_unoptimized);
+  __ LoadRoot(r4, Heap::kUndefinedValueRootIndex);
+  __ str(r4, FieldMemOperand(r0, JSFunction::kNextFunctionLinkOffset));
   __ ldr(r3, FieldMemOperand(r3, SharedFunctionInfo::kCodeOffset));
   __ add(r3, r3, Operand(Code::kHeaderSize - kHeapObjectTag));
   __ str(r3, FieldMemOperand(r0, JSFunction::kCodeEntryOffset));
+
+  // Return result. The argument function info has been popped already.
+  __ Ret();
+
+  __ bind(&check_optimized);
+
+  __ IncrementCounter(counters->fast_new_closure_try_optimized(), 1, r6, r7);
+
+  // r2 holds global context, r1 points to fixed array of 3-element entries
+  // (global context, optimized code, literals).
+  // The optimized code map must never be empty, so check the first elements.
+  Label install_optimized;
+  // Speculatively move code object into r4.
+  __ ldr(r4, FieldMemOperand(r1, FixedArray::kHeaderSize + kPointerSize));
+  __ ldr(r5, FieldMemOperand(r1, FixedArray::kHeaderSize));
+  __ cmp(r2, r5);
+  __ b(eq, &install_optimized);
+
+  // Iterate through the rest of map backwards.  r4 holds an index as a Smi.
+  Label loop;
+  __ ldr(r4, FieldMemOperand(r1, FixedArray::kLengthOffset));
+  __ bind(&loop);
+  // Do not double check first entry.
+
+  __ cmp(r4, Operand(Smi::FromInt(SharedFunctionInfo::kEntryLength)));
+  __ b(eq, &install_unoptimized);
+  __ sub(r4, r4, Operand(
+      Smi::FromInt(SharedFunctionInfo::kEntryLength)));  // Skip an entry.
+  __ add(r5, r1, Operand(FixedArray::kHeaderSize - kHeapObjectTag));
+  __ add(r5, r5, Operand(r4, LSL, kPointerSizeLog2 - kSmiTagSize));
+  __ ldr(r5, MemOperand(r5));
+  __ cmp(r2, r5);
+  __ b(ne, &loop);
+  // Hit: fetch the optimized code.
+  __ add(r5, r1, Operand(FixedArray::kHeaderSize - kHeapObjectTag));
+  __ add(r5, r5, Operand(r4, LSL, kPointerSizeLog2 - kSmiTagSize));
+  __ add(r5, r5, Operand(kPointerSize));
+  __ ldr(r4, MemOperand(r5));
+
+  __ bind(&install_optimized);
+  __ IncrementCounter(counters->fast_new_closure_install_optimized(),
+                      1, r6, r7);
+
+  // TODO(fschneider): Idea: store proper code pointers in the map and either
+  // unmangle them on marking or do nothing as the whole map is discarded on
+  // major GC anyway.
+  __ add(r4, r4, Operand(Code::kHeaderSize - kHeapObjectTag));
+  __ str(r4, FieldMemOperand(r0, JSFunction::kCodeEntryOffset));
+
+  // Now link a function into a list of optimized functions.
+  __ ldr(r4, ContextOperand(r2, Context::OPTIMIZED_FUNCTIONS_LIST));
+
+  __ str(r4, FieldMemOperand(r0, JSFunction::kNextFunctionLinkOffset));
+  // No need for write barrier as JSFunction (eax) is in the new space.
+
+  __ str(r0, ContextOperand(r2, Context::OPTIMIZED_FUNCTIONS_LIST));
+  // Store JSFunction (eax) into edx before issuing write barrier as
+  // it clobbers all the registers passed.
+  __ mov(r4, r0);
+  __ RecordWriteContextSlot(
+      r2,
+      Context::SlotOffset(Context::OPTIMIZED_FUNCTIONS_LIST),
+      r4,
+      r1,
+      kLRHasNotBeenSaved,
+      kDontSaveFPRegs);
 
   // Return result. The argument function info has been popped already.
   __ Ret();
@@ -3737,9 +3817,13 @@ void CEntryStub::GenerateCore(MacroAssembler* masm,
   // Compute the return address in lr to return to after the jump below. Pc is
   // already at '+ 8' from the current instruction but return is after three
   // instructions so add another 4 to pc to get the return address.
-  masm->add(lr, pc, Operand(4));
-  __ str(lr, MemOperand(sp, 0));
-  masm->Jump(r5);
+  {
+    // Prevent literal pool emission before return address.
+    Assembler::BlockConstPoolScope block_const_pool(masm);
+    masm->add(lr, pc, Operand(4));
+    __ str(lr, MemOperand(sp, 0));
+    masm->Jump(r5);
+  }
 
   if (always_allocate) {
     // It's okay to clobber r2 and r3 here. Don't mess with r0 and r1
@@ -3956,14 +4040,21 @@ void JSEntryStub::GenerateBody(MacroAssembler* masm, bool is_construct) {
   // Jump to a faked try block that does the invoke, with a faked catch
   // block that sets the pending exception.
   __ jmp(&invoke);
-  __ bind(&handler_entry);
-  handler_offset_ = handler_entry.pos();
-  // Caught exception: Store result (exception) in the pending exception
-  // field in the JSEnv and return a failure sentinel.  Coming in here the
-  // fp will be invalid because the PushTryHandler below sets it to 0 to
-  // signal the existence of the JSEntry frame.
-  __ mov(ip, Operand(ExternalReference(Isolate::kPendingExceptionAddress,
-                                       isolate)));
+
+  // Block literal pool emission whilst taking the position of the handler
+  // entry. This avoids making the assumption that literal pools are always
+  // emitted after an instruction is emitted, rather than before.
+  {
+    Assembler::BlockConstPoolScope block_const_pool(masm);
+    __ bind(&handler_entry);
+    handler_offset_ = handler_entry.pos();
+    // Caught exception: Store result (exception) in the pending exception
+    // field in the JSEnv and return a failure sentinel.  Coming in here the
+    // fp will be invalid because the PushTryHandler below sets it to 0 to
+    // signal the existence of the JSEntry frame.
+    __ mov(ip, Operand(ExternalReference(Isolate::kPendingExceptionAddress,
+                                         isolate)));
+  }
   __ str(r0, MemOperand(ip));
   __ mov(r0, Operand(reinterpret_cast<int32_t>(Failure::Exception())));
   __ b(&exit);
@@ -4006,9 +4097,13 @@ void JSEntryStub::GenerateBody(MacroAssembler* masm, bool is_construct) {
 
   // Branch and link to JSEntryTrampoline.  We don't use the double underscore
   // macro for the add instruction because we don't want the coverage tool
-  // inserting instructions here after we read the pc.
-  __ mov(lr, Operand(pc));
-  masm->add(pc, ip, Operand(Code::kHeaderSize - kHeapObjectTag));
+  // inserting instructions here after we read the pc. We block literal pool
+  // emission for the same reason.
+  {
+    Assembler::BlockConstPoolScope block_const_pool(masm);
+    __ mov(lr, Operand(pc));
+    masm->add(pc, ip, Operand(Code::kHeaderSize - kHeapObjectTag));
+  }
 
   // Unlink this frame from the handler chain.
   __ PopTryHandler();
@@ -6812,6 +6907,10 @@ void DirectCEntryStub::GenerateCall(MacroAssembler* masm,
                                     Register target) {
   __ mov(lr, Operand(reinterpret_cast<intptr_t>(GetCode().location()),
                      RelocInfo::CODE_TARGET));
+
+  // Prevent literal pool emission during calculation of return address.
+  Assembler::BlockConstPoolScope block_const_pool(masm);
+
   // Push return address (accessible to GC through exit frame pc).
   // Note that using pc with str is deprecated.
   Label start;
@@ -7112,6 +7211,8 @@ static const AheadOfTimeWriteBarrierStubList kAheadOfTime[] = {
   { REG(r2), REG(r6), REG(r9), EMIT_REMEMBERED_SET },
   // StoreArrayLiteralElementStub::Generate
   { REG(r5), REG(r0), REG(r6), EMIT_REMEMBERED_SET },
+  // FastNewClosureStub::Generate
+  { REG(r2), REG(r4), REG(r1), EMIT_REMEMBERED_SET },
   // Null termination.
   { REG(no_reg), REG(no_reg), REG(no_reg), EMIT_REMEMBERED_SET}
 };
@@ -7172,8 +7273,13 @@ void RecordWriteStub::Generate(MacroAssembler* masm) {
   // forth between a compare instructions (a nop in this position) and the
   // real branch when we start and stop incremental heap marking.
   // See RecordWriteStub::Patch for details.
-  __ b(&skip_to_incremental_noncompacting);
-  __ b(&skip_to_incremental_compacting);
+  {
+    // Block literal pool emission, as the position of these two instructions
+    // is assumed by the patching code.
+    Assembler::BlockConstPoolScope block_const_pool(masm);
+    __ b(&skip_to_incremental_noncompacting);
+    __ b(&skip_to_incremental_compacting);
+  }
 
   if (remembered_set_action_ == EMIT_REMEMBERED_SET) {
     __ RememberedSetHelper(object_,

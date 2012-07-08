@@ -132,6 +132,8 @@ public:
 
 // Flags for language modes and experimental language features.
 DEFINE_bool(use_strict, false, "enforce strict mode")
+DEFINE_bool(es5_readonly, false,
+            "activate correct semantics for inheriting readonliness")
 DEFINE_bool(es52_globals, false,
             "activate new semantics for global var declarations")
 
@@ -150,7 +152,7 @@ DEFINE_implication(harmony, harmony_collections)
 DEFINE_implication(harmony_modules, harmony_scoping)
 
 // Flags for experimental implementation features.
-DEFINE_bool(packed_arrays, false, "optimizes arrays that have no holes")
+DEFINE_bool(packed_arrays, true, "optimizes arrays that have no holes")
 DEFINE_bool(smi_only_arrays, true, "tracks arrays with only smi values")
 DEFINE_bool(clever_optimizations,
             true,
@@ -196,7 +198,7 @@ DEFINE_bool(trap_on_deopt, false, "put a break point before deoptimizing")
 DEFINE_bool(deoptimize_uncommon_cases, true, "deoptimize uncommon cases")
 DEFINE_bool(polymorphic_inlining, true, "polymorphic inlining")
 DEFINE_bool(use_osr, true, "use on-stack replacement")
-DEFINE_bool(array_bounds_checks_elimination, true,
+DEFINE_bool(array_bounds_checks_elimination, false,
             "perform array bounds checks elimination")
 DEFINE_bool(array_index_dehoisting, false,
             "perform array index dehoisting")
@@ -204,6 +206,11 @@ DEFINE_bool(array_index_dehoisting, false,
 DEFINE_bool(trace_osr, false, "trace on-stack replacement")
 DEFINE_int(stress_runs, 0, "number of stress runs")
 DEFINE_bool(optimize_closures, true, "optimize closures")
+DEFINE_bool(lookup_sample_by_shared, true,
+            "when picking a function to optimize, watch for shared function "
+            "info, not JSFunction itself")
+DEFINE_bool(cache_optimized_code, true,
+            "cache optimized code for closures")
 DEFINE_bool(inline_construct, true, "inline constructor calls")
 DEFINE_bool(inline_arguments, true, "inline functions with arguments object")
 DEFINE_int(loop_weight, 1, "loop weight for representation inference")
@@ -444,6 +451,10 @@ DEFINE_string(testing_serialization_file, "/tmp/serdes",
               "file in which to serialize heap")
 #endif
 
+// mksnapshot.cc
+DEFINE_string(extra_code, NULL, "A filename with extra code to be included in"
+                  " the snapshot (mksnapshot only)")
+
 //
 // Dev shell flags
 //
@@ -602,6 +613,7 @@ DEFINE_bool(sliding_state_window, false,
             "Update sliding state window counters.")
 DEFINE_string(logfile, "v8.log", "Specify the name of the log file.")
 DEFINE_bool(ll_prof, false, "Enable low-level linux profiler.")
+
 
 //
 // Disassembler only flags

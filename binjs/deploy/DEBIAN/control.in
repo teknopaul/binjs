@@ -4,7 +4,7 @@ Section:
 Priority: optional
 Architecture: all
 Essential: no
-Depends: glibc (>= 2.14), libstdc++ (>=4.6)
+Depends: libglib2.0-0 (>= 2.14), libstdc++6 (>=4.6)
 Pre-Depends: 
 Recommends: perl
 Suggests: 

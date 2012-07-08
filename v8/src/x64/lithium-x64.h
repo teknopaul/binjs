@@ -132,6 +132,7 @@ class LCodeGen;
   V(LoadNamedField)                             \
   V(LoadNamedFieldPolymorphic)                  \
   V(LoadNamedGeneric)                           \
+  V(MathFloorOfDiv)                             \
   V(ModI)                                       \
   V(MulI)                                       \
   V(NumberTagD)                                 \
@@ -333,8 +334,11 @@ class LGap: public LTemplateInstruction<0, 0, 0> {
     LAST_INNER_POSITION = AFTER
   };
 
-  LParallelMove* GetOrCreateParallelMove(InnerPosition pos)  {
-    if (parallel_moves_[pos] == NULL) parallel_moves_[pos] = new LParallelMove;
+  LParallelMove* GetOrCreateParallelMove(InnerPosition pos,
+                                         Zone* zone)  {
+    if (parallel_moves_[pos] == NULL) {
+      parallel_moves_[pos] = new(zone) LParallelMove(zone);
+    }
     return parallel_moves_[pos];
   }
 
@@ -548,6 +552,21 @@ class LDivI: public LTemplateInstruction<1, 2, 1> {
 
   DECLARE_CONCRETE_INSTRUCTION(DivI, "div-i")
   DECLARE_HYDROGEN_ACCESSOR(Div)
+};
+
+
+class LMathFloorOfDiv: public LTemplateInstruction<1, 2, 1> {
+ public:
+  LMathFloorOfDiv(LOperand* left,
+                  LOperand* right,
+                  LOperand* temp = NULL) {
+    inputs_[0] = left;
+    inputs_[1] = right;
+    temps_[0] = temp;
+  }
+
+  DECLARE_CONCRETE_INSTRUCTION(MathFloorOfDiv, "math-floor-of-div")
+  DECLARE_HYDROGEN_ACCESSOR(MathFloorOfDiv)
 };
 
 
@@ -2161,13 +2180,13 @@ class LLoadFieldByIndex: public LTemplateInstruction<1, 2, 0> {
 class LChunkBuilder;
 class LChunk: public ZoneObject {
  public:
-  explicit LChunk(CompilationInfo* info, HGraph* graph)
+  LChunk(CompilationInfo* info, HGraph* graph)
     : spill_slot_count_(0),
       info_(info),
       graph_(graph),
-      instructions_(32),
-      pointer_maps_(8),
-      inlined_closures_(1) { }
+      instructions_(32, graph->zone()),
+      pointer_maps_(8, graph->zone()),
+      inlined_closures_(1, graph->zone()) { }
 
   void AddInstruction(LInstruction* instruction, HBasicBlock* block);
   LConstantOperand* DefineConstantOperand(HConstant* constant);
@@ -2212,8 +2231,10 @@ class LChunk: public ZoneObject {
   }
 
   void AddInlinedClosure(Handle<JSFunction> closure) {
-    inlined_closures_.Add(closure);
+    inlined_closures_.Add(closure, zone());
   }
+
+  Zone* zone() const { return graph_->zone(); }
 
  private:
   int spill_slot_count_;
@@ -2231,7 +2252,7 @@ class LChunkBuilder BASE_EMBEDDED {
       : chunk_(NULL),
         info_(info),
         graph_(graph),
-        zone_(graph->isolate()->zone()),
+        zone_(graph->zone()),
         status_(UNUSED),
         current_instruction_(NULL),
         current_block_(NULL),
@@ -2249,6 +2270,9 @@ class LChunkBuilder BASE_EMBEDDED {
 #define DECLARE_DO(type) LInstruction* Do##type(H##type* node);
   HYDROGEN_CONCRETE_INSTRUCTION_LIST(DECLARE_DO)
 #undef DECLARE_DO
+
+  static HValue* SimplifiedDividendForMathFloorOfDiv(HValue* val);
+  static HValue* SimplifiedDivisorForMathFloorOfDiv(HValue* val);
 
  private:
   enum Status {

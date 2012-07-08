@@ -96,6 +96,7 @@ $.setEnv = function(name, value) {
 		value = "" + value;
 	}
 	binjs_setEnv(name, value);
+	$.env[name] = value;
 }
 
 /**
@@ -262,7 +263,7 @@ $.format = function(f) {
   var i = 1;
   var args = arguments;
   var len = args.length;
-  var str = String(f).replace(formatRegExp, function(x) {
+  var str = String(f).replace($.formatRegExp, function(x) {
     if (i >= len) return x;
     switch (x) {
       case '%s': return String(args[i++]);

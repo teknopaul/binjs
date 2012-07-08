@@ -2,13 +2,11 @@
 
 Runtime allows the script to interface with the environment in which it is running.
 
-Code is modeled on Java's java.lang.Runtime, but you do have to import this library to use it.
-
 ----------------------------
 
 ## Import
 
-`binjs_import("~lib/Runtimejs")`
+`binjs_import("~lib/Runtime.js")`
 
 ------------------------
 
@@ -20,7 +18,7 @@ Code is modeled on Java's java.lang.Runtime, but you do have to import this libr
 
 ## Constructor
 
-Class can not be instantiated
+`var runtime = new Runtime();`
 
 ----------------------------
 

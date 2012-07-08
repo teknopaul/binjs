@@ -90,6 +90,11 @@ class StubCache {
                                    Handle<JSObject> holder,
                                    Handle<AccessorInfo> callback);
 
+  Handle<Code> ComputeLoadViaGetter(Handle<String> name,
+                                    Handle<JSObject> receiver,
+                                    Handle<JSObject> holder,
+                                    Handle<JSFunction> getter);
+
   Handle<Code> ComputeLoadConstant(Handle<String> name,
                                    Handle<JSObject> receiver,
                                    Handle<JSObject> holder,
@@ -157,6 +162,12 @@ class StubCache {
                                     Handle<AccessorInfo> callback,
                                     StrictModeFlag strict_mode);
 
+  Handle<Code> ComputeStoreViaSetter(Handle<String> name,
+                                     Handle<JSObject> receiver,
+                                     Handle<JSObject> holder,
+                                     Handle<JSFunction> setter,
+                                     StrictModeFlag strict_mode);
+
   Handle<Code> ComputeStoreInterceptor(Handle<String> name,
                                        Handle<JSObject> receiver,
                                        StrictModeFlag strict_mode);
@@ -169,7 +180,7 @@ class StubCache {
                                       Handle<Map> transition,
                                       StrictModeFlag strict_mode);
 
-  Handle<Code> ComputeKeyedLoadOrStoreElement(Handle<JSObject> receiver,
+  Handle<Code> ComputeKeyedLoadOrStoreElement(Handle<Map> receiver_map,
                                               KeyedIC::StubKind stub_kind,
                                               StrictModeFlag strict_mode);
 
@@ -250,7 +261,8 @@ class StubCache {
   void CollectMatchingMaps(SmallMapList* types,
                            String* name,
                            Code::Flags flags,
-                           Handle<Context> global_context);
+                           Handle<Context> global_context,
+                           Zone* zone);
 
   // Generate code for probing the stub cache table.
   // Arguments extra, extra2 and extra3 may be used to pass additional scratch
@@ -302,7 +314,7 @@ class StubCache {
   Factory* factory() { return isolate()->factory(); }
 
  private:
-  explicit StubCache(Isolate* isolate);
+  StubCache(Isolate* isolate, Zone* zone);
 
   Handle<Code> ComputeCallInitialize(int argc,
                                      RelocInfo::Mode mode,
@@ -596,6 +608,11 @@ class LoadStubCompiler: public StubCompiler {
                                    Handle<JSObject> holder,
                                    Handle<AccessorInfo> callback);
 
+  Handle<Code> CompileLoadViaGetter(Handle<String> name,
+                                    Handle<JSObject> receiver,
+                                    Handle<JSObject> holder,
+                                    Handle<JSFunction> getter);
+
   Handle<Code> CompileLoadConstant(Handle<JSObject> object,
                                    Handle<JSObject> holder,
                                    Handle<JSFunction> value,
@@ -612,7 +629,7 @@ class LoadStubCompiler: public StubCompiler {
                                  bool is_dont_delete);
 
  private:
-  Handle<Code> GetCode(PropertyType type, Handle<String> name);
+  Handle<Code> GetCode(Code::StubType type, Handle<String> name);
 };
 
 
@@ -660,7 +677,7 @@ class KeyedLoadStubCompiler: public StubCompiler {
   static void GenerateLoadDictionaryElement(MacroAssembler* masm);
 
  private:
-  Handle<Code> GetCode(PropertyType type,
+  Handle<Code> GetCode(Code::StubType type,
                        Handle<String> name,
                        InlineCacheState state = MONOMORPHIC);
 };
@@ -681,6 +698,11 @@ class StoreStubCompiler: public StubCompiler {
                                     Handle<AccessorInfo> callback,
                                     Handle<String> name);
 
+  Handle<Code> CompileStoreViaSetter(Handle<String> name,
+                                     Handle<JSObject> receiver,
+                                     Handle<JSObject> holder,
+                                     Handle<JSFunction> setter);
+
   Handle<Code> CompileStoreInterceptor(Handle<JSObject> object,
                                        Handle<String> name);
 
@@ -689,7 +711,7 @@ class StoreStubCompiler: public StubCompiler {
                                   Handle<String> name);
 
  private:
-  Handle<Code> GetCode(PropertyType type, Handle<String> name);
+  Handle<Code> GetCode(Code::StubType type, Handle<String> name);
 
   StrictModeFlag strict_mode_;
 };
@@ -730,7 +752,7 @@ class KeyedStoreStubCompiler: public StubCompiler {
   static void GenerateStoreDictionaryElement(MacroAssembler* masm);
 
  private:
-  Handle<Code> GetCode(PropertyType type,
+  Handle<Code> GetCode(Code::StubType type,
                        Handle<String> name,
                        InlineCacheState state = MONOMORPHIC);
 
@@ -810,7 +832,7 @@ class CallStubCompiler: public StubCompiler {
                                   Handle<JSFunction> function,
                                   Handle<String> name);
 
-  Handle<Code> GetCode(PropertyType type, Handle<String> name);
+  Handle<Code> GetCode(Code::StubType type, Handle<String> name);
   Handle<Code> GetCode(Handle<JSFunction> function);
 
   const ParameterCount& arguments() { return arguments_; }

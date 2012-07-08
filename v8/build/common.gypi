@@ -95,6 +95,10 @@
 
     # For a shared library build, results in "libv8-<(soname_version).so".
     'soname_version%': '',
+
+    # Interpreted regexp engine exists as platform-independent alternative
+    # based where the regular expression is compiled to a bytecode.
+    'v8_interpreted_regexp%': 0,
   },
   'target_defaults': {
     'conditions': [
@@ -109,6 +113,9 @@
       }],
       ['v8_enable_gdbjit==1', {
         'defines': ['ENABLE_GDB_JIT_INTERFACE',],
+      }],
+      ['v8_interpreted_regexp==1', {
+        'defines': ['V8_INTERPRETED_REGEXP',],
       }],
       ['v8_target_arch=="arm"', {
         'defines': [
@@ -220,6 +227,7 @@
             'StackReserveSize': '2097152',
           },
         },
+        'msvs_configuration_platform': 'x64',
       }],  # v8_target_arch=="x64"
       ['v8_use_liveobjectlist=="true"', {
         'defines': [
@@ -340,7 +348,6 @@
             'cflags': [
               '-fdata-sections',
               '-ffunction-sections',
-              '-fomit-frame-pointer',
               '-O3',
             ],
             'conditions': [
@@ -370,14 +377,16 @@
                 'InlineFunctionExpansion': '2',
                 'EnableIntrinsicFunctions': 'true',
                 'FavorSizeOrSpeed': '0',
-                'OmitFramePointers': 'true',
                 'StringPooling': 'true',
-
                 'conditions': [
                   ['OS=="win" and component=="shared_library"', {
                     'RuntimeLibrary': '2',  #/MD
                   }, {
                     'RuntimeLibrary': '0',  #/MT
+                  }],
+                  ['v8_target_arch=="x64"', {
+                    # TODO(2207): remove this option once the bug is fixed.
+                    'WholeProgramOptimization': 'true',
                   }],
                 ],
               },

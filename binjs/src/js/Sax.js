@@ -1,6 +1,9 @@
 // wrapper for non-node envs
 
-Sax = function() {
+/**
+ * @constructor
+ */
+var Sax = function() {
 Sax = this;
 
 Sax.parser = function (strict, opt) { return new SAXParser(strict, opt) };

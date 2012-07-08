@@ -369,9 +369,9 @@ LOperand* LChunk::GetNextSpillSlot(bool is_double) {
   // stack slots for int32 values.
   int index = GetNextSpillIndex(is_double);
   if (is_double) {
-    return LDoubleStackSlot::Create(index);
+    return LDoubleStackSlot::Create(index, zone());
   } else {
-    return LStackSlot::Create(index);
+    return LStackSlot::Create(index, zone());
   }
 }
 
@@ -467,23 +467,23 @@ void LChunk::AddInstruction(LInstruction* instr, HBasicBlock* block) {
   LInstructionGap* gap = new(graph_->zone()) LInstructionGap(block);
   int index = -1;
   if (instr->IsControl()) {
-    instructions_.Add(gap);
+    instructions_.Add(gap, zone());
     index = instructions_.length();
-    instructions_.Add(instr);
+    instructions_.Add(instr, zone());
   } else {
     index = instructions_.length();
-    instructions_.Add(instr);
-    instructions_.Add(gap);
+    instructions_.Add(instr, zone());
+    instructions_.Add(gap, zone());
   }
   if (instr->HasPointerMap()) {
-    pointer_maps_.Add(instr->pointer_map());
+    pointer_maps_.Add(instr->pointer_map(), zone());
     instr->pointer_map()->set_lithium_position(index);
   }
 }
 
 
 LConstantOperand* LChunk::DefineConstantOperand(HConstant* constant) {
-  return LConstantOperand::Create(constant->id());
+  return LConstantOperand::Create(constant->id(), zone());
 }
 
 
@@ -522,7 +522,8 @@ int LChunk::NearestGapPos(int index) const {
 
 
 void LChunk::AddGapMove(int index, LOperand* from, LOperand* to) {
-  GetGapAt(index)->GetOrCreateParallelMove(LGap::START)->AddMove(from, to);
+  GetGapAt(index)->GetOrCreateParallelMove(
+      LGap::START, zone())->AddMove(from, to, zone());
 }
 
 
@@ -757,7 +758,7 @@ LInstruction* LChunkBuilder::MarkAsCall(LInstruction* instr,
 
 LInstruction* LChunkBuilder::AssignPointerMap(LInstruction* instr) {
   ASSERT(!instr->HasPointerMap());
-  instr->set_pointer_map(new(zone()) LPointerMap(position_));
+  instr->set_pointer_map(new(zone()) LPointerMap(position_, zone()));
   return instr;
 }
 
@@ -980,7 +981,8 @@ LEnvironment* LChunkBuilder::CreateEnvironment(
       hydrogen_env->parameter_count(),
       argument_count_,
       value_count,
-      outer);
+      outer,
+      zone());
   int argument_index = *argument_index_accumulator;
   for (int i = 0; i < value_count; ++i) {
     if (hydrogen_env->is_special_index(i)) continue;
@@ -1285,9 +1287,52 @@ LInstruction* LChunkBuilder::DoDiv(HDiv* instr) {
 }
 
 
-LInstruction* LChunkBuilder::DoMathFloorOfDiv(HMathFloorOfDiv* instr) {
-  UNIMPLEMENTED();
+HValue* LChunkBuilder::SimplifiedDividendForMathFloorOfDiv(HValue* dividend) {
+  // A value with an integer representation does not need to be transformed.
+  if (dividend->representation().IsInteger32()) {
+    return dividend;
+  // A change from an integer32 can be replaced by the integer32 value.
+  } else if (dividend->IsChange() &&
+      HChange::cast(dividend)->from().IsInteger32()) {
+    return HChange::cast(dividend)->value();
+  }
   return NULL;
+}
+
+
+HValue* LChunkBuilder::SimplifiedDivisorForMathFloorOfDiv(HValue* divisor) {
+  if (divisor->IsConstant() &&
+      HConstant::cast(divisor)->HasInteger32Value()) {
+    HConstant* constant_val = HConstant::cast(divisor);
+    return constant_val->CopyToRepresentation(Representation::Integer32(),
+                                              divisor->block()->zone());
+  }
+  return NULL;
+}
+
+
+LInstruction* LChunkBuilder::DoMathFloorOfDiv(HMathFloorOfDiv* instr) {
+  HValue* right = instr->right();
+  ASSERT(right->IsConstant() && HConstant::cast(right)->HasInteger32Value());
+  LOperand* divisor = chunk_->DefineConstantOperand(HConstant::cast(right));
+  int32_t divisor_si = HConstant::cast(right)->Integer32Value();
+  if (divisor_si == 0) {
+    LOperand* dividend = UseRegister(instr->left());
+    return AssignEnvironment(DefineAsRegister(
+        new(zone()) LMathFloorOfDiv(dividend, divisor, NULL)));
+  } else if (IsPowerOf2(abs(divisor_si))) {
+    LOperand* dividend = UseRegisterAtStart(instr->left());
+    LInstruction* result = DefineAsRegister(
+        new(zone()) LMathFloorOfDiv(dividend, divisor, NULL));
+    return divisor_si < 0 ? AssignEnvironment(result) : result;
+  } else {
+    // use two r64
+    LOperand* dividend = UseRegisterAtStart(instr->left());
+    LOperand* temp = TempRegister();
+    LInstruction* result = DefineAsRegister(
+        new(zone()) LMathFloorOfDiv(dividend, divisor, temp));
+    return divisor_si < 0 ? AssignEnvironment(result) : result;
+  }
 }
 
 
@@ -1593,7 +1638,7 @@ LInstruction* LChunkBuilder::DoValueOf(HValueOf* instr) {
 
 LInstruction* LChunkBuilder::DoDateField(HDateField* instr) {
   LOperand* object = UseFixed(instr->value(), rax);
-  LDateField* result = new LDateField(object, instr->index());
+  LDateField* result = new(zone()) LDateField(object, instr->index());
   return MarkAsCall(DefineFixed(result, rax), instr);
 }
 
@@ -1642,14 +1687,13 @@ LInstruction* LChunkBuilder::DoChange(HChange* instr) {
     } else {
       ASSERT(to.IsInteger32());
       LOperand* value = UseRegister(instr->value());
-      bool needs_check = !instr->value()->type().IsSmi();
-      if (needs_check) {
+      if (instr->value()->type().IsSmi()) {
+        return DefineSameAsFirst(new(zone()) LSmiUntag(value, false));
+      } else {
         bool truncating = instr->CanTruncateToInt32();
         LOperand* xmm_temp = truncating ? NULL : FixedTemp(xmm1);
         LTaggedToI* res = new(zone()) LTaggedToI(value, xmm_temp);
         return AssignEnvironment(DefineSameAsFirst(res));
-      } else {
-        return DefineSameAsFirst(new(zone()) LSmiUntag(value, needs_check));
       }
     }
   } else if (from.IsDouble()) {
@@ -2102,7 +2146,7 @@ LInstruction* LChunkBuilder::DoStringLength(HStringLength* instr) {
 
 
 LInstruction* LChunkBuilder::DoAllocateObject(HAllocateObject* instr) {
-  LAllocateObject* result = new LAllocateObject(TempRegister());
+  LAllocateObject* result = new(zone()) LAllocateObject(TempRegister());
   return AssignPointerMap(DefineAsRegister(result));
 }
 

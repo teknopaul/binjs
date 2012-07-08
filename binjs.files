@@ -713,3 +713,7 @@ binjs/TODO.text
 binjs/src/js/util/TableParser.js
 Makefile.am
 binjs/doc/StyleGuide.md
+binjs/Makefile.in
+binjs/deploy/DEBIAN/postinst
+binjs/deploy/DEBIAN/control.in
+binjs/deploy/DEBIAN/prerm

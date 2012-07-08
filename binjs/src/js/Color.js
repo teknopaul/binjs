@@ -1,6 +1,15 @@
-
-Color = function() {
-	throw new Error("Color can not be instantiated");
+/**
+ * Color class suports instantiating with var color = new Color() like other
+ * Libraries, but also support sstatic type calls like Color.disable()
+ *
+ * You can not call Color.disable() directly in a /bin/js script because
+ * the preparser forbids it, but all changes are global they do not affect
+ * the instance of Color if you create one.
+ *
+ */
+ 
+ 
+var Color = function() {
 };
 
 // \033 is 27 ie ESC
@@ -41,6 +50,7 @@ Color.disable = function() {
 	Color.UNDERLINE = "";
 	Color.BLINK     = "";
 }
+Color.prototype.disable = Color.disable;
 
 Color.enable = function() {
 	Color.BLACK   = "\033[30m";
@@ -60,6 +70,7 @@ Color.enable = function() {
 	Color.UNDERLINE = "\033[4m";
 	Color.BLINK     = "\033[5m";
 }
+Color.prototype.enable = Color.enable;
 
 Color.fromModifier = function(colour) {
 	switch(colour) {
@@ -79,6 +90,8 @@ Color.fromModifier = function(colour) {
 		  throw new Error("invalid colour choose from black,white,grey,darkgrey,blue,green,red,yellow,cyan,magenta,orange");
 	}
 }
+Color.prototype.fromModifier = Color.fromModifier;
+
 
 if ( ! binjs_isatty() ) {
 	Color.disable();

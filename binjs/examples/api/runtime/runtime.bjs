@@ -2,6 +2,9 @@
 
 binjs_import("~lib/Runtime.js")
 
-$.println("/bin/js ver = " + Runtime.binjsVersion) ;
-$.println("bash ver = " + Runtime.bashVersion) ;
-$.println("v8 ver = " + Runtime.javaScriptVersion) ;
+var runtime = new Runtime();
+
+$.println("/bin/js ver = " + runtime.binjsVersion);
+$.println("bash ver = " + runtime.bashVersion);
+$.println("v8 ver = " + runtime.javaScriptVersion);
+

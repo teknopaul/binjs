@@ -1,0 +1,117 @@
+#!/bin/js
+#
+# Check core APIs are not broken and that everything imports OK
+#
+
+// Import all install libs
+
+var libs = [];
+function importAll(imports) {
+	var subdirs = [];
+	for (var i = 0 ; i < imports.length ; i++ ) {
+		if ( imports[i].isFile() &&  imports[i].ext() == "js" ) {
+			$.println( "importing " + imports[i].getAbsolutePath() );
+			binjs_import(imports[i].getAbsolutePath());
+			libs.push(imports[i]);
+		}
+		if ( imports[i].isDir() ) subdirs.push(imports[i]);
+  	}
+	for (var i = 0 ; i < subdirs.length ; i++ ) {
+		$.println("Importing from " + subdirs[i].getAbsolutePath());
+		importAll( subdirs[i].listFiles() );
+	}
+}
+
+var imports = new File("/usr/lib/binjs/lib").listFiles();
+
+importAll(imports);
+
+// Call key methods of Core APIs
+
+// Assert.js
+var assert = new Assert();
+assert.ok(true);
+
+// binjs.js magic
+$.println("argc:" + argc);
+assert.ok(typeof argc == 'number', "typeof argc " + typeof argc);
+$.println("argv:" + argv.join(" "));
+assert.ok(typeof argv == 'object', "typeof argv " + typeof argv);
+$.println("errno:" + errno)
+assert.ok(typeof errno == 'number', "typeof errno " + typeof errno);
+assert.equal(0, errno), "errno should be 0";
+$.println("pid:" + pid)
+assert.ok(typeof pid == 'number', "pid should be a number");
+echo ok >/dev/null
+$.println("lastpid:" + lastpid);
+assert.ok(typeof lastpid == 'number'), "lastpid";
+
+// Color.js
+
+var color = new Color();
+color.disable();
+$.println("not green", 'green');
+color.enable();
+$.println("green", 'green');
+assert.equal(Color.GREEN, color.fromModifier('green'));
+
+// Dollar.js
+
+assert.ok(typeof $.env == 'object', "typeof $.env " + typeof $.env);
+assert.ok(typeof $.env.HOME == 'string', "typeof $.env.HOME " + typeof $.env.HOME);
+$.sleep(1);
+$.setEnv("BJS_TMP", "quxx");
+assert.equal("quxx", $.env.BJS_TMP, "$.env");
+assert.equal("quxx", $.getEnv("BJS_TMP"), "$.getEnv");
+$.getJobs();
+assert.equal("oioi23{}", $.format("%s%d%j", "oioi", 23, {}), "$.format");
+
+// Dom.js
+
+var dom = new Dom();
+
+assert.equal("&quot;", Dom.escape('"'), "Dom.escape()");
+assert.equal("&quot;", dom.escape('"'), "dom.escape()");
+assert.equal("xml", dom.parser().parse("<xml/>").name, "dom parsing");
+
+// File.js
+
+var home = new File("~");
+
+assert.equal($.env.HOME, home.getAbsolutePath(), "home.getAbsolutePath()"); 
+assert.equal($.env.HOME, home.getAbsoluteFile().path, "home.getAbsoluteFile().path");
+
+var ext = Number.toString(Math.random(), 32);
+var tmpFile = new File("/tmp/bjstst." + ext );
+tmpFile.touch();
+assert.equal(0, tmpFile.size, "tmpFile.size");
+tmpFile.stat();
+assert.equal(ext, tmpFile.ext(), "file.ext()");
+ext = Number.toString(Math.random(), 32);
+tmpFile.rename("/tmp/bjstst." + ext);
+assert.equal(ext, tmpFile.ext()), "file.rename()";
+tmpFile.delete();
+assert.equals(false, tmpFile.exists, "file.delete() & file.exists");
+
+var tmpDir = new File("/tmp");
+tmpDir.list();
+tmpDir.listFiles();
+tmpDir.listFiles("*.doc");
+tmpDir.listFiles("*");
+tmpDir.listFiles( function() {return true; } );
+
+tmpFile.touch();
+tmpFile.write("hello");
+assert.equal("hello", tmpFile.read(), "file.write() & file.read()");
+
+
+
+
+
+
+
+
+
+
+
+

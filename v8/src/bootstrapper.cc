@@ -1080,11 +1080,11 @@ bool Genesis::InitializeGlobal(Handle<GlobalObject> inner_global,
 #ifdef DEBUG
     LookupResult lookup(isolate);
     result->LocalLookup(heap->callee_symbol(), &lookup);
-    ASSERT(lookup.IsFound() && (lookup.type() == FIELD));
+    ASSERT(lookup.IsField());
     ASSERT(lookup.GetFieldIndex() == Heap::kArgumentsCalleeIndex);
 
     result->LocalLookup(heap->length_symbol(), &lookup);
-    ASSERT(lookup.IsFound() && (lookup.type() == FIELD));
+    ASSERT(lookup.IsField());
     ASSERT(lookup.GetFieldIndex() == Heap::kArgumentsLengthIndex);
 
     ASSERT(result->map()->inobject_properties() > Heap::kArgumentsCalleeIndex);
@@ -1178,7 +1178,7 @@ bool Genesis::InitializeGlobal(Handle<GlobalObject> inner_global,
 #ifdef DEBUG
     LookupResult lookup(isolate);
     result->LocalLookup(heap->length_symbol(), &lookup);
-    ASSERT(lookup.IsFound() && (lookup.type() == FIELD));
+    ASSERT(lookup.IsField());
     ASSERT(lookup.GetFieldIndex() == Heap::kArgumentsLengthIndex);
 
     ASSERT(result->map()->inobject_properties() > Heap::kArgumentsLengthIndex);
@@ -1632,9 +1632,10 @@ bool Genesis::InstallNatives() {
     // through a common bottleneck that would make the SMI_ONLY -> FAST_ELEMENT
     // transition easy to trap. Moreover, they rarely are smi-only.
     MaybeObject* maybe_map =
-        array_function->initial_map()->CopyDropTransitions();
+        array_function->initial_map()->CopyDropTransitions(
+            DescriptorArray::MAY_BE_SHARED);
     Map* new_map;
-    if (!maybe_map->To<Map>(&new_map)) return false;
+    if (!maybe_map->To(&new_map)) return false;
     new_map->set_elements_kind(FAST_HOLEY_ELEMENTS);
     array_function->set_initial_map(new_map);
 
@@ -2092,14 +2093,10 @@ bool Genesis::InstallJSBuiltins(Handle<JSBuiltinsObject> builtins) {
     Handle<JSFunction> function
         = Handle<JSFunction>(JSFunction::cast(function_object));
     builtins->set_javascript_builtin(id, *function);
-    Handle<SharedFunctionInfo> shared
-        = Handle<SharedFunctionInfo>(function->shared());
-    if (!SharedFunctionInfo::EnsureCompiled(shared, CLEAR_EXCEPTION)) {
+    if (!JSFunction::CompileLazy(function, CLEAR_EXCEPTION)) {
       return false;
     }
-    // Set the code object on the function object.
-    function->ReplaceCode(function->shared()->code());
-    builtins->set_javascript_builtin_code(id, shared->code());
+    builtins->set_javascript_builtin_code(id, function->shared()->code());
   }
   return true;
 }
@@ -2194,16 +2191,12 @@ void Genesis::TransferNamedProperties(Handle<JSObject> from,
           JSObject::SetNormalizedProperty(to, key, callbacks, d);
           break;
         }
-        case MAP_TRANSITION:
-        case ELEMENTS_TRANSITION:
-        case CONSTANT_TRANSITION:
-        case NULL_DESCRIPTOR:
-          // Ignore non-properties.
-          break;
         case NORMAL:
           // Do not occur since the from object has fast properties.
         case HANDLER:
         case INTERCEPTOR:
+        case TRANSITION:
+        case NONEXISTENT:
           // No element in instance descriptors have proxy or interceptor type.
           UNREACHABLE();
           break;

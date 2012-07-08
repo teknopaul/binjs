@@ -66,21 +66,26 @@ Heap::Heap()
     : isolate_(NULL),
 // semispace_size_ should be a power of 2 and old_generation_size_ should be
 // a multiple of Page::kPageSize.
-#if defined(ANDROID)
-#define LUMP_OF_MEMORY (128 * KB)
-      code_range_size_(0),
-#elif defined(V8_TARGET_ARCH_X64)
+#if defined(V8_TARGET_ARCH_X64)
 #define LUMP_OF_MEMORY (2 * MB)
       code_range_size_(512*MB),
 #else
 #define LUMP_OF_MEMORY MB
       code_range_size_(0),
 #endif
+#if defined(ANDROID)
+      reserved_semispace_size_(4 * Max(LUMP_OF_MEMORY, Page::kPageSize)),
+      max_semispace_size_(4 * Max(LUMP_OF_MEMORY, Page::kPageSize)),
+      initial_semispace_size_(Page::kPageSize),
+      max_old_generation_size_(192*MB),
+      max_executable_size_(max_old_generation_size_),
+#else
       reserved_semispace_size_(8 * Max(LUMP_OF_MEMORY, Page::kPageSize)),
       max_semispace_size_(8 * Max(LUMP_OF_MEMORY, Page::kPageSize)),
       initial_semispace_size_(Page::kPageSize),
       max_old_generation_size_(700ul * LUMP_OF_MEMORY),
       max_executable_size_(256l * LUMP_OF_MEMORY),
+#endif
 
 // Variables set based on semispace_size_ and old_generation_size_ in
 // ConfigureHeap (survived_since_last_expansion_, external_allocation_limit_)
@@ -315,48 +320,52 @@ void Heap::ReportStatisticsBeforeGC() {
 
 void Heap::PrintShortHeapStatistics() {
   if (!FLAG_trace_gc_verbose) return;
-  PrintF("Memory allocator,   used: %8" V8_PTR_PREFIX "d"
-             ", available: %8" V8_PTR_PREFIX "d\n",
-         isolate_->memory_allocator()->Size(),
-         isolate_->memory_allocator()->Available());
-  PrintF("New space,          used: %8" V8_PTR_PREFIX "d"
-             ", available: %8" V8_PTR_PREFIX "d\n",
-         Heap::new_space_.Size(),
-         new_space_.Available());
-  PrintF("Old pointers,       used: %8" V8_PTR_PREFIX "d"
-             ", available: %8" V8_PTR_PREFIX "d"
-             ", waste: %8" V8_PTR_PREFIX "d\n",
-         old_pointer_space_->Size(),
-         old_pointer_space_->Available(),
-         old_pointer_space_->Waste());
-  PrintF("Old data space,     used: %8" V8_PTR_PREFIX "d"
-             ", available: %8" V8_PTR_PREFIX "d"
-             ", waste: %8" V8_PTR_PREFIX "d\n",
-         old_data_space_->Size(),
-         old_data_space_->Available(),
-         old_data_space_->Waste());
-  PrintF("Code space,         used: %8" V8_PTR_PREFIX "d"
-             ", available: %8" V8_PTR_PREFIX "d"
-             ", waste: %8" V8_PTR_PREFIX "d\n",
-         code_space_->Size(),
-         code_space_->Available(),
-         code_space_->Waste());
-  PrintF("Map space,          used: %8" V8_PTR_PREFIX "d"
-             ", available: %8" V8_PTR_PREFIX "d"
-             ", waste: %8" V8_PTR_PREFIX "d\n",
-         map_space_->Size(),
-         map_space_->Available(),
-         map_space_->Waste());
-  PrintF("Cell space,         used: %8" V8_PTR_PREFIX "d"
-             ", available: %8" V8_PTR_PREFIX "d"
-             ", waste: %8" V8_PTR_PREFIX "d\n",
-         cell_space_->Size(),
-         cell_space_->Available(),
-         cell_space_->Waste());
-  PrintF("Large object space, used: %8" V8_PTR_PREFIX "d"
-             ", available: %8" V8_PTR_PREFIX "d\n",
-         lo_space_->Size(),
-         lo_space_->Available());
+  PrintF("Memory allocator,   used: %6" V8_PTR_PREFIX "d KB"
+             ", available: %6" V8_PTR_PREFIX "d KB\n",
+         isolate_->memory_allocator()->Size() / KB,
+         isolate_->memory_allocator()->Available() / KB);
+  PrintF("New space,          used: %6" V8_PTR_PREFIX "d KB"
+             ", available: %6" V8_PTR_PREFIX "d KB"
+             ", committed: %6" V8_PTR_PREFIX "d KB\n",
+         new_space_.Size() / KB,
+         new_space_.Available() / KB,
+         new_space_.CommittedMemory() / KB);
+  PrintF("Old pointers,       used: %6" V8_PTR_PREFIX "d KB"
+             ", available: %6" V8_PTR_PREFIX "d KB"
+             ", committed: %6" V8_PTR_PREFIX "d KB\n",
+         old_pointer_space_->SizeOfObjects() / KB,
+         old_pointer_space_->Available() / KB,
+         old_pointer_space_->CommittedMemory() / KB);
+  PrintF("Old data space,     used: %6" V8_PTR_PREFIX "d KB"
+             ", available: %6" V8_PTR_PREFIX "d KB"
+             ", committed: %6" V8_PTR_PREFIX "d KB\n",
+         old_data_space_->SizeOfObjects() / KB,
+         old_data_space_->Available() / KB,
+         old_data_space_->CommittedMemory() / KB);
+  PrintF("Code space,         used: %6" V8_PTR_PREFIX "d KB"
+             ", available: %6" V8_PTR_PREFIX "d KB"
+             ", committed: %6" V8_PTR_PREFIX "d KB\n",
+         code_space_->SizeOfObjects() / KB,
+         code_space_->Available() / KB,
+         code_space_->CommittedMemory() / KB);
+  PrintF("Map space,          used: %6" V8_PTR_PREFIX "d KB"
+             ", available: %6" V8_PTR_PREFIX "d KB"
+             ", committed: %6" V8_PTR_PREFIX "d KB\n",
+         map_space_->SizeOfObjects() / KB,
+         map_space_->Available() / KB,
+         map_space_->CommittedMemory() / KB);
+  PrintF("Cell space,         used: %6" V8_PTR_PREFIX "d KB"
+             ", available: %6" V8_PTR_PREFIX "d KB"
+             ", committed: %6" V8_PTR_PREFIX "d KB\n",
+         cell_space_->SizeOfObjects() / KB,
+         cell_space_->Available() / KB,
+         cell_space_->CommittedMemory() / KB);
+  PrintF("Large object space, used: %6" V8_PTR_PREFIX "d KB"
+             ", available: %6" V8_PTR_PREFIX "d KB"
+             ", committed: %6" V8_PTR_PREFIX "d KB\n",
+         lo_space_->SizeOfObjects() / KB,
+         lo_space_->Available() / KB,
+         lo_space_->CommittedMemory() / KB);
 }
 
 
@@ -435,6 +444,56 @@ void Heap::GarbageCollectionEpilogue() {
       symbol_table()->Capacity());
   isolate_->counters()->number_of_symbols()->Set(
       symbol_table()->NumberOfElements());
+
+  isolate_->counters()->new_space_bytes_available()->Set(
+      static_cast<int>(new_space()->Available()));
+  isolate_->counters()->new_space_bytes_committed()->Set(
+      static_cast<int>(new_space()->CommittedMemory()));
+  isolate_->counters()->new_space_bytes_used()->Set(
+      static_cast<int>(new_space()->SizeOfObjects()));
+
+  isolate_->counters()->old_pointer_space_bytes_available()->Set(
+      static_cast<int>(old_pointer_space()->Available()));
+  isolate_->counters()->old_pointer_space_bytes_committed()->Set(
+      static_cast<int>(old_pointer_space()->CommittedMemory()));
+  isolate_->counters()->old_pointer_space_bytes_used()->Set(
+      static_cast<int>(old_pointer_space()->SizeOfObjects()));
+
+  isolate_->counters()->old_data_space_bytes_available()->Set(
+      static_cast<int>(old_data_space()->Available()));
+  isolate_->counters()->old_data_space_bytes_committed()->Set(
+      static_cast<int>(old_data_space()->CommittedMemory()));
+  isolate_->counters()->old_data_space_bytes_used()->Set(
+      static_cast<int>(old_data_space()->SizeOfObjects()));
+
+  isolate_->counters()->code_space_bytes_available()->Set(
+      static_cast<int>(code_space()->Available()));
+  isolate_->counters()->code_space_bytes_committed()->Set(
+      static_cast<int>(code_space()->CommittedMemory()));
+  isolate_->counters()->code_space_bytes_used()->Set(
+      static_cast<int>(code_space()->SizeOfObjects()));
+
+  isolate_->counters()->map_space_bytes_available()->Set(
+      static_cast<int>(map_space()->Available()));
+  isolate_->counters()->map_space_bytes_committed()->Set(
+      static_cast<int>(map_space()->CommittedMemory()));
+  isolate_->counters()->map_space_bytes_used()->Set(
+      static_cast<int>(map_space()->SizeOfObjects()));
+
+  isolate_->counters()->cell_space_bytes_available()->Set(
+      static_cast<int>(cell_space()->Available()));
+  isolate_->counters()->cell_space_bytes_committed()->Set(
+      static_cast<int>(cell_space()->CommittedMemory()));
+  isolate_->counters()->cell_space_bytes_used()->Set(
+      static_cast<int>(cell_space()->SizeOfObjects()));
+
+  isolate_->counters()->lo_space_bytes_available()->Set(
+      static_cast<int>(lo_space()->Available()));
+  isolate_->counters()->lo_space_bytes_committed()->Set(
+      static_cast<int>(lo_space()->CommittedMemory()));
+  isolate_->counters()->lo_space_bytes_used()->Set(
+      static_cast<int>(lo_space()->SizeOfObjects()));
+
 #if defined(DEBUG)
   ReportStatisticsAfterGC();
 #endif  // DEBUG
@@ -2817,7 +2876,7 @@ void Heap::AllocateFullSizeNumberStringCache() {
   // The idea is to have a small number string cache in the snapshot to keep
   // boot-time memory usage down.  If we expand the number string cache already
   // while creating the snapshot then that didn't work out.
-  ASSERT(!Serializer::enabled());
+  ASSERT(!Serializer::enabled() || FLAG_extra_code != NULL);
   MaybeObject* maybe_obj =
       AllocateFixedArray(FullSizeNumberStringCacheLength(), TENURED);
   Object* new_cache;
@@ -3005,6 +3064,7 @@ MaybeObject* Heap::AllocateSharedFunctionInfo(Object* name) {
   share->set_name(name);
   Code* illegal = isolate_->builtins()->builtin(Builtins::kIllegal);
   share->set_code(illegal);
+  share->ClearOptimizedCodeMap();
   share->set_scope_info(ScopeInfo::Empty());
   Code* construct_stub =
       isolate_->builtins()->builtin(Builtins::kJSConstructStubGeneric);
@@ -3017,8 +3077,8 @@ MaybeObject* Heap::AllocateSharedFunctionInfo(Object* name) {
   share->set_initial_map(undefined_value(), SKIP_WRITE_BARRIER);
   share->set_this_property_assignments(undefined_value(), SKIP_WRITE_BARRIER);
   share->set_ast_node_count(0);
-  share->set_deopt_counter(FLAG_deopt_every_n_times);
-  share->set_ic_age(0);
+  share->set_stress_deopt_counter(FLAG_deopt_every_n_times);
+  share->set_counters(0);
 
   // Set integer fields (smi or int, depending on the architecture).
   share->set_length(0);
@@ -3666,7 +3726,8 @@ MaybeObject* Heap::AllocateFunctionPrototype(JSFunction* function) {
   Map* new_map;
   ASSERT(object_function->has_initial_map());
   { MaybeObject* maybe_map =
-        object_function->initial_map()->CopyDropTransitions();
+        object_function->initial_map()->CopyDropTransitions(
+            DescriptorArray::MAY_BE_SHARED);
     if (!maybe_map->To<Map>(&new_map)) return maybe_map;
   }
   Object* prototype;
@@ -3814,7 +3875,8 @@ MaybeObject* Heap::AllocateInitialMap(JSFunction* fun) {
       fun->shared()->ForbidInlineConstructor();
     } else {
       DescriptorArray* descriptors;
-      { MaybeObject* maybe_descriptors_obj = DescriptorArray::Allocate(count);
+      { MaybeObject* maybe_descriptors_obj =
+            DescriptorArray::Allocate(count, DescriptorArray::MAY_BE_SHARED);
         if (!maybe_descriptors_obj->To<DescriptorArray>(&descriptors)) {
           return maybe_descriptors_obj;
         }
@@ -5006,7 +5068,11 @@ void Heap::AdvanceIdleIncrementalMarking(intptr_t step_size) {
 
 
 bool Heap::IdleNotification(int hint) {
+  // Hints greater than this value indicate that
+  // the embedder is requesting a lot of GC work.
   const int kMaxHint = 1000;
+  // Minimal hint that allows to do full GC.
+  const int kMinHintForFullGC = 100;
   intptr_t size_factor = Min(Max(hint, 20), kMaxHint) / 4;
   // The size factor is in range [5..250]. The numbers here are chosen from
   // experiments. If you changes them, make sure to test with
@@ -5074,16 +5140,30 @@ bool Heap::IdleNotification(int hint) {
   mark_sweeps_since_idle_round_started_ += new_mark_sweeps;
   ms_count_at_last_idle_notification_ = ms_count_;
 
-  if (mark_sweeps_since_idle_round_started_ >= kMaxMarkSweepsInIdleRound) {
+  int remaining_mark_sweeps = kMaxMarkSweepsInIdleRound -
+                              mark_sweeps_since_idle_round_started_;
+
+  if (remaining_mark_sweeps <= 0) {
     FinishIdleRound();
     return true;
   }
 
   if (incremental_marking()->IsStopped()) {
-    incremental_marking()->Start();
+    // If there are no more than two GCs left in this idle round and we are
+    // allowed to do a full GC, then make those GCs full in order to compact
+    // the code space.
+    // TODO(ulan): Once we enable code compaction for incremental marking,
+    // we can get rid of this special case and always start incremental marking.
+    if (remaining_mark_sweeps <= 2 && hint >= kMinHintForFullGC) {
+      CollectAllGarbage(kReduceMemoryFootprintMask,
+                        "idle notification: finalize idle round");
+    } else {
+      incremental_marking()->Start();
+    }
   }
-
-  AdvanceIdleIncrementalMarking(step_size);
+  if (!incremental_marking()->IsStopped()) {
+    AdvanceIdleIncrementalMarking(step_size);
+  }
   return false;
 }
 
@@ -6628,7 +6708,7 @@ void PathTracer::TracePathFrom(Object** root) {
   ASSERT((search_target_ == kAnyGlobalObject) ||
          search_target_->IsHeapObject());
   found_target_in_trace_ = false;
-  object_stack_.Clear();
+  Reset();
 
   MarkVisitor mark_visitor(this);
   MarkRecursively(root, &mark_visitor);
@@ -6732,11 +6812,7 @@ void PathTracer::ProcessResults() {
     for (int i = 0; i < object_stack_.length(); i++) {
       if (i > 0) PrintF("\n     |\n     |\n     V\n\n");
       Object* obj = object_stack_[i];
-#ifdef OBJECT_PRINT
       obj->Print();
-#else
-      obj->ShortPrint();
-#endif
     }
     PrintF("=====================================\n");
   }

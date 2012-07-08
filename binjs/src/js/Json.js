@@ -10,6 +10,7 @@
  * <code>var p = new Json().prettyPrint(jsonString)</code>
  * 
  * @class
+ * @constructor
  */
 var Json = function() {
 

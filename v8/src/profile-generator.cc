@@ -169,6 +169,15 @@ const char* StringsStorage::GetName(int index) {
 }
 
 
+size_t StringsStorage::GetUsedMemorySize() const {
+  size_t size = sizeof(*this);
+  size += sizeof(HashMap::Entry) * names_.capacity();
+  for (HashMap::Entry* p = names_.Start(); p != NULL; p = names_.Next(p)) {
+    size += strlen(reinterpret_cast<const char*>(p->value)) + 1;
+  }
+  return size;
+}
+
 const char* const CodeEntry::kEmptyNamePrefix = "";
 
 
@@ -1083,12 +1092,16 @@ template <size_t ptr_size> struct SnapshotSizeConstants;
 template <> struct SnapshotSizeConstants<4> {
   static const int kExpectedHeapGraphEdgeSize = 12;
   static const int kExpectedHeapEntrySize = 24;
+  static const int kExpectedHeapSnapshotsCollectionSize = 96;
+  static const int kExpectedHeapSnapshotSize = 136;
   static const size_t kMaxSerializableSnapshotRawSize = 256 * MB;
 };
 
 template <> struct SnapshotSizeConstants<8> {
   static const int kExpectedHeapGraphEdgeSize = 24;
   static const int kExpectedHeapEntrySize = 32;
+  static const int kExpectedHeapSnapshotsCollectionSize = 144;
+  static const int kExpectedHeapSnapshotSize = 168;
   static const uint64_t kMaxSerializableSnapshotRawSize =
       static_cast<uint64_t>(6000) * MB;
 };
@@ -1243,12 +1256,15 @@ void HeapSnapshot::Print(int max_depth) {
 
 template<typename T, class P>
 static size_t GetMemoryUsedByList(const List<T, P>& list) {
-  return list.capacity() * sizeof(T);
+  return list.length() * sizeof(T) + sizeof(list);
 }
 
 
 size_t HeapSnapshot::RawSnapshotSize() const {
+  STATIC_CHECK(SnapshotSizeConstants<kPointerSize>::kExpectedHeapSnapshotSize ==
+      sizeof(HeapSnapshot));  // NOLINT
   return
+      sizeof(*this) +
       GetMemoryUsedByList(entries_) +
       GetMemoryUsedByList(edges_) +
       GetMemoryUsedByList(children_) +
@@ -1446,6 +1462,15 @@ SnapshotObjectId HeapObjectsMap::GenerateId(v8::RetainedObjectInfo* info) {
 }
 
 
+size_t HeapObjectsMap::GetUsedMemorySize() const {
+  return
+      sizeof(*this) +
+      sizeof(HashMap::Entry) * entries_map_.capacity() +
+      GetMemoryUsedByList(entries_) +
+      GetMemoryUsedByList(time_intervals_);
+}
+
+
 HeapSnapshotsCollection::HeapSnapshotsCollection()
     : is_tracking_objects_(false),
       snapshots_uids_(HeapSnapshotsMatch),
@@ -1522,6 +1547,22 @@ Handle<HeapObject> HeapSnapshotsCollection::FindHeapObjectById(
     }
   }
   return object != NULL ? Handle<HeapObject>(object) : Handle<HeapObject>();
+}
+
+
+size_t HeapSnapshotsCollection::GetUsedMemorySize() const {
+  STATIC_CHECK(SnapshotSizeConstants<kPointerSize>::
+      kExpectedHeapSnapshotsCollectionSize ==
+      sizeof(HeapSnapshotsCollection));  // NOLINT
+  size_t size = sizeof(*this);
+  size += names_.GetUsedMemorySize();
+  size += ids_.GetUsedMemorySize();
+  size += sizeof(HashMap::Entry) * snapshots_uids_.capacity();
+  size += GetMemoryUsedByList(snapshots_);
+  for (int i = 0; i < snapshots_.length(); ++i) {
+    size += snapshots_[i]->RawSnapshotSize();
+  }
+  return size;
 }
 
 
@@ -2141,16 +2182,31 @@ void V8HeapExplorer::ExtractPropertyReferences(JSObject* js_obj, int entry) {
       switch (descs->GetType(i)) {
         case FIELD: {
           int index = descs->GetFieldIndex(i);
+
+          String* k = descs->GetKey(i);
           if (index < js_obj->map()->inobject_properties()) {
-            SetPropertyReference(
-                js_obj, entry,
-                descs->GetKey(i), js_obj->InObjectPropertyAt(index),
-                NULL,
-                js_obj->GetInObjectPropertyOffset(index));
+            Object* value = js_obj->InObjectPropertyAt(index);
+            if (k != heap_->hidden_symbol()) {
+              SetPropertyReference(
+                  js_obj, entry,
+                  k, value,
+                  NULL,
+                  js_obj->GetInObjectPropertyOffset(index));
+            } else {
+              TagObject(value, "(hidden properties)");
+              SetInternalReference(
+                  js_obj, entry,
+                  "hidden_properties", value,
+                  js_obj->GetInObjectPropertyOffset(index));
+            }
           } else {
-            SetPropertyReference(
-                js_obj, entry,
-                descs->GetKey(i), js_obj->FastPropertyAt(index));
+            Object* value = js_obj->FastPropertyAt(index);
+            if (k != heap_->hidden_symbol()) {
+              SetPropertyReference(js_obj, entry, k, value);
+            } else {
+              TagObject(value, "(hidden properties)");
+              SetInternalReference(js_obj, entry, "hidden_properties", value);
+            }
           }
           break;
         }
@@ -2177,10 +2233,10 @@ void V8HeapExplorer::ExtractPropertyReferences(JSObject* js_obj, int entry) {
         case NORMAL:  // only in slow mode
         case HANDLER:  // only in lookup results, not in descriptors
         case INTERCEPTOR:  // only in lookup results, not in descriptors
-        case MAP_TRANSITION:  // we do not care about transitions here...
-        case ELEMENTS_TRANSITION:
-        case CONSTANT_TRANSITION:
-        case NULL_DESCRIPTOR:  // ... and not about "holes"
+          break;
+        case TRANSITION:
+        case NONEXISTENT:
+          UNREACHABLE();
           break;
       }
     }
@@ -2195,7 +2251,7 @@ void V8HeapExplorer::ExtractPropertyReferences(JSObject* js_obj, int entry) {
         Object* value = target->IsJSGlobalPropertyCell()
             ? JSGlobalPropertyCell::cast(target)->value()
             : target;
-        if (String::cast(k)->length() > 0) {
+        if (k != heap_->hidden_symbol()) {
           SetPropertyReference(js_obj, entry, String::cast(k), value);
         } else {
           TagObject(value, "(hidden properties)");
@@ -2652,6 +2708,10 @@ void V8HeapExplorer::TagGlobalObjects() {
     Object* obj_document;
     if (global_obj->GetProperty(*document_string)->ToObject(&obj_document) &&
         obj_document->IsJSObject()) {
+      // FixMe: Workaround: SharedWorker's current Isolate has NULL context.
+      // As result GetProperty(*url_string) will crash.
+      if (!Isolate::Current()->context() && obj_document->IsJSGlobalProxy())
+        continue;
       JSObject* document = JSObject::cast(obj_document);
       Object* obj_url;
       if (document->GetProperty(*url_string)->ToObject(&obj_url) &&
@@ -3248,7 +3308,6 @@ HeapSnapshot* HeapSnapshotJSONSerializer::CreateFakeSnapshot() {
 
 
 void HeapSnapshotJSONSerializer::SerializeImpl() {
-  List<HeapEntry>& nodes = snapshot_->entries();
   ASSERT(0 == snapshot_->root()->index());
   writer_->AddCharacter('{');
   writer_->AddString("\"snapshot\":{");
@@ -3256,11 +3315,11 @@ void HeapSnapshotJSONSerializer::SerializeImpl() {
   if (writer_->aborted()) return;
   writer_->AddString("},\n");
   writer_->AddString("\"nodes\":[");
-  SerializeNodes(nodes);
+  SerializeNodes();
   if (writer_->aborted()) return;
   writer_->AddString("],\n");
   writer_->AddString("\"edges\":[");
-  SerializeEdges(nodes);
+  SerializeEdges();
   if (writer_->aborted()) return;
   writer_->AddString("],\n");
   writer_->AddString("\"strings\":[");
@@ -3302,9 +3361,9 @@ static int utoa(unsigned value, const Vector<char>& buffer, int buffer_pos) {
 
 void HeapSnapshotJSONSerializer::SerializeEdge(HeapGraphEdge* edge,
                                                bool first_edge) {
-  // The buffer needs space for 3 ints, 3 commas and \0
+  // The buffer needs space for 3 unsigned ints, 3 commas and \0
   static const int kBufferSize =
-      MaxDecimalDigitsIn<sizeof(int)>::kSigned * 3 + 3 + 1;  // NOLINT
+      MaxDecimalDigitsIn<sizeof(unsigned)>::kUnsigned * 3 + 3 + 1;  // NOLINT
   EmbeddedVector<char, kBufferSize> buffer;
   int edge_name_or_index = edge->type() == HeapGraphEdge::kElement
       || edge->type() == HeapGraphEdge::kHidden
@@ -3324,25 +3383,21 @@ void HeapSnapshotJSONSerializer::SerializeEdge(HeapGraphEdge* edge,
 }
 
 
-void HeapSnapshotJSONSerializer::SerializeEdges(const List<HeapEntry>& nodes) {
-  bool first_edge = true;
-  for (int i = 0; i < nodes.length(); ++i) {
-    HeapEntry* entry = &nodes[i];
-    Vector<HeapGraphEdge*> children = entry->children();
-    for (int j = 0; j < children.length(); ++j) {
-      SerializeEdge(children[j], first_edge);
-      first_edge = false;
-      if (writer_->aborted()) return;
-    }
+void HeapSnapshotJSONSerializer::SerializeEdges() {
+  List<HeapGraphEdge*>& edges = snapshot_->children();
+  for (int i = 0; i < edges.length(); ++i) {
+    ASSERT(i == 0 ||
+           edges[i - 1]->from()->index() <= edges[i]->from()->index());
+    SerializeEdge(edges[i], i == 0);
+    if (writer_->aborted()) return;
   }
 }
 
 
-void HeapSnapshotJSONSerializer::SerializeNode(HeapEntry* entry,
-                                               int edges_index) {
-  // The buffer needs space for 5 uint32_t, 5 commas, \n and \0
+void HeapSnapshotJSONSerializer::SerializeNode(HeapEntry* entry) {
+  // The buffer needs space for 5 unsigned ints, 5 commas, \n and \0
   static const int kBufferSize =
-      5 * MaxDecimalDigitsIn<sizeof(uint32_t)>::kUnsigned  // NOLINT
+      5 * MaxDecimalDigitsIn<sizeof(unsigned)>::kUnsigned  // NOLINT
       + 5 + 1 + 1;
   EmbeddedVector<char, kBufferSize> buffer;
   int buffer_pos = 0;
@@ -3357,19 +3412,17 @@ void HeapSnapshotJSONSerializer::SerializeNode(HeapEntry* entry,
   buffer[buffer_pos++] = ',';
   buffer_pos = utoa(entry->self_size(), buffer, buffer_pos);
   buffer[buffer_pos++] = ',';
-  buffer_pos = utoa(edges_index, buffer, buffer_pos);
+  buffer_pos = utoa(entry->children_count(), buffer, buffer_pos);
   buffer[buffer_pos++] = '\n';
   buffer[buffer_pos++] = '\0';
   writer_->AddString(buffer.start());
 }
 
 
-void HeapSnapshotJSONSerializer::SerializeNodes(const List<HeapEntry>& nodes) {
-  int edges_index = 0;
-  for (int i = 0; i < nodes.length(); ++i) {
-    HeapEntry* entry = &nodes[i];
-    SerializeNode(entry, edges_index);
-    edges_index += entry->children().length() * kEdgeFieldsCount;
+void HeapSnapshotJSONSerializer::SerializeNodes() {
+  List<HeapEntry>& entries = snapshot_->entries();
+  for (int i = 0; i < entries.length(); ++i) {
+    SerializeNode(&entries[i]);
     if (writer_->aborted()) return;
   }
 }
@@ -3393,7 +3446,7 @@ void HeapSnapshotJSONSerializer::SerializeSnapshot() {
         JSON_S("name") ","
         JSON_S("id") ","
         JSON_S("self_size") ","
-        JSON_S("edges_index")) ","
+        JSON_S("edge_count")) ","
     JSON_S("node_types") ":" JSON_A(
         JSON_A(
             JSON_S("hidden") ","

@@ -28,7 +28,10 @@
 // AssertionError's when particular conditions are not met. The
 // assert module must conform to the following interface.
 
-Assert = function() {
+/**
+ * @constructor
+ */
+var Assert = function() {
 
 };
 
@@ -37,7 +40,7 @@ Assert = function() {
 //                             actual: actual,
 //                             expected: expected })
 
-AssertionError = function AssertionError(options) {
+var AssertionError = function AssertionError(options) {
   this.name = 'AssertionError';
   this.message = options.message;
   this.actual = options.actual;

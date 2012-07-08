@@ -3,6 +3,10 @@
 /**
  *	new File() mostly implemented in native code
  */
+ 
+/*
+var File = function() {}
+*/
 
 File.separator = '/';
 
@@ -218,7 +222,7 @@ File.prototype.listFiles = function(filter) {
  */
 File.prototype.ext = function(newValue) {
 
-	if ( this.isDir() || this.isSymLink() ) throw new Error("Can only change the extension of Files");
+	if ( this.isDir() || this.isSymLink() ) throw new Error("Can only call ext() on Files");
 
 	var lastDot = this.name.lastIndexOf('.');
 

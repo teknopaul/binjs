@@ -523,8 +523,8 @@ install:
 	cd binjs/binjs-@PACKAGE_VERSION@ && cp -Rv * ${prefix}
 	chmod -R ugo+r ${prefix}
 	chmod -R go-w ${prefix}
-	find ${prefix} -name "*.so" --exec chmod ugo+x {} \;
-	find ${prefix} -name "*.so.1" --exec chmod ugo+x {} \;
+	find ${prefix} -name "*.so" -exec chmod ugo+x {} \;
+	find ${prefix} -name "*.so.1" -exec chmod ugo+x {} \;
 
 	ln -svf $(prefix)/lib/libv8.so.1 $(exec_prefix)/libv8.so.1
 	cd  $(exec_prefix) && ln -svf libv8.so.1 libv8.so
@@ -553,7 +553,7 @@ develop:
 	rm -f $(prefix)
 	ln -svf $(CURDIR)/binjs/binjs-@PACKAGE_VERSION@  $(prefix)
 
-	ls -svf $(prefix)/lib/libv8.so.1 $(exec_prefix)/libv8.so.1
+	ln -svf $(prefix)/lib/libv8.so.1 $(exec_prefix)/libv8.so.1
 	cd  $(exec_prefix) && ln -svf libv8.so.1 libv8.so
 
 	rm -f /bin/js

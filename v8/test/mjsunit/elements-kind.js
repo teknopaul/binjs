@@ -143,7 +143,7 @@ assertKind(elements_kind.external_int,            new Int32Array(0xF));
 assertKind(elements_kind.external_unsigned_int,   new Uint32Array(23));
 assertKind(elements_kind.external_float,          new Float32Array(7));
 assertKind(elements_kind.external_double,         new Float64Array(0));
-assertKind(elements_kind.external_pixel,          new PixelArray(512));
+assertKind(elements_kind.external_pixel,          new Uint8ClampedArray(512));
 
 // Crankshaft support for smi-only array elements.
 function monomorphic(array) {
@@ -224,9 +224,11 @@ if (support_smi_only_arrays) {
   for (var i = 0; i < 3; i++) {
     convert_mixed(doubles, "three", elements_kind.fast);
   }
+  convert_mixed(construct_smis(), "three", elements_kind.fast);
+  convert_mixed(construct_doubles(), "three", elements_kind.fast);
+  %OptimizeFunctionOnNextCall(convert_mixed);
   smis = construct_smis();
   doubles = construct_doubles();
-  %OptimizeFunctionOnNextCall(convert_mixed);
   convert_mixed(smis, 1, elements_kind.fast);
   convert_mixed(doubles, 1, elements_kind.fast);
   assertTrue(%HaveSameMap(smis, doubles));

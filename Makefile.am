@@ -6,7 +6,7 @@
 all:
 
 	test -f v8/build/gyp/gyp || ( cd v8 && make dependencies )
-
+	
 	cd v8 && make -s -j4 library=shared native
 
 	mkdir -p binjs/contrib/include
@@ -67,7 +67,7 @@ develop:
 	rm -f $(prefix)
 	ln -svf $(CURDIR)/binjs/binjs-@PACKAGE_VERSION@  $(prefix)
 
-	ls -svf $(prefix)/lib/libv8.so.1 $(exec_prefix)/libv8.so.1
+	ln -svf $(prefix)/lib/libv8.so.1 $(exec_prefix)/libv8.so.1
 	cd  $(exec_prefix) && ln -svf libv8.so.1 libv8.so
 
 	rm -f /bin/js
@@ -85,4 +85,5 @@ clean:
 	cd v8 && make clean
 	cd binjs && make clean
 	cd bash-4.2 && make clean
+	rm bash-4.2/test_libbash
 

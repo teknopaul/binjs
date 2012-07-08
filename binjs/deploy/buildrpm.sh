@@ -8,21 +8,26 @@
 cd `dirname $0`
 PROJECT_ROOT=`pwd`/../../
 NAME=binjs
+ARCH=`uname -m`
 . $PROJECT_ROOT/binjs/version
 
 # make and empty RPM build setup
 mkdir -p /tmp/binjs_rpmbuild
 mkdir -p /tmp/binjs_rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
-echo '%_topdir /tmp/binjs_rpmbuild' > /tmp/binjs_rpmbuild/rpmmacros
-echo '%_builddir %{_topdir}/BUILD' >> /tmp/binjs_rpmbuild/rpmmacros
-echo '%_rpmdir %{_topdir}/RPMS' >> /tmp/binjs_rpmbuild/rpmmacros
-echo '%_sourcedir %{_topdir}/SOURCES' >> /tmp/binjs_rpmbuild/rpmmacros
-echo '%_specdir %{_topdir}/SPECS' >> /tmp/binjs_rpmbuild/rpmmacros
-echo '%_srcrpmdir %{_topdir}/SRPMS' >> /tmp/binjs_rpmbuild/rpmmacros
-echo '' >> /tmp/binjs_rpmbuild/rpmmacros
+
+#MACROS_FILE=~/.rpmmacros
+MACROS_FILE=/tmp/binjs_rpmbuild/rpmrcs
+echo '%_topdir /tmp/binjs_rpmbuild' > $MACROS_FILE
+echo '%_builddir %{_topdir}/BUILD' >>  $MACROS_FILE
+echo '%_rpmdir %{_topdir}/RPMS' >>  $MACROS_FILE
+echo '%_sourcedir %{_topdir}/SOURCES' >>  $MACROS_FILE
+echo '%_specdir %{_topdir}/SPECS' >>  $MACROS_FILE
+echo '%_srcrpmdir %{_topdir}/SRPMS' >>  $MACROS_FILE
+echo '' >>  $MACROS_FILE
 
 echo 'include:	/usr/lib/rpm/rpmrc' > /tmp/binjs_rpmbuild/rpmrcs
-echo 'macrofiles:	/usr/lib/rpm/macros' >> /tmp/binjs_rpmbuild/rpmrcs
+echo 'macrofiles: /tmp/binjs_rpmbuild/macros' >> /tmp/binjs_rpmbuild/rpmrcs
+cat /usr/lib/rpm/macros | sed -e 's/^%_topdir.*$/%_topdir \/tmp\/binjs_rpmbuild/' > /tmp/binjs_rpmbuild/macros
 
 # make an empty src tar
 mkdir -p binjs-$VERSION
@@ -43,7 +48,7 @@ for ( var i = 0 ; i < files.length ; i++ ) {
 
   fileListString += "\n/usr/lib/binjs" + files[i].substring(1) ;
   $.setEnv("FILE_NAME", "/usr/lib/binjs" + files[i].substring(1) ) ;
-  DIR=`dirname /tmp/binjs_rpmbuild/BUILDROOT/binjs-$VERSION-1.x86_64/$FILE_NAME`
+  DIR=`dirname /tmp/binjs_rpmbuild/BUILDROOT/binjs-${VERSION}-1.${ARCH}/$FILE_NAME`
   mkdir -p $DIR
   cp $FILE_NAME $DIR 
 
@@ -69,20 +74,24 @@ new File("/tmp/binjs_rpmbuild/SPECS/binjs-" + $.env.VERSION + "-1.spec").write(f
 $.println("Created /tmp/binjs_rpmbuild/SPECS/binjs-" + $.env.VERSION + "-1.spec", true);
 
 ## now build
+#--buildroot /tmp/binjs_rpmbuild/BUILDROOT/binjs-${VERSION}-1.${ARCH} \
 
-# rpmbuild -bb --macros=/tmp/binjs_rpmbuild/rpmmacros /tmp/binjs_rpmbuild/SPECS/binjs-${VERSION}-1.spec
+rpmbuild -bb \
+	--rcfile /tmp/binjs_rpmbuild/rpmrcs \
+	--macros /tmp/binjs_rpmbuild/macros \
+	/tmp/binjs_rpmbuild/SPECS/binjs-${VERSION}-1.spec
 
-rpmbuild -bb --rcfile /tmp/binjs_rpmbuild/rpmrcs /tmp/binjs_rpmbuild/SPECS/binjs-${VERSION}-1.spec
+if ( new File("/tmp/binjs_rpmbuild/RPMS/" 
+		+ $.env.ARCH 
+		+ "/binjs-" +$.env.VERSION  + "-1." + $.env.ARCH + ".rpm").exists ) {
 
-if ( new File("/tmp/binjs_rpmbuild/RPMS/x86_64/binjs-" +$.env.VERSION  + "-1.x86_64.rpm").exists ) {
-
-	rm $PROJECT_ROOT/binjs-0.1-1.x86_64.rpm 2>/dev/null
-	mv /tmp/binjs_rpmbuild/RPMS/x86_64/binjs-${VERSION}-1.x86_64.rpm $PROJECT_ROOT
+	rm $PROJECT_ROOT/binjs-${VERSION}-1.${ARCH}.rpm 2>/dev/null
+	mv /tmp/binjs_rpmbuild/RPMS/${ARCH}/binjs-${VERSION}-1.${ARCH}.rpm $PROJECT_ROOT
 	if (errno === 0) $.println("Done.", 'green');
 	
 }
 else {
-	$.println("File not created", 'red');
+	$.println("File not created : ", 'red');
 }
 
-#rm -rf /tmp/binjs_rpmbuild
+rm -rf /tmp/binjs_rpmbuild

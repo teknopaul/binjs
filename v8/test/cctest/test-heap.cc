@@ -1198,6 +1198,7 @@ TEST(TestSizeOfObjects) {
   HEAP->CollectAllGarbage(Heap::kNoGCFlags);
   HEAP->CollectAllGarbage(Heap::kNoGCFlags);
   HEAP->CollectAllGarbage(Heap::kNoGCFlags);
+  HEAP->CollectAllGarbage(Heap::kNoGCFlags);
   CHECK(HEAP->old_pointer_space()->IsSweepingComplete());
   int initial_size = static_cast<int>(HEAP->SizeOfObjects());
 
@@ -1582,15 +1583,17 @@ TEST(PrototypeTransitionClearing) {
   // Verify that only dead prototype transitions are cleared.
   CHECK_EQ(10, baseObject->map()->NumberOfProtoTransitions());
   HEAP->CollectAllGarbage(Heap::kNoGCFlags);
-  CHECK_EQ(10 - 3, baseObject->map()->NumberOfProtoTransitions());
+  const int transitions = 10 - 3;
+  CHECK_EQ(transitions, baseObject->map()->NumberOfProtoTransitions());
 
   // Verify that prototype transitions array was compacted.
   FixedArray* trans = baseObject->map()->prototype_transitions();
-  for (int i = 0; i < 10 - 3; i++) {
+  for (int i = 0; i < transitions; i++) {
     int j = Map::kProtoTransitionHeaderSize +
         i * Map::kProtoTransitionElementsPerEntry;
     CHECK(trans->get(j + Map::kProtoTransitionMapOffset)->IsMap());
-    CHECK(trans->get(j + Map::kProtoTransitionPrototypeOffset)->IsJSObject());
+    Object* proto = trans->get(j + Map::kProtoTransitionPrototypeOffset);
+    CHECK(proto->IsTheHole() || proto->IsJSObject());
   }
 
   // Make sure next prototype is placed on an old-space evacuation candidate.
@@ -1740,14 +1743,7 @@ TEST(OptimizedAllocationAlwaysInNewSpace) {
 
 
 static int CountMapTransitions(Map* map) {
-  int result = 0;
-  DescriptorArray* descs = map->instance_descriptors();
-  for (int i = 0; i < descs->number_of_descriptors(); i++) {
-    if (descs->IsTransitionOnly(i)) {
-      result++;
-    }
-  }
-  return result;
+  return map->transitions()->number_of_transitions();
 }
 
 
@@ -1895,4 +1891,43 @@ TEST(Regress2143b) {
   // The root object should be in a sane state.
   CHECK(root->IsJSObject());
   CHECK(root->map()->IsMap());
+}
+
+
+// Implemented in the test-alloc.cc test suite.
+void SimulateFullSpace(PagedSpace* space);
+
+
+TEST(ReleaseOverReservedPages) {
+  i::FLAG_trace_gc = true;
+  InitializeVM();
+  v8::HandleScope scope;
+  static const int number_of_test_pages = 20;
+
+  // Prepare many pages with low live-bytes count.
+  PagedSpace* old_pointer_space = HEAP->old_pointer_space();
+  CHECK_EQ(1, old_pointer_space->CountTotalPages());
+  for (int i = 0; i < number_of_test_pages; i++) {
+    AlwaysAllocateScope always_allocate;
+    SimulateFullSpace(old_pointer_space);
+    FACTORY->NewFixedArray(1, TENURED);
+  }
+  CHECK_EQ(number_of_test_pages + 1, old_pointer_space->CountTotalPages());
+
+  // Triggering one GC will cause a lot of garbage to be discovered but
+  // even spread across all allocated pages.
+  HEAP->CollectAllGarbage(Heap::kNoGCFlags, "triggered for preparation");
+  CHECK_EQ(number_of_test_pages + 1, old_pointer_space->CountTotalPages());
+
+  // Triggering subsequent GCs should cause at least half of the pages
+  // to be released to the OS after at most two cycles.
+  HEAP->CollectAllGarbage(Heap::kNoGCFlags, "triggered by test 1");
+  CHECK_GE(number_of_test_pages + 1, old_pointer_space->CountTotalPages());
+  HEAP->CollectAllGarbage(Heap::kNoGCFlags, "triggered by test 2");
+  CHECK_GE(number_of_test_pages + 1, old_pointer_space->CountTotalPages() * 2);
+
+  // Triggering a last-resort GC should cause all pages to be released
+  // to the OS so that other processes can seize the memory.
+  HEAP->CollectAllAvailableGarbage("triggered really hard");
+  CHECK_EQ(1, old_pointer_space->CountTotalPages());
 }

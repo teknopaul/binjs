@@ -112,9 +112,6 @@ def BuildOptions():
   result.add_option("--nostress",
                     help="Don't run crankshaft --always-opt --stress-op test",
                     default=False, action="store_true")
-  result.add_option("--crankshaft",
-                    help="Run with the --crankshaft flag",
-                    default=False, action="store_true")
   result.add_option("--shard-count",
                     help="Split testsuites into this number of shards",
                     default=1, type="int")
@@ -151,7 +148,7 @@ def ProcessOptions(options):
       print "Unknown mode %s" % mode
       return False
   for arch in options.arch:
-    if not arch in ['ia32', 'x64', 'arm', 'mips']:
+    if not arch in ['ia32', 'x64', 'arm', 'mips', 'android']:
       print "Unknown architecture %s" % arch
       return False
   if options.buildbot:
@@ -199,8 +196,6 @@ def PassOnOptions(options):
     result += ['--stress-only']
   if options.nostress:
     result += ['--nostress']
-  if options.crankshaft:
-    result += ['--crankshaft']
   if options.shard_count != 1:
     result += ['--shard-count=%s' % options.shard_count]
   if options.shard_run != 1:
@@ -222,9 +217,10 @@ def Main():
 
   if not options.no_presubmit:
     print ">>> running presubmit tests"
-    returncodes += subprocess.call([workspace + '/tools/presubmit.py'])
+    returncodes += subprocess.call([sys.executable,
+                                    workspace + '/tools/presubmit.py'])
 
-  args_for_children = ['python']
+  args_for_children = [sys.executable]
   args_for_children += [workspace + '/tools/test.py'] + PassOnOptions(options)
   args_for_children += ['--no-build', '--build-system=gyp']
   for arg in args:
@@ -245,9 +241,6 @@ def Main():
                          ['--arch=' + arch] +
                          ['--mode=' + mode] +
                          ['--shell=' + shell])
-      # TODO(jkummerow): This print is temporary.
-      print "Executing: %s" % cmdline
-
       child = subprocess.Popen(cmdline,
                                shell=True,
                                cwd=workspace,

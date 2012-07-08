@@ -100,6 +100,7 @@ class Function;
 class Date;
 class ImplementationUtilities;
 class Signature;
+class AccessorSignature;
 template <class T> class Handle;
 template <class T> class Local;
 template <class T> class Persistent;
@@ -1550,6 +1551,12 @@ class Object : public Value {
   V8EXPORT Local<String> ObjectProtoToString();
 
   /**
+   * Returns the function invoked as a constructor for this object.
+   * May be the null value.
+   */
+  V8EXPORT Local<Value> GetConstructor();
+
+  /**
    * Returns the name of the function invoked as a constructor for this object.
    */
   V8EXPORT Local<String> GetConstructorName();
@@ -2289,7 +2296,8 @@ class V8EXPORT FunctionTemplate : public Template {
                                    AccessorSetter setter,
                                    Handle<Value> data,
                                    AccessControl settings,
-                                   PropertyAttribute attributes);
+                                   PropertyAttribute attributes,
+                                   Handle<AccessorSignature> signature);
   void SetNamedInstancePropertyHandler(NamedPropertyGetter getter,
                                        NamedPropertySetter setter,
                                        NamedPropertyQuery query,
@@ -2347,13 +2355,20 @@ class V8EXPORT ObjectTemplate : public Template {
    *   cross-context access.
    * \param attribute The attributes of the property for which an accessor
    *   is added.
+   * \param signature The signature describes valid receivers for the accessor
+   *   and is used to perform implicit instance checks against them. If the
+   *   receiver is incompatible (i.e. is not an instance of the constructor as
+   *   defined by FunctionTemplate::HasInstance()), an implicit TypeError is
+   *   thrown and no callback is invoked.
    */
   void SetAccessor(Handle<String> name,
                    AccessorGetter getter,
                    AccessorSetter setter = 0,
                    Handle<Value> data = Handle<Value>(),
                    AccessControl settings = DEFAULT,
-                   PropertyAttribute attribute = None);
+                   PropertyAttribute attribute = None,
+                   Handle<AccessorSignature> signature =
+                       Handle<AccessorSignature>());
 
   /**
    * Sets a named property handler on the object template.
@@ -2457,8 +2472,8 @@ class V8EXPORT ObjectTemplate : public Template {
 
 
 /**
- * A Signature specifies which receivers and arguments a function can
- * legally be called with.
+ * A Signature specifies which receivers and arguments are valid
+ * parameters to a function.
  */
 class V8EXPORT Signature : public Data {
  public:
@@ -2468,6 +2483,19 @@ class V8EXPORT Signature : public Data {
                               Handle<FunctionTemplate> argv[] = 0);
  private:
   Signature();
+};
+
+
+/**
+ * An AccessorSignature specifies which receivers are valid parameters
+ * to an accessor callback.
+ */
+class V8EXPORT AccessorSignature : public Data {
+ public:
+  static Local<AccessorSignature> New(Handle<FunctionTemplate> receiver =
+                                          Handle<FunctionTemplate>());
+ private:
+  AccessorSignature();
 };
 
 
@@ -3906,7 +3934,7 @@ class Internals {
   static const int kNullValueRootIndex = 7;
   static const int kTrueValueRootIndex = 8;
   static const int kFalseValueRootIndex = 9;
-  static const int kEmptySymbolRootIndex = 128;
+  static const int kEmptySymbolRootIndex = 112;
 
   static const int kJSObjectType = 0xaa;
   static const int kFirstNonstringType = 0x80;

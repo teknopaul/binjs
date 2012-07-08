@@ -41,13 +41,18 @@ class ScriptDataImpl;
 // is constructed based on the resources available at compile-time.
 class CompilationInfo BASE_EMBEDDED {
  public:
-  explicit CompilationInfo(Handle<Script> script);
-  explicit CompilationInfo(Handle<SharedFunctionInfo> shared_info);
-  explicit CompilationInfo(Handle<JSFunction> closure);
+  CompilationInfo(Handle<Script> script, Zone* zone);
+  CompilationInfo(Handle<SharedFunctionInfo> shared_info, Zone* zone);
+  CompilationInfo(Handle<JSFunction> closure, Zone* zone);
+
+  ~CompilationInfo();
 
   Isolate* isolate() {
     ASSERT(Isolate::Current() == isolate_);
     return isolate_;
+  }
+  Zone* zone() {
+    return zone_;
   }
   bool is_lazy() const { return IsLazy::decode(flags_); }
   bool is_eval() const { return IsEval::decode(flags_); }
@@ -170,6 +175,11 @@ class CompilationInfo BASE_EMBEDDED {
   // current compilation pipeline.
   void AbortOptimization();
 
+  void set_deferred_handles(DeferredHandles* deferred_handles) {
+    ASSERT(deferred_handles_ == NULL);
+    deferred_handles_ = deferred_handles;
+  }
+
  private:
   Isolate* isolate_;
 
@@ -183,8 +193,6 @@ class CompilationInfo BASE_EMBEDDED {
     OPTIMIZE,
     NONOPT
   };
-
-  CompilationInfo() : function_(NULL) {}
 
   void Initialize(Mode mode) {
     mode_ = V8::UseCrankshaft() ? mode : NONOPT;
@@ -254,7 +262,53 @@ class CompilationInfo BASE_EMBEDDED {
   Mode mode_;
   int osr_ast_id_;
 
+  // The zone from which the compilation pipeline working on this
+  // CompilationInfo allocates.
+  Zone* zone_;
+
+  DeferredHandles* deferred_handles_;
+
   DISALLOW_COPY_AND_ASSIGN(CompilationInfo);
+};
+
+
+// Exactly like a CompilationInfo, except also creates and enters a
+// Zone on construction and deallocates it on exit.
+class CompilationInfoWithZone: public CompilationInfo {
+ public:
+  explicit CompilationInfoWithZone(Handle<Script> script)
+      : CompilationInfo(script, &zone_),
+        zone_(script->GetIsolate()),
+        zone_scope_(&zone_, DELETE_ON_EXIT) {}
+  explicit CompilationInfoWithZone(Handle<SharedFunctionInfo> shared_info)
+      : CompilationInfo(shared_info, &zone_),
+        zone_(shared_info->GetIsolate()),
+        zone_scope_(&zone_, DELETE_ON_EXIT) {}
+  explicit CompilationInfoWithZone(Handle<JSFunction> closure)
+      : CompilationInfo(closure, &zone_),
+        zone_(closure->GetIsolate()),
+        zone_scope_(&zone_, DELETE_ON_EXIT) {}
+
+ private:
+  Zone zone_;
+  ZoneScope zone_scope_;
+};
+
+
+// A wrapper around a CompilationInfo that detaches the Handles from
+// the underlying DeferredHandleScope and stores them in info_ on
+// destruction.
+class CompilationHandleScope BASE_EMBEDDED {
+ public:
+  explicit CompilationHandleScope(CompilationInfo* info)
+      : deferred_(info->isolate()), info_(info) {}
+  ~CompilationHandleScope() {
+    info_->set_deferred_handles(deferred_.Detach());
+  }
+
+ private:
+  DeferredHandleScope deferred_;
+  CompilationInfo* info_;
 };
 
 

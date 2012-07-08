@@ -2,4 +2,6 @@
 
 binjs_import("~lib/Runtime.js");
 
-$.println("isatty " + Runtime.isatty, true);
+var runtime = new Runtime();
+
+$.println("isatty " + runtime.isatty, true);
