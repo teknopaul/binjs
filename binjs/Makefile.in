@@ -14,14 +14,14 @@ all : ../bash-4.2/Makefile
 	mkdir -p $(BUILD_PREP)
 	cd $(BUILD_PREP) && mkdir -p bin lib examples doc
 
-	cd ../bash-4.2 && make -s
-	cd ../bash-4.2 && make -s test_libbash
-	cd ../bash-4.2 && make -s binjs_preparser
+	cd ../bash-4.2 && make CFLAGS=-fPIC -s
+	cd ../bash-4.2 && make CFLAGS=-fPIC -s test_libbash
+	cd ../bash-4.2 && make CFLAGS=-fPIC -s binjs_preparser
 	cp src/c/binjs_preparser $(BUILD_PREP)/bin
 
 	cd src/v8 && make -s
 
-	cd ../bash-4.2 && make -s binjs
+	cd ../bash-4.2 && make CFLAGS=-fPIC -s binjs
 	cp src/c/binjs $(BUILD_PREP)/bin
 
 	cd src/js && cp -R --archive * $(BUILD_PREP)/lib

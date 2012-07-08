@@ -571,7 +571,7 @@ lib$(Program).so.1:  .build $(LIBBASH_OBJECTS) $(BUILTINS_DEP) $(LIBDEP)
 
 
 test_libbash : examples/test_libbash.c
-	gcc -Wall -c examples/test_libbash.c
+	gcc -Wall -c -fPIC examples/test_libbash.c
 	gcc -Wall test_libbash.o \
 		$(BUILTINS_LDFLAGS) $(LIBRARY_LDFLAGS) $(LDFLAGS) \
 		-o test_libbash \
@@ -579,12 +579,12 @@ test_libbash : examples/test_libbash.c
 	test -f test_libbash
 
 binjs_preparser: ../binjs/src/c/binjs_preparser.c
-	gcc -Wall -c ../binjs/src/c/libpreparser.c -I../binjs/src/c `pkg-config --cflags glib-2.0`
+	gcc -Wall -c -fPIC ../binjs/src/c/libpreparser.c -I../binjs/src/c `pkg-config --cflags glib-2.0`
 	gcc -Wall libpreparser.o ../binjs/src/c/binjs_preparser.c -I../binjs/src/c `pkg-config --cflags glib-2.0` \
 		-o ../binjs/src/c/binjs_preparser `pkg-config --libs glib-2.0`
 
 binjs:
-	gcc -Wall -c ../binjs/src/c/binjs.c -I../binjs/src/c `pkg-config --cflags glib-2.0`
+	gcc -Wall -c -fPIC ../binjs/src/c/binjs.c -I../binjs/src/c `pkg-config --cflags glib-2.0`
 	g++ -Wall binjs.o libpreparser.o \
 		$(BUILTINS_LDFLAGS) $(LIBRARY_LDFLAGS) $(LDFLAGS) `pkg-config --libs glib-2.0` -L../binjs/contrib \
 		 ../binjs/src/v8/bashexec.o ../binjs/src/v8/file.o ../binjs/src/v8/util.o ../binjs/src/v8/term.o ../binjs/src/v8/librunjs.o ../binjs/src/v8/runtime.o \
@@ -818,7 +818,7 @@ LIB_SUBDIRS = ${RL_LIBDIR}  ${HIST_LIBDIR} ${TERM_LIBDIR} ${GLOB_LIBDIR} \
 		${INTL_LIBDIR} ${TILDE_LIBDIR} ${ALLOC_LIBDIR} ${SH_LIBDIR}
 
 basic-clean:
-	$(RM) $(OBJECTS) $(Program) bashbug lib$(Program).so.1
+	$(RM) $(OBJECTS) $(Program) bashbug lib$(Program).so.1 libbash.o
 	$(RM) .build .made version.h 
 
 clean:	basic-clean
