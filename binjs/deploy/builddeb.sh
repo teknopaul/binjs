@@ -6,6 +6,7 @@
 cd `dirname $0`
 PROJECT_ROOT=`pwd`/../..
 NAME=binjs
+ARCH=`uname -m`
 . $PROJECT_ROOT/binjs/version
 TMP_DIR=/tmp/binjs_debbuild
 
@@ -17,9 +18,9 @@ cp --archive -R  ${PROJECT_ROOT}/binjs/binjs-${VERSION}/* ${TMP_DIR}/usr/lib/bin
 cp --archive -R  ${PROJECT_ROOT}/binjs/deploy/DEBIAN/* ${TMP_DIR}/DEBIAN
 find ${TMP_DIR} -type d | xargs chmod 755
 
-dpkg-deb --build ${TMP_DIR} ../../binjs-${VERSION}-1.x86_64.deb
+dpkg-deb --build ${TMP_DIR} ../../binjs-${VERSION}-1.${ARCH}.deb
 
-test -f ../../binjs-${VERSION}-1.x86_64.deb
+test -f ../../binjs-${VERSION}-1.${ARCH}.deb
 
 if (errno === 0) {
 	$.println("Done.", 'green');
