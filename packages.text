@@ -1,0 +1,35 @@
+Ubuntu12 package listings
+
+git
+subversion
+make
+libglib2.0-0
+libglib2.0-0-dev
+python2.7
+pkg-config
+gcc
+g++
+libstdc++-dev
+automake
+
+Package names keep changing in ubuntu but this worked in 12
+sudo apt-get install git subversion make libglib2.0-dev python2.7 pkg-config gcc g++ libstdc++6-4.5-dev
+
+Fedora17 package listings
+
+git
+subversion
+make
+glibc
+glibc-devel
+gcc
+gcc-c++
+libglib2.0
+pkgconfig
+python > 2.7
+automake
+
+
+
+
+

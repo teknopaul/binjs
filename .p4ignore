@@ -1,9 +1,0 @@
-autom4te.cache
-.git
-.svn
-.gitignore
-*.o
-*~
-*.swp
-*.a
-

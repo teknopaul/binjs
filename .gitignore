@@ -6,9 +6,12 @@
 *.deb
 .directory
 Makefile
-autom4te.cache/
+autom4te.cache
 config.status
 stamp-h1
-
-
+.svn
+*~
+*.swp
+binjs.kdev4
+.kdev4
 
