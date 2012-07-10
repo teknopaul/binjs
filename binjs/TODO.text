@@ -4,13 +4,12 @@
  
   Standardize use of $.info for output, in both sets of scripts
   
-  Everything should have a constructor sicne it makes the preparser happy.
+  Everything should have a constructor since it makes the preparser happy.
   var term = new Term()
   and
   new Term()
   are both interpreted correctly
   Term.foo()  is not
-
 
 Consistency of APIs, go through each and every att and method and ensure it conforms to some expected value be that from c / C++ or JavaScript w3c or Java.
 
@@ -20,11 +19,11 @@ Copy and Merge code/doc comments so they are consistent.
 
 Tidy up all C and C++ code, espcially preparser.  reorder methods and atts an dcomments
 
-Make preparser sufficiently abstract that it can export HTML.
+Make preparser sufficiently abstract that it can export HTML for documenttion.
 
 Get and apply GPL.
 
-Static link bash and v8 so we have only one binary file
+Static link v8 so we have only one binary file
 
 ### Bugs
 
@@ -42,37 +41,39 @@ Term in C++ land needs a reliable pattern for sending ESC codes
 
 ### Features
 
-Export all objects of type String that start with an uppercase letter from JS to BASH
-add all colours to color even the wishy-washy ones	
 import .bjs scripts properly
 i18n
 Interactive mode = false  to disable \r and other escapes
 Support text formatting in all TUI components in a consistent manner and some global option too
-Dynamic C++ lib loading so Objects get properl  lass
+Dynamic C++ lib loading so Objects get proper class names and instanceof works for core things
 TUI Widgets 
-  Date
+  Date is not good
   Time - needs seconds and validation
-  Table should have UTF-8 borders as an option
 
 copy nodejs' inspect() method but add colour
 Debug on / off that enables Bash debug and $.debug() statements
   bash debug is jus tsetting echo_command_at_execute from flags.h
   
 Shell Script helpers
-	TextParser
-		lsof table type
-		support"grepping" tables where headers are always parsed btu data is grepped
-		Table Joining like a Database does
+	TextParser more ideas
+		line parsers
+		get WordAt()  accept a delim
 
-### General
+	Writing to stderr not supported is it?? except via bash
 
-add asserts to scripts in src/test
+### Pipes
+
+Pipes are key Linuxy things should have better support
+
 
 ### Build 
 
-build for RPM should make
-build for DEB
-
+make build needs to be more stable.
+	Perhaps  configure should not make Makefile?perhaps some other fconfigure should do the versioning thing
+	basically need more autotools knowledge 
+		play find things that work 
+		check simple core gnu tools see how they work
+	find out why sometimes configure wants to automake
 curl github.com/teknopaul/binjs/install.sh | bash style script
 Find way to apply patches to bash
 Use correct Ubuntu / Fedora versions of bash
@@ -80,8 +81,6 @@ Use correct Ubuntu / Fedora versions of bash
 ### Libs & Modules
 
 Probably best to leave Libs as they are and add Module support
-var assert = require("assert"); needed since it seems node and CommonJS does this
-Modules using require() should run it its own scope
 
 Check out how to use npm without messing up 
 
@@ -90,7 +89,6 @@ Check out how to use npm without messing up
 JSDoc
 Doxygen
 fiddle with preparser to output HTML for example scripts
-README.md
 
 ### Command line debugger
 

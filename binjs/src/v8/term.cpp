@@ -100,8 +100,8 @@ void DoTermReset() {
 }
 
 /**
- * Read a UTF-8 char from the terminal, basically read one byte and itf the tope bit is 0
- * its multibyte and we need to work out howmany more to read and read them.
+ * Read a UTF-8 char from the terminal, basically read one byte and if the top bit is 0
+ * its multibyte and we need to work out how many more to read and read them.
  * ref: http://en.wikipedia.org/wiki/UTF-8
  */
 Handle<Value> TermReadChar(const Arguments& args) {

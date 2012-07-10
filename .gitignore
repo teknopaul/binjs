@@ -12,6 +12,7 @@ stamp-h1
 .svn
 *~
 *.swp
+*.kate-swp
 binjs.kdev4
 .kdev4
 

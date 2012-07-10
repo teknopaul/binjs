@@ -81,17 +81,19 @@ var home = new File("~");
 assert.equal($.env.HOME, home.getAbsolutePath(), "home.getAbsolutePath()"); 
 assert.equal($.env.HOME, home.getAbsoluteFile().path, "home.getAbsoluteFile().path");
 
-var ext = Number.toString(Math.random(), 32);
-var tmpFile = new File("/tmp/bjstst." + ext );
+var ext = "" + Math.floor(Math.random() * 1000000);
+$.println("ext=" + ext);
+var tmpFile = new File("/tmp/bjstest." + ext );
 tmpFile.touch();
+ls -la /tmp/bjstest.*
 assert.equal(0, tmpFile.size, "tmpFile.size");
 tmpFile.stat();
 assert.equal(ext, tmpFile.ext(), "file.ext()");
-ext = Number.toString(Math.random(), 32);
-tmpFile.rename("/tmp/bjstst." + ext);
+ext = "" + Math.floor(Math.random() * 1000000);
+tmpFile.rename("/tmp/bjstest." + ext);
 assert.equal(ext, tmpFile.ext()), "file.rename()";
 tmpFile.delete();
-assert.equals(false, tmpFile.exists, "file.delete() & file.exists");
+assert.equal(false, tmpFile.exists, "file.delete() & file.exists");
 
 var tmpDir = new File("/tmp");
 tmpDir.list();

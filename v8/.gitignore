@@ -23,6 +23,7 @@ shell_g
 /build/gyp
 /obj/
 /out/
+out
 /out/environment
 /test/es5conform/data
 /test/mozilla/data

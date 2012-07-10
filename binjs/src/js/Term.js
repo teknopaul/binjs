@@ -44,6 +44,12 @@ Term.prototype.readChar = function() {
 Term.prototype.writeByte = function(args) {
 	return binjs_termWriteByte.apply(this, arguments);
 }
+/**
+ * Read an 8bit byte off tstdin and return it as a JavaScript integer.
+ */
+Term.prototype.readByte = function(args) {
+	return binjs_termReadByte();
+}
 
 Term.prototype.flush = function() {
 	binjs_flush();

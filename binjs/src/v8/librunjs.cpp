@@ -414,6 +414,23 @@ Handle<Value> Print(const Arguments& args) {
 	return Undefined();
 	
 }
+
+/**
+ * Print a string to stderr.
+ */
+Handle<Value> PrintErr(const Arguments& args) {
+	HandleScope handle_scope;
+
+	Handle<String> sss = SafeToString(args[0]); // TODO there is a Builtin for this
+	String::Utf8Value str(sss);
+	const char* cstr = ToCString(str);
+	fprintf(stderr, "%s", cstr);
+	
+	if ( cstr[strlen(cstr) -1] == '\n' ) fflush(stderr);
+	
+	return Undefined();
+	
+}
 /**
  * Print a string to stdout, something JavaScript cant normally do.
  */

@@ -19,7 +19,7 @@ all : ../bash-4.2/Makefile
 	cd ../bash-4.2 && make CFLAGS=-fPIC -s binjs_preparser
 	cp src/c/binjs_preparser $(BUILD_PREP)/bin
 
-	cd src/v8 && make -s
+	cd src/v8 && make
 
 	cd ../bash-4.2 && make CFLAGS=-fPIC -s binjs
 	cp src/c/binjs $(BUILD_PREP)/bin

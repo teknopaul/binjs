@@ -314,7 +314,7 @@ Handle<Value> FileStat(const Arguments& args) {
 Handle<Value> FileTouch(const Arguments& args) {
 	HandleScope scope;
 
-	Handle<Value> handle = args.This()->Get(String::New("name"));
+	Handle<Value> handle = args.This()->Get(String::New("path"));
 	
 	String::Utf8Value path(handle);
 	const char* cpath = ToCString(path);

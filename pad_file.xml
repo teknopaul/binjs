@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <XML_DIZ_INFO>
+	<MASTER_PAD_VERSION_INFO>
+		<MASTER_PAD_VERSION>3.11</MASTER_PAD_VERSION>
+	</MASTER_PAD_VERSION_INFO>
 	<Company_Info>
 		<Company_Name>teknopaul</Company_Name>
 		<Address_1>Spain</Address_1>
@@ -14,15 +17,25 @@
 			<Author_Last_Name>hinds</Author_Last_Name>
 			<Author_Email>me@teknopaul.com</Author_Email>
 			<Contact_First_Name>teknopaul</Contact_First_Name>
-			<Contact_Last_Name></Contact_Last_Name>
+			<Contact_Last_Name>hinds</Contact_Last_Name>
 			<Contact_Email>me@teknopaul.com</Contact_Email>
 		</Contact_Info>
+		<Support_Info>
+			<Sales_Email>blackhole@teknopaul.com</Sales_Email>
+			<Support_Email>me@teknopaul.com</Support_Email>
+			<General_Email>me@teknopaul.com</General_Email>
+			<General_Email/>
+			<Sales_Phone/>
+			<Support_Phone/>
+			<General_Phone/>
+			<Fax_Phone/>
+		</Support_Info>
 	</Company_Info>
 	<Program_Info>
 		<Program_Name>binjs</Program_Name>
 		<Program_Version>0.8</Program_Version>
 		<Program_Release_Month>07</Program_Release_Month>
-		<Program_Release_Day>010</Program_Release_Day>
+		<Program_Release_Day>10</Program_Release_Day>
 		<Program_Release_Year>2012</Program_Release_Year>
 		<Program_Cost_Dollars/>
 		<Program_Cost_Other_Code/>
@@ -55,37 +68,23 @@
 		<English>
 			<Keywords>JavaScript, Bash, language, tool, shell scripting,</Keywords>
 			<Char_Desc_45>#!/bin/js is a scripting framework</Char_Desc_45>
-			<Char_Desc_80>The framework allows scripts to be written with JavaScript syntax and bash statements.</Char_Desc_80>
-			<Char_Desc_250>
-/bin/js scripts are a mash-up of JavaScript and bash.
-Simple bash code is valid.
-Simple JavaScript code is valid.
-And you can mash-up both. Pipes and redirects and all the wonders of bash one-liners are available. The net result of this is a very comfortable way to write scripts, the final code is self-explanatory and natural, you can increment a variable in a script with i++ instead of i=$((i + 1)). The code you write looks like code, and the lines of bash commands look exactly like you would type them on the command line.
-			</Char_Desc_250>
-			<Char_Desc_450>
-/bin/js scripts are a mash-up of JavaScript and bash.
-Simple bash code is valid.
-Simple JavaScript code is valid.
-And you can mash-up both. Pipes and redirects and all the wonders of bash one-liners are available. 
-			</Char_Desc_450>
-			<Char_Desc_2000>
-/bin/js scripts are a mash-up of JavaScript and bash.
-Simple bash code is valid.
-Simple JavaScript code is valid.
-And you can mash-up both. Pipes and redirects and all the wonders of bash one-liners are available. The net result of this is a very comfortable way to write scripts, the final code is self-explanatory and natural, you can increment a variable in a script with i++ instead of i=$((i + 1)). The code you write looks like code, and the lines of bash commands look exactly like you would type them on the command line.
-			</Char_Desc_2000>
+			<Char_Desc_80>The framework allows scripts to be written with JavaScript and bash syntax.</Char_Desc_80>
+			<Char_Desc_250>/bin/js scripts are a mash-up of JavaScript and bash. Simple bash code is valid. Simple JavaScript code is valid, and you can mash-up both. Pipes and redirects and all the wonders of bash one-liners are available. </Char_Desc_250>
+			<Char_Desc_450>/bin/js scripts are a mash-up of JavaScript and bash. Simple bash code is valid. Simple JavaScript code is valid, and you can mash-up both. Pipes and redirects and all the wonders of bash one-liners are available. The result of this is a very comfortable way to write scripts, the code is self-explanatory, you can increment a variable in a script with i++ instead of i=$((i + 1)).</Char_Desc_450>
+			
+			<Char_Desc_2000>/bin/js scripts are a mash-up of JavaScript and bash. Simple bash code is valid. Simple JavaScript code is valid. And you can mash-up both. Pipes and redirects and all the wonders of bash one-liners are available. The net result of this is a very comfortable way to write scripts, the final code is self-explanatory and natural, you can increment a variable in a script with i++ instead of i=$((i + 1)). The code you write looks like code, and the lines of bash commands look exactly like you would type them on the command line.</Char_Desc_2000>
 		</English>
 	</Program_Descriptions>
 	<Web_Info>
 		<Application_URLs>
 			<Application_Info_URL>http://teknopaul.github.com/binjs</Application_Info_URL>
 			<Application_Order_URL/>
-			<Application_Screenshot_URL>https://github.com/teknopaul/binjs/raw/master/binjs/media/screenshot.png</Application_Screenshot_URL>
-			<Application_Icon_URL>https://github.com/teknopaul/binjs/raw/master/binjs/media/binjs_128x128.png</Application_Icon_URL>
-			<Application_XML_File_URL>https://github.com/teknopaul/binjs/raw/master/binjs/pad_file.xml</Application_XML_File_URL>
+			<Application_Screenshot_URL>http://code.abnoctus.com/binjs/screenshot.png</Application_Screenshot_URL>
+			<Application_Icon_URL>http://code.abnoctus.com/binjs/binjs_128x128.png</Application_Icon_URL>
+			<Application_XML_File_URL>http://code.abnoctus.com/binjs/pad_file.xml</Application_XML_File_URL>
 		</Application_URLs>
 		<Download_URLs>
-			<Primary_Download_URL>https://github.com/teknopaul/binjs/downloads</Primary_Download_URL>
+			<Primary_Download_URL>http://github.com/teknopaul/binjs/downloads?not.zip</Primary_Download_URL>
 			<Secondary_Download_URL/>
 			<Additional_Download_URL_1/>
 			<Additional_Download_URL_2/>
