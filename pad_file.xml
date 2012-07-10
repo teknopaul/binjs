@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XML_DIZ_INFO>
+	<Company_Info>
+		<Company_Name>teknopaul</Company_Name>
+		<Address_1>Spain</Address_1>
+		<Address_2/>
+		<City_Town>Barcelona</City_Town>
+		<State_Province/>
+		<Zip_Postal_Code/>
+		<Country>ES</Country>
+		<Company_WebSite_URL>http://code.abnoctus.com</Company_WebSite_URL>
+		<Contact_Info>
+			<Author_First_Name>teknopaul</Author_First_Name>
+			<Author_Last_Name>hinds</Author_Last_Name>
+			<Author_Email>me@teknopaul.com</Author_Email>
+			<Contact_First_Name>teknopaul</Contact_First_Name>
+			<Contact_Last_Name></Contact_Last_Name>
+			<Contact_Email>me@teknopaul.com</Contact_Email>
+		</Contact_Info>
+	</Company_Info>
+	<Program_Info>
+		<Program_Name>binjs</Program_Name>
+		<Program_Version>0.8</Program_Version>
+		<Program_Release_Month>07</Program_Release_Month>
+		<Program_Release_Day>010</Program_Release_Day>
+		<Program_Release_Year>2012</Program_Release_Year>
+		<Program_Cost_Dollars/>
+		<Program_Cost_Other_Code/>
+		<Program_Cost_Other/>
+		<Program_Type>Freeware</Program_Type>
+		<Program_Release_Status>Major Update</Program_Release_Status>
+		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
+		<Program_OS_Support>Linux</Program_OS_Support>
+		<Program_Language>English</Program_Language>
+		<Program_Change_Info/>
+		<Program_Specific_Category>Development Tools</Program_Specific_Category>
+		<Program_Category_Class>System Utilities::Shell Tools</Program_Category_Class>
+		<Program_System_Requirements/>
+		<File_Info>
+			<File_Size_Bytes>3559492</File_Size_Bytes>
+			<File_Size_K>3476</File_Size_K>
+			<File_Size_MB>3.39</File_Size_MB>
+		</File_Info>
+		<Expire_Info>
+			<Has_Expire_Info>N</Has_Expire_Info>
+			<Expire_Count/>
+			<Expire_Based_On>Days</Expire_Based_On>
+			<Expire_Other_Info/>
+			<Expire_Month/>
+			<Expire_Day/>
+			<Expire_Year/>
+		</Expire_Info>
+	</Program_Info>
+	<Program_Descriptions>
+		<English>
+			<Keywords>JavaScript, Bash, language, tool, shell scripting,</Keywords>
+			<Char_Desc_45>#!/bin/js is a scripting framework</Char_Desc_45>
+			<Char_Desc_80>The framework allows scripts to be written with JavaScript syntax and bash statements.</Char_Desc_80>
+			<Char_Desc_250>
+/bin/js scripts are a mash-up of JavaScript and bash.
+Simple bash code is valid.
+Simple JavaScript code is valid.
+And you can mash-up both. Pipes and redirects and all the wonders of bash one-liners are available. The net result of this is a very comfortable way to write scripts, the final code is self-explanatory and natural, you can increment a variable in a script with i++ instead of i=$((i + 1)). The code you write looks like code, and the lines of bash commands look exactly like you would type them on the command line.
+			</Char_Desc_250>
+			<Char_Desc_450>
+/bin/js scripts are a mash-up of JavaScript and bash.
+Simple bash code is valid.
+Simple JavaScript code is valid.
+And you can mash-up both. Pipes and redirects and all the wonders of bash one-liners are available. 
+			</Char_Desc_450>
+			<Char_Desc_2000>
+/bin/js scripts are a mash-up of JavaScript and bash.
+Simple bash code is valid.
+Simple JavaScript code is valid.
+And you can mash-up both. Pipes and redirects and all the wonders of bash one-liners are available. The net result of this is a very comfortable way to write scripts, the final code is self-explanatory and natural, you can increment a variable in a script with i++ instead of i=$((i + 1)). The code you write looks like code, and the lines of bash commands look exactly like you would type them on the command line.
+			</Char_Desc_2000>
+		</English>
+	</Program_Descriptions>
+	<Web_Info>
+		<Application_URLs>
+			<Application_Info_URL>http://teknopaul.github.com/binjs</Application_Info_URL>
+			<Application_Order_URL/>
+			<Application_Screenshot_URL>https://github.com/teknopaul/binjs/raw/master/binjs/media/screenshot.png</Application_Screenshot_URL>
+			<Application_Icon_URL>https://github.com/teknopaul/binjs/raw/master/binjs/media/binjs_128x128.png</Application_Icon_URL>
+			<Application_XML_File_URL>https://github.com/teknopaul/binjs/raw/master/binjs/pad_file.xml</Application_XML_File_URL>
+		</Application_URLs>
+		<Download_URLs>
+			<Primary_Download_URL>https://github.com/teknopaul/binjs/downloads</Primary_Download_URL>
+			<Secondary_Download_URL/>
+			<Additional_Download_URL_1/>
+			<Additional_Download_URL_2/>
+		</Download_URLs>
+	</Web_Info>
+	<Permissions>
+		<Distribution_Permissions>See End User License Agreement.</Distribution_Permissions>
+		<EULA>
+			GNU GENERAL PUBLIC LICENSE
+            Version 3, 29 June 2007
+		</EULA>
+	</Permissions>
+</XML_DIZ_INFO>
+
