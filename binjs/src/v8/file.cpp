@@ -19,6 +19,14 @@
 
 #include <v8.h>
 
+#define B_0  0
+#define B_10  2
+#define B_110  6
+#define B_1110  14
+#define B_11110  30
+#define B_111110  62
+#define B_1111110  126
+
 /**
  * The File object, instantiatable with new File("file.dat");
  *
@@ -33,6 +41,9 @@
  *
  * This is done so that when creating a JSON object for a list of files
  * we dont call stat() for every access to every attribute of every file.
+ * 
+ * @since 0.9 supports open() and close() and stdio read and write methods.
+ * also constructor supports 0 1 and 2 for stdin, stdout stderr
  */
  
 #define UNIXTIME(t) Date::New(1000*static_cast<double>(t))
@@ -43,6 +54,9 @@ using namespace v8;
 
 static void SetPath(Handle<String> path, Handle<Object> self);
 static void DoStat(Handle<String> path, Handle<Object> self);
+
+static FILE* unwrap(const Arguments& args);
+static bool isNaF(const Arguments& args);
 
 // Extracts a C string from a V8 Utf8Value.
 static const char* ToCString(const String::Utf8Value& value) {
@@ -66,7 +80,17 @@ void InitialiseFile(Handle<FunctionTemplate> fileTemplate) {
 	fileTemplate->PrototypeTemplate()->Set( String::New("list"),		FunctionTemplate::New(FileList));
 	fileTemplate->PrototypeTemplate()->Set( String::New("read"),		FunctionTemplate::New(FileRead));
 	fileTemplate->PrototypeTemplate()->Set( String::New("write"),		FunctionTemplate::New(FileWrite));
+	
+	Local<ObjectTemplate> instanceTemplate = fileTemplate->InstanceTemplate();
+	instanceTemplate->SetInternalFieldCount(1);
 
+	fileTemplate->PrototypeTemplate()->Set( String::New("open"),			FunctionTemplate::New(FileOpen));
+	fileTemplate->PrototypeTemplate()->Set( String::New("close"),			FunctionTemplate::New(FileClose));
+	fileTemplate->PrototypeTemplate()->Set( String::New("readByte"),		FunctionTemplate::New(FileReadByte));
+	fileTemplate->PrototypeTemplate()->Set( String::New("writeByte"),		FunctionTemplate::New(FileWriteByte));
+	fileTemplate->PrototypeTemplate()->Set( String::New("readString"),		FunctionTemplate::New(FileReadString));
+	fileTemplate->PrototypeTemplate()->Set( String::New("writeString"),		FunctionTemplate::New(FileWriteString));
+	fileTemplate->PrototypeTemplate()->Set( String::New("readChar"),		FunctionTemplate::New(FileReadChar));
 }
 
 /**
@@ -74,16 +98,37 @@ void InitialiseFile(Handle<FunctionTemplate> fileTemplate) {
  */
 Handle<Value> FileConstructor(const Arguments& args) {
 	HandleScope scope;
-	
-	if (args.Length() < 1 || ! args[0]->IsString() ) {
+
+
+	if ( args.Length() < 1 ) {
 		return ThrowException(Exception::TypeError(String::New("File constructor needs a file name")));
 	}
 	
-	if (!args.IsConstructCall()) {
+	if ( ! args.IsConstructCall() ) {
 		return ThrowException(Exception::TypeError(String::New("File must be called with new File(\"file.txt\")")));
 	}
+	
 	Handle<Object> self = args.This();
+	if ( args[0]->IsNumber() ) {
+		self->Set(String::New("name"), Null());
+		self->Set(String::New("path"), Null());
+		int32_t num = args[0]->Int32Value();
+		switch ( num ) {
+			case 0 : self->SetInternalField(0, External::New(stdin));  break;
+			case 1 : self->SetInternalField(0, External::New(stdout)); break;
+			case 2 : self->SetInternalField(0, External::New(stderr)); break;
+			default : return ThrowException(Exception::TypeError(String::New("File must be called with new File(\"file.txt\")")));
+		}
+		return Undefined();
+	}
+	else {
+		self->SetInternalField(0, External::New(NULL));
+	}
 
+	if ( ! args[0]->IsString() ) {
+		return ThrowException(Exception::TypeError(String::New("File constructor needs a file name")));
+	}
+	
 	SetPath(args[0]->ToString(), self);
 	
 	DoStat(self->Get(String::New("path"))->ToString(), self);
@@ -236,6 +281,8 @@ static void DoStat(Handle<String> pathString, Handle<Object> self) {
 Handle<Value> FileIsFile(const Arguments& args) { 
 	HandleScope scope;
 	
+	if ( isNaF(args) ) return ThrowException(Exception::TypeError(String::New("NaF")));
+	
 	int64_t mode = args.This()->Get(String::New("mode"))->IntegerValue();
 	
 	return Boolean::New(S_ISREG(mode));
@@ -248,6 +295,8 @@ Handle<Value> FileIsFile(const Arguments& args) {
 Handle<Value> FileIsDirectory(const Arguments& args) { 
 	HandleScope scope;
 	
+	if ( isNaF(args) ) return ThrowException(Exception::TypeError(String::New("NaF")));
+	
 	int64_t mode = args.This()->Get(String::New("mode"))->IntegerValue();
 	
 	return Boolean::New(S_ISDIR(mode));
@@ -259,6 +308,8 @@ Handle<Value> FileIsDirectory(const Arguments& args) {
  */
 Handle<Value> FileIsSymlink(const Arguments& args) { 
 	HandleScope scope;
+	
+	if ( isNaF(args) ) return ThrowException(Exception::TypeError(String::New("NaF")));
 	
 	int64_t mode = args.This()->Get(String::New("mode"))->IntegerValue();
 	
@@ -275,6 +326,7 @@ Handle<Value> FileIsRoot(const Arguments& args) {
 	HandleScope scope;
 	
 	Handle<Value> handle = args.This()->Get(String::New("name"));
+	if ( handle->IsNull() ) return ThrowException(Exception::TypeError(String::New("NaF")));
 	
 	String::Utf8Value path(handle);
 	const char* cpath = ToCString(path);
@@ -302,7 +354,10 @@ Handle<Value> FileIsRoot(const Arguments& args) {
 Handle<Value> FileStat(const Arguments& args) { 
 	HandleScope scope;
 	
-	DoStat(args.This()->Get(String::New("path"))->ToString(), args.This());
+	Handle<Value> handle = args.This()->Get(String::New("path"));
+	if ( handle->IsNull() ) return ThrowException(Exception::TypeError(String::New("NaF")));
+	
+	DoStat(handle->ToString(), args.This());
 	
 	return args.This();
 	
@@ -315,6 +370,7 @@ Handle<Value> FileTouch(const Arguments& args) {
 	HandleScope scope;
 
 	Handle<Value> handle = args.This()->Get(String::New("path"));
+	if ( handle->IsNull() ) return ThrowException(Exception::TypeError(String::New("NaF")));
 	
 	String::Utf8Value path(handle);
 	const char* cpath = ToCString(path);
@@ -339,6 +395,9 @@ Handle<Value> FileTouch(const Arguments& args) {
  */
 Handle<Value> FileRename(const Arguments& args) {
 	HandleScope scope;
+
+	Handle<Value> handle = args.This()->Get(String::New("path"));
+	if ( handle->IsNull() ) return ThrowException(Exception::TypeError(String::New("NaF")));
 	
 	if (args.Length() < 1 || ! args[0]->IsString() ) { // TODO support file.rename(otherFile);
 		return ThrowException(Exception::TypeError(String::New("Rename to what?")));
@@ -348,7 +407,9 @@ Handle<Value> FileRename(const Arguments& args) {
 	const char* cnewpath = ToCString(newpath);
 	
 	
-	String::Utf8Value path(args.This()->Get(String::New("path")));
+	String::Utf8Value path(handle);
+
+	
 	const char* cpath = ToCString(path);
 
 	if ( rename(cpath, cnewpath) == 0 ) {
@@ -373,10 +434,12 @@ Handle<Value> FileDelete(const Arguments& args) {
 	HandleScope scope;
 
 	Handle<Value> handle = args.This()->Get(String::New("path"));
+	if ( handle->IsNull() ) return ThrowException(Exception::TypeError(String::New("NaF")));
+	
 	String::Utf8Value path(handle);
 	const char* cpath = ToCString(path);
 
-	if (remove(cpath) == 0) {
+	if ( remove(cpath) == 0 ) {
 
 		DoStat(handle->ToString(), args.This());
 
@@ -393,14 +456,16 @@ Handle<Value> FileDelete(const Arguments& args) {
 Handle<Value> FileList(const Arguments& args) { 
 	HandleScope scope;
 
+	Handle<Value> handle = args.This()->Get(String::New("path"));
+	if ( handle->IsNull() ) return ThrowException(Exception::TypeError(String::New("NaF")));
+
+	String::Utf8Value path(handle);
+	const char* cpath = ToCString(path);
+	
 	int64_t mode = args.This()->Get(String::New("mode"))->IntegerValue();
 	if ( ! S_ISDIR(mode) ) {
 		return ThrowException(Exception::TypeError(String::New("File is not a directory, can not list")));
 	}
-	
-	Handle<Value> handle = args.This()->Get(String::New("path"));
-	String::Utf8Value path(handle);
-	const char* cpath = ToCString(path);
 	
 	struct dirent *dp;
 	DIR *dir = opendir(cpath);
@@ -429,15 +494,18 @@ Handle<Value> FileList(const Arguments& args) {
  * Reads the File into a v8 string.
  */
 Handle<Value> FileRead(const Arguments& args) {
+	HandleScope scope;
 
+	Handle<Value> handle = args.This()->Get(String::New("path"));
+	if ( handle->IsNull() ) return ThrowException(Exception::TypeError(String::New("NaF")));
+	String::Utf8Value path(handle);
+	const char* cpath = ToCString(path);
+	
 	bool exists = args.This()->Get(String::New("exists"))->ToBoolean()->Value();
 	if ( ! exists ) {
 		return ThrowException(Exception::TypeError(String::New("File does not exist")));
 	}
 	
-	Handle<Value> handle = args.This()->Get(String::New("path"));
-	String::Utf8Value path(handle);
-	const char* cpath = ToCString(path);
 	
 	FILE* file = fopen(cpath, "rb");
 	if (file == NULL) {
@@ -465,17 +533,20 @@ Handle<Value> FileRead(const Arguments& args) {
  * Write a string to the file, overwriting any current contents.
  */
 Handle<Value> FileWrite(const Arguments& args) {
+	HandleScope scope;
 
+	Handle<Value> handle = args.This()->Get(String::New("path"));
+	if ( handle->IsNull() ) return ThrowException(Exception::TypeError(String::New("NaF")));
+	String::Utf8Value path(handle);
+	const char* cpath = ToCString(path);
+	
 	if (args.Length() < 1 || ! args[0]->IsString() ) {
 		return ThrowException(Exception::TypeError(String::New("Missing data to write")));
 	}
 	
 	String::Utf8Value contents(args[0]);
 	const char* ccontents = ToCString(contents);
-	
-	Handle<Value> handle = args.This()->Get(String::New("path"));
-	String::Utf8Value path(handle);
-	const char* cpath = ToCString(path);
+
 	
 	FILE* file = fopen(cpath, "wb");
 	if (file == NULL) {
@@ -490,4 +561,232 @@ Handle<Value> FileWrite(const Arguments& args) {
 	return count == len ? True() : False();
 }
 
+/**
+ * Open a file for reading or writing
+ */
+Handle<Value> FileOpen(const Arguments& args) {
+	HandleScope scope;
 
+	if ( isNaF(args) ) return ThrowException(Exception::TypeError(String::New("NaF")));
+
+	FILE* file = unwrap(args);
+	if (file != NULL) {
+		return ThrowException(Exception::TypeError(String::New("File already open")));
+	}
+
+	if (args.Length() < 1 || ! args[0]->IsString() ) {
+		return ThrowException(Exception::TypeError(String::New("Missing parameter to open")));
+	}
+	
+	String::Utf8Value openFlag(args[0]);
+	const char* copenFlag = ToCString(openFlag);
+	
+	Handle<Value> phandle = args.This()->Get(String::New("path"));
+	String::Utf8Value path(phandle);
+	const char* cpath = ToCString(path);
+	
+	file = fopen(cpath, copenFlag);
+	if (file == NULL) {
+		return ThrowException(Exception::TypeError(String::New("Can't open file for writing")));
+	}
+	args.This()->SetInternalField(0, External::New(file));
+	
+	return Undefined();
+}
+
+
+/**
+ * Close an open file.
+ */
+Handle<Value> FileClose(const Arguments& args) {
+	HandleScope scope;
+
+	if ( isNaF(args) ) return ThrowException(Exception::TypeError(String::New("NaF")));
+
+	FILE* file = unwrap(args);
+	if (file == NULL) {
+		return ThrowException(Exception::TypeError(String::New("File not open")));
+	}
+	
+	fclose(file);
+	args.This()->SetInternalField(0, External::New(NULL));
+	
+	return Undefined();
+}
+
+
+/**
+ * Read a single byte from a file, or null if the end of the stream is reached
+ * @return an int
+ */
+Handle<Value> FileReadByte(const Arguments& args) {
+	HandleScope scope;
+
+	FILE* file = unwrap(args);
+	if (file == NULL) {
+		return ThrowException(Exception::TypeError(String::New("File not open")));
+	}
+	
+	int c = fgetc(file);
+	
+	if (c == EOF) {
+		return Null();
+	}
+	
+	return Integer::New(c);
+	
+}
+
+/**
+ * Write a single byte to the file.
+ */
+Handle<Value> FileWriteByte(const Arguments& args) {
+	HandleScope scope;
+
+	FILE* file = unwrap(args);
+	if (file == NULL) {
+		return ThrowException(Exception::TypeError(String::New("File not open")));
+	}
+
+	if (args.Length() < 1 || ! args[0]->IsNumber() ) {
+		return ThrowException(Exception::TypeError(String::New("Missing parameter to writeByte")));
+	}
+	int32_t c = args[0]->ToInt32()->Int32Value();
+	
+	c = fputc(c, file);
+	
+	if (c == EOF) {
+		return ThrowException(Exception::TypeError(String::New("Error writing byte")));
+	}
+	
+	return Undefined();
+	
+}
+
+/**
+ * Read a line of utf-8 text from the stream. This reads till the next `\n` or `EOF` the end of the file.
+ * @return a String
+ */
+Handle<Value> FileReadString(const Arguments& args) {
+	HandleScope scope;
+
+	FILE* file = unwrap(args);
+	if (file == NULL) {
+		return ThrowException(Exception::TypeError(String::New("File not open")));
+	}
+	
+	int CHUNK_SIZE = 1024;
+	int size = CHUNK_SIZE;
+	char* buffer = new char[size];
+	
+	int c = 0;
+	int i = 0;
+	
+	do {
+		c = fgetc(file); // TODO persumably fgets would be faster
+		if ( c == EOF ) {
+			break;
+		}
+		buffer[i++] = c;
+		if ( i == size ) {
+			char* newBuffer = new char[size + CHUNK_SIZE];
+			memcpy(newBuffer, buffer, size);
+			delete[] buffer;
+			buffer = newBuffer;
+			size += CHUNK_SIZE;
+		}
+	} while (c  != '\n' && c != EOF);
+
+	Handle<String> result = String::New(buffer, i);
+	delete[] buffer;
+	return result;
+}
+
+/**
+ * Write a String.
+ */
+Handle<Value> FileWriteString(const Arguments& args) {
+	HandleScope scope;
+
+    FILE* file = unwrap(args);
+	if (file == NULL) {
+		return ThrowException(Exception::TypeError(String::New("File not open")));
+	}
+
+	if (args.Length() < 1 || ! args[0]->IsString() ) {
+		return ThrowException(Exception::TypeError(String::New("Missing parameter to writeString")));
+	}
+	
+	String::Utf8Value toWrite(args[0]);
+	const char* ctoWrite = ToCString(toWrite);
+	
+	int c = fputs(ctoWrite, file);
+	
+	if (c == EOF) {
+		return ThrowException(Exception::TypeError(String::New("Error writing string")));
+	}
+	
+	return Undefined();
+}
+/**
+ * Read a UTF-8 char from the terminal, basically read one byte and if the top bit is 0
+ * its multibyte and we need to work out how many more to read and read them.
+ * ref: http://en.wikipedia.org/wiki/UTF-8
+ */
+Handle<Value> FileReadChar(const Arguments& args) {
+	HandleScope scope;
+
+	FILE* file = unwrap(args);
+	if (file == NULL) {
+		return ThrowException(Exception::TypeError(String::New("File not open")));
+	}
+
+	char c[6];
+	memset(c, 0, 6);
+	int unicodeBytestoRead = 0;
+	
+	int read = getc(file);
+	if (read == 0) {
+		return Null();
+	}
+	
+	     if ((read & 0xff) >> 7 == B_0)  unicodeBytestoRead = 0;
+	else if ((read & 0xff) >> 5 == B_110) unicodeBytestoRead = 1;
+	else if ((read & 0xff) >> 4 == B_1110) unicodeBytestoRead = 2;
+	else if ((read & 0xff) >> 3 == B_11110) unicodeBytestoRead = 3;
+	else if ((read & 0xff) >> 2 == B_111110) unicodeBytestoRead = 4;
+	else if ((read & 0xff) >> 1 == B_1111110) unicodeBytestoRead = 5;
+	
+	c[0] = (char)(read & 0xff);
+	
+	for ( int i = 0 ; i < unicodeBytestoRead ; i++) {
+		c[i+1] = (char)(getc(stdin) & 0xff);
+		if ( (c[i+1] & 0xff) >> 6 != B_10 ) {
+			return ThrowException(Exception::TypeError(String::New("Invalid Unicode Char on input")));
+		}
+	}
+	
+	//if (unicodeBytestoRead == 0) {
+	//	printf("char=%d", c[0] & 0xff);
+	//}
+
+	return String::New(c);
+
+}
+/**
+ * @return the wrapped pointer to a FILE, may be NULL.
+ */
+static FILE* unwrap(const Arguments& args) {
+	Local<Object> self = args.This();
+	Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
+	void* ptr = wrap->Value();
+    return static_cast<FILE*>(ptr);
+}
+
+/**
+ * Is not a file, NaF is thrown when file operations are tried on pipes.
+ */
+static bool isNaF(const Arguments& args) {
+	Handle<Value> handle = args.This()->Get(String::New("path"));
+	return handle->IsNull();
+}

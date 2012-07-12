@@ -31,4 +31,16 @@ Handle<Value> FileRead(const Arguments& args);
 
 Handle<Value> FileWrite(const Arguments& args);
 
+Handle<Value> FileOpen(const Arguments& args);
+
+Handle<Value> FileClose(const Arguments& args);
+
+Handle<Value> FileReadByte(const Arguments& args);
+
+Handle<Value> FileWriteByte(const Arguments& args);
+
+Handle<Value> FileReadString(const Arguments& args);
+
+Handle<Value> FileWriteString(const Arguments& args);
+
 #endif // FILE_H

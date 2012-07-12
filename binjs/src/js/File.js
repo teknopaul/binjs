@@ -267,3 +267,26 @@ File.prototype.ext = function(newValue) {
 		}
 	}
 }
+
+
+// IO extensions
+
+File.prototype.writeChar = function(char) {
+	this.writeString(char.charAt(0));
+}
+
+// these could be faster written in C++
+File.prototype.writeBinary = function(arr) {
+	for (var i = 0 ; i < arr.length ; i++ ) this.writeByte(arr[i]);
+}
+File.prototype.readBinary = function(len) {
+	if ( ! len ) len = 4294967295; // max array length per soem JS spec
+	var arr = []
+	for (var i = 0 ; i < len ; i++ ) {
+		var b = this.readByte();
+		if (b == null) return arr;
+		arr.push( b );
+	}
+	return arr;
+}
+

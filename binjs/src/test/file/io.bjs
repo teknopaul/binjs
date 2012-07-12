@@ -1,0 +1,41 @@
+#!/bin/js
+binjs_import("~lib/Assert.js");
+
+var assert = new Assert();
+
+
+var file = new File("/tmp/somefile");
+file.touch();
+
+file.open("wb");
+file.writeByte(23);
+file.close();
+
+file.open("rb");
+var read = file.readByte();
+$.println("read " + read, true);
+file.close();
+assert.equal(23, read);
+
+
+file.open("wb");
+for (var i = 0 ; i < 200; i++) {
+	file.writeString("Hello World ");
+}
+file.close();
+
+file.open("rb");
+var read = file.readString();
+$.println("read " + read, true);
+file.close();
+//assert.equal("Hello World", read);
+
+
+var stdout = new File(1);
+stdout.writeString("oioi");
+
+stdout.stat();
+stdout.isFile();
+
+
+echo 1234
