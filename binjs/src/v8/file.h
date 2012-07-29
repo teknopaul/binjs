@@ -43,4 +43,6 @@ Handle<Value> FileReadString(const Arguments& args);
 
 Handle<Value> FileWriteString(const Arguments& args);
 
+Handle<Value> FileReadChar(const Arguments& args);
+
 #endif // FILE_H
