@@ -79,5 +79,7 @@ thisification "foo"
 barbaric "bar"
 superlify that
 
+echo binjs_ is reserved but should not be used, use functions from $.
 binjs_println("text");
+
 

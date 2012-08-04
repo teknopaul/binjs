@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Json.js");
+#include <Json.js>
 #
 # Test Json colourizing
 #
@@ -24,5 +24,6 @@ $.println(json.toJson(object));
 
 $.println("toJson native indent", true);
 $.println(json.toJson(object, true));
+
 
 

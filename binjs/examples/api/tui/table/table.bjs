@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/tui/Table.js")
+#include <tui/Table.js>
 
 cd `dirname $0`
 
@@ -43,5 +43,6 @@ table.pack(2);
 
 $.println("Using the unicode() method, packed", true);
 $.println(table.printUnicode());
+
 
 

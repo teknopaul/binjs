@@ -25,3 +25,22 @@ Runtime.prototype.exit = function(status) {
 Runtime.prototype.halt = function(status) {
 	binjs_exit(status);
 }
+
+Runtime.prototype.halt = function(status) {
+	binjs_exit(status);
+}
+
+Runtime.prototype.load = function(file) {
+	binjs_include(file);
+}
+
+Runtime.prototype.loadLibrary = function(file) {
+	binjs_include("~lib/" + file);
+}
+Runtime.prototype.getenv = function(propertyName) {
+	if (propertyName) {
+		return $.env[propertyName];
+	}
+	return $.env;
+}
+

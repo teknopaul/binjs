@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Term.js")
+#include <Term.js>
 
 var term = new Term();
 
@@ -14,5 +14,6 @@ $.print("\ro_o", true);
 term.flush();
 $.println();
 term.cursorOn();
+
 
 

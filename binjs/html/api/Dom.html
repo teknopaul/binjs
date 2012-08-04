@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../css/style.css" rel="stylesheet"/>
+	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="../toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="../api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="../tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="../_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Dom</h1>
+
+<p>XML Dom parser and Document model.</p>
+
+<p>Dom.js is a clone of nodejs dom-js.</p>
+
+<p>See <a href="../Xml.html">Xml parsing</a></p>
+
+<hr />
+
+<h2>Include</h2>
+
+<p>The include should be <code>Xml.js</code> which imports both Sax.js and Dom.js.</p>
+
+<p><code>#include &lt;Xml.js&gt;</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>Dom</li>
+<li>Element</li>
+<li>Text</li>
+<li>Comment</li>
+<li>ProcessingInstruction</li>
+<li>CDATASection</li>
+</ul>
+
+<hr />
+
+<h3>/bin/js Usage</h3>
+
+<pre><code>var dom = new Dom();
+var root = dom.parser().parse(xmlString);
+</code></pre>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

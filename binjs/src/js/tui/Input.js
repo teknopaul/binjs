@@ -1,4 +1,5 @@
-binjs_import("~lib/Term.js")
+
+binjs_include("~lib/Term.js")
 
 if (typeof tui === 'undefined') tui = {};
 

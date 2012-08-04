@@ -19,3 +19,4 @@ $.println("moved" + JSON.stringify(file.stat(), undefined, 2));
 
 
 file.delete();
+

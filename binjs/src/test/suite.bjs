@@ -3,28 +3,28 @@
 # Check core APIs are not broken and that everything imports OK
 #
 
-// Import all install libs
+// Include all install libs
 
 var libs = [];
-function importAll(imports) {
+function includeAll(includes) {
 	var subdirs = [];
-	for (var i = 0 ; i < imports.length ; i++ ) {
-		if ( imports[i].isFile() &&  imports[i].ext() == "js" ) {
-			$.println( "importing " + imports[i].getAbsolutePath() );
-			binjs_import(imports[i].getAbsolutePath());
-			libs.push(imports[i]);
+	for (var i = 0 ; i < includes.length ; i++ ) {
+		if ( includes[i].isFile() &&  includes[i].ext() == "js" ) {
+			$.println( "including " + includes[i].getAbsolutePath() );
+			$.include(includes[i].getAbsolutePath());
+			libs.push(includes[i]);
 		}
-		if ( imports[i].isDir() ) subdirs.push(imports[i]);
+		if ( includes[i].isDir() ) subdirs.push(includes[i]);
   	}
 	for (var i = 0 ; i < subdirs.length ; i++ ) {
-		$.println("Importing from " + subdirs[i].getAbsolutePath());
-		importAll( subdirs[i].listFiles() );
+		$.println("Includinging from " + subdirs[i].getAbsolutePath());
+		includeAll( subdirs[i].listFiles() );
 	}
 }
 
-var imports = new File("/usr/lib/binjs/lib").listFiles();
+var includes = new File("/usr/lib/binjs/lib").listFiles();
 
-importAll(imports);
+includeAll(includes);
 
 // Call key methods of Core APIs
 
@@ -105,6 +105,7 @@ tmpDir.listFiles( function() {return true; } );
 tmpFile.touch();
 tmpFile.write("hello");
 assert.equal("hello", tmpFile.read(), "file.write() & file.read()");
+
 
 
 

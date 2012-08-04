@@ -1,9 +1,9 @@
 /**
- * Combo is similar in use toa  combo box, it presents a list of options
+ * Combo is similar in use to a combo box, it presents a list of options
  * The user can select from.
  */
 
-binjs_import("~lib/Term.js");
+binjs_include("~lib/Term.js");
  
 if (typeof tui === 'undefined') tui = {};
 

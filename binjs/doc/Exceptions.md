@@ -58,3 +58,4 @@ The typical error handling mechanisn for a bash script is to check the `$?` vari
     }
 
 Nothing needs to be imported for `errno to be populated in /bin/js scripts. `errno` is always populated unlike C code where the errno.h header must be imported to make errno available.
+

@@ -21,3 +21,4 @@ $.debugOn = true;
 $.debug("Visible");
 $.debugOn = false;
 $.debug("invisible");
+

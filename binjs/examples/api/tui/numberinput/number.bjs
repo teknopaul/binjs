@@ -1,10 +1,11 @@
 #!/bin/js
 
-binjs_import("~lib/tui/NumberInput.js");
+#include <tui/NumberInput.js>
 
 var inp = new tui.NumberInput();
 
 $.println("Enter a number");
 
 $.println("You entered : " + inp.readline() , 'green');
+
 

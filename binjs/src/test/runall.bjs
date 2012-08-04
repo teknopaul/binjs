@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/tui/Table.js");
+#include <tui/Table.js>
 #
 # Script to run all the bjs scripts.
 #
@@ -50,3 +50,4 @@ for (var i = 0; i < dirs.length ; i++ ) {
 
 
 results.print();
+

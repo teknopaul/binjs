@@ -50,3 +50,4 @@ for (gi = 0 ; gi < 5 ; gi++) {
 	echo as expected gi is $gi
 	
 }
+

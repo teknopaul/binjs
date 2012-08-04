@@ -2,8 +2,9 @@
 
 cd `dirname $0`
 
-binjs_import("./dep.js");
-binjs_import("./otherdep.js");
+#include "./dep.js"
+#include "./otherdep.js"
 
 // without checking and loading the deps only once the above code would be an infinite loop
 echo done.
+

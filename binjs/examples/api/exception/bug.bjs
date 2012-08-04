@@ -9,3 +9,4 @@ echo "bug script"
 
 var forceToBeJS = 0 ; noneExistingVar.broke();
 
+

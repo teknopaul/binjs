@@ -8,11 +8,11 @@ See [Xml parsing](../Xml.html)
 
 ----------------------------
 
-## Import
+## Include
 
-The import should be `~lib/Xml.js` which imports both Sax and Dom.
+The include should be `Xml.js` which imports both Sax.js and Dom.js.
 
-`binjs_import("~lib/Xml.js")`
+`#include <Xml.js>`
 
 -----------------------
 
@@ -33,3 +33,4 @@ The import should be `~lib/Xml.js` which imports both Sax and Dom.
     var root = dom.parser().parse(xmlString);
     
     
+

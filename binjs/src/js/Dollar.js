@@ -2,10 +2,11 @@
  * Defines the functions avaiable using the global $ variable.
  */
  
-binjs_import("~lib/Color.js");
+binjs_include("~lib/Color.js");
 
 
 if ( typeof $ === 'undefined' ) {
+
  /**
   * The $ object provides access to /bin/js core features.
   */
@@ -37,22 +38,27 @@ if ( typeof $ === 'undefined' ) {
  // copy the default bash envirionment to JavaScript land
  binjs_copyEnv();
  
+ // add trim() method to JavaScript String
  String.prototype.trim = function() { 
 	return binjs_trim(this); 
  }
  
+ /**
+  * Flag to determine if messages are printed when $.debug() is called.
+  */
  $.debugOn = false;
  
 }
 
-// Global Magic
+// Global Magic vars that are shared with bash
 var gi,gj,gk;
 $.watch =  ["gi","gj","gk"];
 
 /**
- * Print a line of text to std out.
+ * Print a line of text to stdout.
+ * 
  * @pram text the String to print
- * @ param formatting if true print in bold , if a String prinit colourized text
+ * @param formatting if true print in bold, if a String print colourized text
  */
 $.println = function(text, format) {
 	if (typeof text == 'undefined') {
@@ -65,7 +71,7 @@ $.println = function(text, format) {
 }
 
 /**
- *  Print text to stdout wihtout a new line character at the end the text is not flushed
+ * Print text to stdout wihtout a new line character at the end, the text is not flushed
  * and may not be visible untill println() is called.
  */
 $.print = function(text, format) {
@@ -82,14 +88,15 @@ $.sleep = function(millis) {
 }
 
 /**
- * Alias for binjs_import, import a js file into the global context.
+ * Alias for binjs_include, include a js file into the global context.
+ * for preference use #include <Lib.js> syntax
  */
-$.import = function(lib) {
-	binjs_import(lilb);
+$.include = function(lib) {
+	binjs_include(lib);
 }
 
 /**
- * Set a variabl into the bash environment, both arguments must be strings.
+ * Set a variable into the bash environment, both arguments must be strings.
  */
 $.setEnv = function(name, value) {
 	if (typeof value !== 'string') {
@@ -100,7 +107,7 @@ $.setEnv = function(name, value) {
 }
 
 /**
- * Get the value of an environment variable
+ * Get the value of an environment variable.
  */
 $.getEnv = function(name) {
 	return binjs_getEnv(name);
@@ -108,6 +115,7 @@ $.getEnv = function(name) {
 
 /**
  * Add colours to text.
+ * 
  * @return the input text marked up with colour ESC sequences for terminals.
  */
 $.color = function(color, message) {
@@ -139,10 +147,12 @@ $.underline = function(message) {
 }
 
 /**
- * Print an error with a number and a machine readable text string
+ * Print an error with a number and a machine readable text string.
+ * 
  * In a future version the 2nd parameter will be used to lookup a translated message
  * for the current language.
- * For now i18n features are not implemented
+ * For now i18n features are not implemented.
+ * 
  * @param errNo an integer erro number
  * @param errTag A property value used to lookup the string (in future versions)
  * @param errText default text to display
@@ -177,7 +187,7 @@ $.warn = function(errNo, errTag, errText) {
 }
 
 /**
- * Print an information al message accepts the same parameters as $.error()
+ * Print an informational message accepts the same parameters as $.error()
  */
 $.info = function(errNo, errTag, errText) {
 	if (typeof errText === 'undefined') errText ="";
@@ -204,7 +214,8 @@ $.getJobs = function() {
 }
 
 
-// Copied from nodeJS
+// Functions copied from nodeJS,   inherits() and format()
+
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a

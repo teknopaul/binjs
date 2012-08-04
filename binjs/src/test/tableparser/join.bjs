@@ -1,6 +1,6 @@
 #!/bin/js
-binjs_import("~lib/util/TableParser.js");
-binjs_import("~lib/Json.js");
+#include <util/TableParser.js>
+#include <Json.js>
 
 
 var t1 = "id foo1 baa2\n"
@@ -23,6 +23,7 @@ new Json().prettyPrintObject(dataTable1.innerJoin(dataTable2, "id", "id"));
 new Json().prettyPrintObject(dataTable1.leftOuterJoin(dataTable2, "id", "id"));
 
 new Json().prettyPrintObject(dataTable1.rightOuterJoin(dataTable2, "id", "id"));
+
 
 
 

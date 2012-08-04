@@ -1,7 +1,7 @@
 #!/bin/js
-binjs_import("~lib/Json.js");
-binjs_import("~lib/Assert.js");
-binjs_import("~lib/util/TableParser.js");
+#include <Json.js>
+#include <Assert.js>
+#include <util/TableParser.js>
 #
 #
 #
@@ -23,5 +23,6 @@ assert.equal(4, tableData.data.length);
 $.println(tableData.titles.join("_"));
 
 new Json().prettyPrintObject(tableData);
+
 
 

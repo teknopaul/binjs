@@ -1,0 +1,7 @@
+#!/bin/js
+#
+# Demonstrate /bin/js being used for filtering pipes.
+#
+
+echo -n ööö | ./filter
+

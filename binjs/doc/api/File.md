@@ -12,9 +12,9 @@ File API is defined in `src/v8/file.cpp` and `src/js/File.js`.
     
 ----------------------------
 
-## Import
+## Include
 
-You do not have to import this library it is included by default.
+You do not have to include this library it is included by default.
 
 -----------------------
 
@@ -233,3 +233,4 @@ Returns the parent file as a String or null if this file points to the root dire
 ### getParentFile()
   
 Returns the parent file as a File object or null if this file points to the root directory.
+

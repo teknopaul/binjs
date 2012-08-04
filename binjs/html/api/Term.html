@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../css/style.css" rel="stylesheet"/>
+	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="../toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="../api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="../tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="../_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Term</h1>
+
+<p>Provides access to features of the terminal the script is running in, such as terminal width, height and cursor position.</p>
+
+<p>This Object provides access to the terminal via ESC codes wrapped as JavaScript method calls, to make interacting with ther terminal easy.</p>
+
+<hr />
+
+<h2>Include</h2>
+
+<p><code>#include &lt;Term.js&gt;</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>Term</li>
+</ul>
+
+<hr />
+
+<h2>Constructor</h2>
+
+<p>The constructor takes no arguments.</p>
+
+<pre><code>var term = new Term();
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>getWidth</h3>
+
+<p>Returns the width of the console in characters</p>
+
+<h3>getHeight</h3>
+
+<p>Returns the height of the console in characters, this is the visible height not the scrollback buffer.</p>
+
+<h3>makeRaw</h3>
+
+<p>Make the stdin read in raw mode without line buffereing so that characters can be read byte by byte. Enabling this means the script has to take control of basics like cursor and deleting chars and typing enter, but enables scripts to respond to up arrow keypresses and ESC sequences.</p>
+
+<p>Warning: after turning this on it must be turned off before the script terminates or the bash shell from which the script was launched becomes unresponsive.</p>
+
+<h3>reset</h3>
+
+<p>Undo makeRaw</p>
+
+<h3>readChar</h3>
+
+<p>Read a single character off the command line, this method handles UTF-8 reading so it may read more than one byte.</p>
+
+<h3>writeByte</h3>
+
+<p>Enables writing 8bit bytes to the console, this method takes integer varargs which are converted to unsigned bytes before being send to stdout.  N.B to write a UTF-8 char just call $.print()</p>
+
+<h3>flush</h3>
+
+<p>Flush stdout if it was being buffered.</p>
+
+<h3>writeDoubleHeight</h3>
+
+<p>Write text to the console that is twice as big as normal, this only works in DEC compatible terminals, KDEs Konsole supports it gnome-terminal does not and will just print the line twice at single height.</p>
+
+<h3>setWindowTitle</h3>
+
+<p>Set the title window of the terminal, Konsole by default does not show this, change the window title or the tabl tile to %w and scripts are able to set the title. Double click on the tab to change the settings.</p>
+
+<h3>cursorOff</h3>
+
+<p>Hide the cursor.</p>
+
+<h3>cursorOn</h3>
+
+<p>Show the cursor.</p>
+
+<h3>cursorUp, cursorUDown, cursorLeft, cursorRight</h3>
+
+<p>Programatically move the cursor.  This can be sued to move the cursor to any screen position and start writing characters.</p>
+
+<h3>cursorPosition</h3>
+
+<p>Move the curson to a position on screen, accepts two arguments row and col. This is counter-intuitive, one would expect x and y but the args are reversed and expressed as the line to move to vertically and then column to move horizontally.</p>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

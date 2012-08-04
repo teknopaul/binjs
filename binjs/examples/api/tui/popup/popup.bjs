@@ -1,6 +1,6 @@
 #!/bin/js
-binjs_import("~lib/tui/Popup.js");
-binjs_import("~lib/tui/TimeInput.js");
+#include <tui/Popup.js>
+#include <tui/TimeInput.js>
 #
 #  "Popup" help in its looses sense, prints text away from the cursor
 #
@@ -30,6 +30,7 @@ $.println("Yo Yo , what time is it?", true);
 
 popup.render();
 var time = tinput.readline();
+
 
 
 

@@ -25,12 +25,12 @@ static int do_preparse(int in, int out, struct binjs_parsed_doc doc) {
 	binjs_preparse(in, out, &doc);
 
 	if (doc.err == 1) {
-		fprintf(stderr, "Error preparsing %s", doc.error);
+		fprintf(stderr, "Error preparsing %s at line %d\n", doc.error, doc.err_line_no);
 		return 1;
 	}
 
 	if (doc.err == 2) {
-		fprintf(stderr, "Warning preparsing %s", doc.warning);
+		fprintf(stderr, "Warning preparsing %s at line %d\n", doc.warning, doc.err_line_no);
 		return 2;
 	}
 

@@ -44,3 +44,4 @@ It is recommeded to declare global variables that you wish to be available in ba
     var MY_FILE_NAME = null;
 
 This makes it clear that the variable is in the global scope.
+

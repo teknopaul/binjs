@@ -1,6 +1,6 @@
 /**
- * Color class suports instantiating with var color = new Color() like other
- * Libraries, but also support sstatic type calls like Color.disable()
+ * Color class supports instantiating with var color = new Color() like other
+ * Libraries, but also supports static type calls like Color.disable()
  *
  * You can not call Color.disable() directly in a /bin/js script because
  * the preparser forbids it, but all changes are global they do not affect
@@ -18,7 +18,7 @@ var Color = function() {
 Color.BLACK   = "\033[30m";
 Color.WHITE   = "\033[97m";
 Color.GREY    = "\033[37m";
-Color.DARKGREY= "\033[90m";
+Color.DARK_GREY= "\033[90m";
 Color.BLUE    = "\033[94m";
 Color.GREEN   = "\033[32m";
 Color.RED     = "\033[91m";
@@ -36,7 +36,7 @@ Color.disable = function() {
 	Color.BLACK   = "";
 	Color.WHITE   = "";
 	Color.GREY    = "";
-	Color.DARKGREY= "";
+	Color.DARK_GREY= "";
 	Color.BLUE    = "";
 	Color.GREEN   = "";
 	Color.RED     = "";
@@ -56,7 +56,7 @@ Color.enable = function() {
 	Color.BLACK   = "\033[30m";
 	Color.WHITE   = "\033[97m";
 	Color.GREY    = "\033[37m";
-	Color.DARKGREY= "\033[90m";
+	Color.DARK_GREY= "\033[90m";
 	Color.BLUE    = "\033[94m";
 	Color.GREEN   = "\033[32m";
 	Color.RED     = "\033[91m";
@@ -78,7 +78,7 @@ Color.fromModifier = function(colour) {
 		case 'black'	  : return Color.BLACK; 
 		case 'white'	  : return Color.WHITE; 
 		case 'grey'	  	  : return Color.GREY; 
-		case 'darkgrey'	  : return Color.DARKGREY; 
+		case 'darkgrey'	  : return Color.DARK_GREY; 
 		case 'blue'	 	  : return Color.BLUE; 
 		case 'green'	  : return Color.GREEN; 
 		case 'red'	  	  : return Color.RED; 

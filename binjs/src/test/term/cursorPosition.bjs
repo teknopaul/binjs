@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Term.js");
+#include <Term.js>
 
 var t = new Term();
 
@@ -9,6 +9,7 @@ $.print("pretty pointless but you get the idea", true);
 t.cursorPosition(t.getHeight() , t.getWidth() );
 
 $.println();
+
 
 
 

@@ -1,7 +1,7 @@
 #!/bin/js
-binjs_import("~lib/Json.js");
-binjs_import("~lib/Assert.js");
-binjs_import("~lib/util/TableParser.js");
+#include <Json.js>
+#include <Assert.js>
+#include <util/TableParser.js>
 #
 #
 #
@@ -25,5 +25,6 @@ new Json().prettyPrintObject(tableData);
 $.println(tableData.data[2][3], true);
 assert.equal(4, tableData.data.length);
 assert.equal("should be one", tableData.data[2][3]);
+
 
 

@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Assert.js");
+#include <Assert.js>
 #
 # indicate an exception should be thrown in bash
 # by setting the variable _EX 
@@ -43,4 +43,5 @@ try {
   $.error(24,"Bash ex caught but not thrown", err.name + ":" + err.message);
   assert.ok(false);
 }
+
 

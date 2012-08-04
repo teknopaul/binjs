@@ -42,3 +42,4 @@ Each job in the array is represented as a Job Object with the following properti
       running : Boolean,
       state : Integer
     }
+

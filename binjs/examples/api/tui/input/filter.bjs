@@ -1,6 +1,6 @@
 #!/bin/js
 
-binjs_import("~lib/tui/Input.js");
+#include <tui/Input.js>
 
 
 
@@ -20,4 +20,5 @@ $.println("Enter a single character from this list abcdef:öäü", true);
 var char = finput.readline();
 
 $.println("You choose : " + char);
+
 

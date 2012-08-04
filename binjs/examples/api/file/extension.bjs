@@ -29,3 +29,4 @@ try {
 try {
   $.println(new File("..").ext("a").path);
 } catch(err) {}
+

@@ -5,3 +5,4 @@ cd `dirname $0`
 var ok = new File("./output.data").touch().write("some\ntext\n");
 
 if ( ! ok ) $.error(23, "error writing file");
+

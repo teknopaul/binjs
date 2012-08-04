@@ -1,5 +1,5 @@
 
-binjs_import("~lib/tui/Input.js");
+binjs_include("~lib/tui/Input.js");
 
 /**
  * An Input that only accepts floating point numbers

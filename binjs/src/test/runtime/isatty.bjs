@@ -1,7 +1,8 @@
 #!/bin/js
 
-binjs_import("~lib/Runtime.js");
+#include <Runtime.js>
 
 var runtime = new Runtime();
 
 $.println("isatty " + runtime.isatty, true);
+

@@ -6,9 +6,9 @@ The library closely conforms to the CommonJS spec, but is not identical, code is
 
 ----------------------------
 
-## Import
+## Include
 
-`binjs_import("~lib/Assert.js")`
+`#include <Assert.js>`
     
 ----------------------------
 

@@ -281,7 +281,7 @@ static void DoStat(Handle<String> pathString, Handle<Object> self) {
 Handle<Value> FileIsFile(const Arguments& args) { 
 	HandleScope scope;
 	
-	if ( isNaF(args) ) return ThrowException(Exception::TypeError(String::New("NaF")));
+	if ( isNaF(args) ) return Boolean::New(false);
 	
 	int64_t mode = args.This()->Get(String::New("mode"))->IntegerValue();
 	
@@ -295,7 +295,7 @@ Handle<Value> FileIsFile(const Arguments& args) {
 Handle<Value> FileIsDirectory(const Arguments& args) { 
 	HandleScope scope;
 	
-	if ( isNaF(args) ) return ThrowException(Exception::TypeError(String::New("NaF")));
+	if ( isNaF(args) ) return Boolean::New(false);
 	
 	int64_t mode = args.This()->Get(String::New("mode"))->IntegerValue();
 	
@@ -309,7 +309,7 @@ Handle<Value> FileIsDirectory(const Arguments& args) {
 Handle<Value> FileIsSymlink(const Arguments& args) { 
 	HandleScope scope;
 	
-	if ( isNaF(args) ) return ThrowException(Exception::TypeError(String::New("NaF")));
+	if ( isNaF(args) ) return Boolean::New(false);
 	
 	int64_t mode = args.This()->Get(String::New("mode"))->IntegerValue();
 	
@@ -587,7 +587,7 @@ Handle<Value> FileOpen(const Arguments& args) {
 	
 	file = fopen(cpath, copenFlag);
 	if (file == NULL) {
-		return ThrowException(Exception::TypeError(String::New("Can't open file for writing")));
+		return ThrowException(Exception::TypeError(String::New("Can't open file")));
 	}
 	args.This()->SetInternalField(0, External::New(file));
 	
@@ -697,6 +697,10 @@ Handle<Value> FileReadString(const Arguments& args) {
 		}
 	} while (c  != '\n' && c != EOF);
 
+	if (c == EOF && i == 0) {
+		return Null();
+	}
+	
 	Handle<String> result = String::New(buffer, i);
 	delete[] buffer;
 	return result;
@@ -743,30 +747,30 @@ Handle<Value> FileReadChar(const Arguments& args) {
 
 	char c[6];
 	memset(c, 0, 6);
-	int unicodeBytestoRead = 0;
+	int unicodeBytesToRead = 0;
 	
 	int read = getc(file);
-	if (read == 0) {
+	if (read <= 0) {
 		return Null();
 	}
 	
-	     if ((read & 0xff) >> 7 == B_0)  unicodeBytestoRead = 0;
-	else if ((read & 0xff) >> 5 == B_110) unicodeBytestoRead = 1;
-	else if ((read & 0xff) >> 4 == B_1110) unicodeBytestoRead = 2;
-	else if ((read & 0xff) >> 3 == B_11110) unicodeBytestoRead = 3;
-	else if ((read & 0xff) >> 2 == B_111110) unicodeBytestoRead = 4;
-	else if ((read & 0xff) >> 1 == B_1111110) unicodeBytestoRead = 5;
+	     if ((read & 0xff) >> 7 == B_0)  unicodeBytesToRead = 0;
+	else if ((read & 0xff) >> 5 == B_110) unicodeBytesToRead = 1;
+	else if ((read & 0xff) >> 4 == B_1110) unicodeBytesToRead = 2;
+	else if ((read & 0xff) >> 3 == B_11110) unicodeBytesToRead = 3;
+	else if ((read & 0xff) >> 2 == B_111110) unicodeBytesToRead = 4;
+	else if ((read & 0xff) >> 1 == B_1111110) unicodeBytesToRead = 5;
 	
 	c[0] = (char)(read & 0xff);
 	
-	for ( int i = 0 ; i < unicodeBytestoRead ; i++) {
+	for ( int i = 0 ; i < unicodeBytesToRead ; i++) {
 		c[i+1] = (char)(getc(stdin) & 0xff);
 		if ( (c[i+1] & 0xff) >> 6 != B_10 ) {
 			return ThrowException(Exception::TypeError(String::New("Invalid Unicode Char on input")));
 		}
 	}
 	
-	//if (unicodeBytestoRead == 0) {
+	//if (unicodeBytesToRead == 0) {
 	//	printf("char=%d", c[0] & 0xff);
 	//}
 

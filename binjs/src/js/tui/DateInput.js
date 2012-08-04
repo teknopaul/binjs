@@ -1,5 +1,5 @@
 
-binjs_import("~lib/tui/Input.js");
+binjs_include("~lib/tui/Input.js");
 
 if (typeof tui === 'undefined') tui = {};
 

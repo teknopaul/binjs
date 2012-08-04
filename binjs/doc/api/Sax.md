@@ -8,9 +8,9 @@ See [Xml parsing](../Xml.html)
 
 ----------------------------
 
-## Import
+## Include
 
-`binjs_import("~lib/Sax.js")`
+`#include <Sax.js>`
 
 -----------------------
 
@@ -20,3 +20,4 @@ See [Xml parsing](../Xml.html)
 
     
     
+

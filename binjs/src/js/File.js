@@ -50,7 +50,10 @@ File.separator = '/';
 // file.read()
 // file.write()
 
-	
+File.STDIN  = 0;
+File.STDOUT = 1;
+File.STDERR = 2;
+
 /**
  * Returns a String with the file's path made absolute and cananocalized.
  */

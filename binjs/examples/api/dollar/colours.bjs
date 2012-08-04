@@ -25,3 +25,4 @@ $.println("Some bold text", true);
 $.println( $.underline("Some underlined text") );
 $.println ($.blink("Now thats really annoying!") );
 
+

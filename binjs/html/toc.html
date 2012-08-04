@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="./css/style.css" rel="stylesheet"/>
+	<link href="./img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab selected" id="doc-index-tab">
+				  <a class="vertical" href="./toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="./api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="./tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="./_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Table of contents</h1>
+<ul class="markbooktoc">
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/00_SimpleSyntax.html"> Simple Syntax </a> - 
+ A quick introduction to /bin/js syntax.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/01_HowItWorks.html"> How it works </a> - 
+ The /bin/js mash-up is achieved by preparsing the script and deciding for each line if it needs to be interpreted as JavaScript or Bash.  
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/Arguments.html"> Arguments to the script </a> - 
+ When executing a /bin/js scripts command line arguments are passed to both bash and JavaScript. The arguments to bash are available inthe normal manner and in JavaScript they are available via global variables.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/ByteDataType.html"> Representing Bytes </a> - 
+ Node.js represents streams of bytes very efficiently with a class called Buffer. The approach /bin/js takes for streams of bytes is to return JavaScript arrays of integers.  Where a single byte would be returned a normal JavaScript integer is returned.
+ The approach /bin/js takes is much simpler, much easier for the user, but much less efficient interms of performance and use of memory. 
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/EnvironmentVariables.html"> Environment Variables </a> - 
+ Environment variables from bash are available in JavaScript via the <code>$.env</code> object.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/Exceptions.html"> Exceptions </a> - 
+ Bash has exception handling limited to returning error codes, JavaScript supports <code>try</code> , <code>catch</code> and <code>finally</code> syntax. /bin/js merges the two providing bash style error return codes and exceptions that can be thrown from bash commands and caught in JavaScript.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/Features.html"> Features </a> - 
+ This page lists the hight level features of /bin/js.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/IncludeJavaScript.html"> Including JavaScript </a> - 
+ A preparser directive #include that is very similar to the C directive can be used to execute entire JavaScript files.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/Jobs.html"> Job Control </a> - 
+ /bin/js has job control from bash, JavaScript is single-threaded, bash suports multiple forked processes.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/Json.html"> Json </a> - 
+ /bin/js has native support for JSON.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/MagicVars.html"> Magic Vars </a> - 
+ /bin/js sets some variable in the global scope at startup that developers should be aware of since they are useful.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/ParserRules.html"> /bin/js Parser Rules </a> - 
+ Full details of the rules used by the preparser preparser defining /bin/js syntax.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/StyleGuide.html"> Style Guide </a> - 
+ /bin/js preparser has some quirks that make following a regular style advisable, this page outlines the recommended way to write /bin/js scripts.
+ </li>
+<li class="idx"><a href="/home/teknopaul/c_workspace/binjs/binjs/html/Xml.html"> Xml Support </a> - 
+ /bin/js has native support for reading, manipulating and writing XML.
+ </li>
+<li class="idx"><a href="api/index.html"> API Documentation </a> - 
+ Core API docs, Object attribute and method reference.
+ </li>
+<li class="idx"><a href="tui/index.html"> TUI Text User Unterface </a> - 
+ TUI contains Objects for commandline uiser interfaces for rending information and fetching input from usersd.  TUI is a widget library for the command line.
+ </li>
+</ul>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

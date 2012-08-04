@@ -8,6 +8,10 @@
  */
 
 // This needs to be global since there may be multiple instances of Term
+/**
+ * When true makeRaw() has been called ont he terminal.
+ * When false makeRaw() has not been called or reset() has.
+ */
 var binjs_TERM_IS_RAW = false;
 
 /**
@@ -19,10 +23,16 @@ var Term = function() {
 
 Term.INVALID_ESC = "Invalid escape sequence";
 
+/**
+ * Get the width of the terminal in characters.
+ */
 Term.prototype.getWidth = function() {
 	return binjs_termWidth();
 }
 
+/**
+ * Get the height of the terminal in number of visible lines.
+ */
 Term.prototype.getHeight = function() {
 	return binjs_termHeight();
 }
@@ -36,16 +46,16 @@ Term.prototype.readChar = function() {
 	return binjs_termReadChar();
 }
 /**
- * Write an 8bit byte to stdout,  UTF-8 can be written with just $.print('ö')
+ * Write an 8bit byte to stdout, UTF-8 can be written with just $.print('ö')
  * Any Number arg is written to stdout so you can use varargs
  * Numbers in JS are 32bit signed what is written to output is arg & 0x000000FF
- * i.,e only 0 -255 is significant
+ * i.e. only 0 - 255 is significant
  */
 Term.prototype.writeByte = function(args) {
 	return binjs_termWriteByte.apply(this, arguments);
 }
 /**
- * Read an 8bit byte off tstdin and return it as a JavaScript integer.
+ * Read an 8bit byte off stdin and return it as a JavaScript integer.
  */
 Term.prototype.readByte = function(args) {
 	return binjs_termReadByte();
@@ -53,6 +63,16 @@ Term.prototype.readByte = function(args) {
 
 Term.prototype.flush = function() {
 	binjs_flush();
+}
+/**
+ * Read and discard any key stroke.
+ * Currently does not support ESC codes manually entered by the user.
+ */
+Term.prototype.anyKey = function() {
+	var wasRaw = binjs_TERM_IS_RAW;
+	if ( ! wasRaw ) binjs_termMakeRaw();
+	binjs_termReadChar();
+	if ( ! wasRaw ) binjs_termReset();
 }
 /**
  * Turn the console into raw mode where each input char is available

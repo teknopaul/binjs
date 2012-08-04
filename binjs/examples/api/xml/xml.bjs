@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Xml.js");
+#include <Xml.js>
 #
 # XML parser is included because not all scripting jobs can be achieved with 
 # adept use of awk these days.
@@ -13,6 +13,7 @@ var text = new File("./doc.xml").read();
 var rootElement = parser.parse(text);
 
 $.println(JSON.stringify(rootElement));
+
 
 
 

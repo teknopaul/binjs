@@ -1,5 +1,5 @@
-binjs_import("~lib/tui/Input.js");
-binjs_import("~lib/Term.js");
+binjs_include("~lib/tui/Input.js");
+binjs_include("~lib/Term.js");
 
 tui.ValidatedTextInput = function(callback) {
 

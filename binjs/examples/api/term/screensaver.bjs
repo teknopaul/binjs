@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Term.js");
+#include <Term.js>
 #
 # Yer classic screen saver
 #
@@ -89,4 +89,5 @@ for (var i = 0 ; i < 100 ; i++) {
 	renderAll();
 	//$.sleep(1);
 }
+
 

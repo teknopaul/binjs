@@ -1,5 +1,7 @@
 # TODO LIST #
  
+ FileReadChar needs testing it must be new 
+  
   Add Assert to every script still in src/test or move it
  
   Standardize use of $.info for output, in both sets of scripts
@@ -11,13 +13,14 @@
   are both interpreted correctly
   Term.foo()  is not
 
-Consistency of APIs, go through each and every att and method and ensure it conforms to some expected value be that from c / C++ or JavaScript w3c or Java.
+Consistency of APIs, go through each and every att and method and ensure it conforms to some expected value be that 
+from c / C++ or JavaScript w3c or Java.
 
-Make API kipple private  with _
+Make API kipple private with _
 
 Copy and Merge code/doc comments so they are consistent.
 
-Tidy up all C and C++ code, espcially preparser.  reorder methods and atts an dcomments
+Tidy up all C and C++ code, espcially preparser.  reorder methods and atts and comments.
 
 Make preparser sufficiently abstract that it can export HTML for documenttion.
 
@@ -27,7 +30,12 @@ Static link v8 so we have only one binary file
 
 ### Bugs
 
-Json pretty printer should detect misuse  if you pass a non string to prettyPrint() it prints nothing
+tmpFile.rename("/tmp/bjstst." + ext);
+        ^
+TypeError: Error renaming file
+    at <anonymous>:91:9
+
+Json pretty printer should detect misuse, if you pass a non string to prettyPrint() it prints nothing.
 
 Signal handling is hard
 	parse_and_exec call set_signal_handler in Bash
@@ -46,13 +54,13 @@ i18n
 Interactive mode = false  to disable \r and other escapes
 Support text formatting in all TUI components in a consistent manner and some global option too
 Dynamic C++ lib loading so Objects get proper class names and instanceof works for core things
+
 TUI Widgets 
   Date is not good
   Time - needs seconds and validation
 
-copy nodejs' inspect() method but add colour
 Debug on / off that enables Bash debug and $.debug() statements
-  bash debug is jus tsetting echo_command_at_execute from flags.h
+  bash debug is just setting echo_command_at_execute from flags.h
   
 Shell Script helpers
 	TextParser more ideas
@@ -61,13 +69,10 @@ Shell Script helpers
 
 	Writing to stderr not supported is it?? except via bash
 
-### Pipes
-
-Pipes are key Linuxy things should have better support
-
 
 ### Build 
 
+Need to script m ultiple builds for many versions
 make build needs to be more stable.
 	Perhaps  configure should not make Makefile?perhaps some other fconfigure should do the versioning thing
 	basically need more autotools knowledge 
@@ -89,6 +94,8 @@ Check out how to use npm without messing up
 JSDoc
 Doxygen
 fiddle with preparser to output HTML for example scripts
+Interactive command line documentation
+	
 
 ### Command line debugger
 

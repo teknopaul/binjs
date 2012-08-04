@@ -1,0 +1,18 @@
+#!/bin/js
+#
+#  Read binary data from stdin and write to stdout.
+#
+var stdin = new File(File.STDIN);
+var stdout = new File(File.STDIN);
+
+var byte;
+
+while (true) {
+
+	byte = stdin.readByte();
+	if (byte == null) break;
+	byte &= 0x00cc;
+	stdout.writeByte(byte);
+	
+}
+

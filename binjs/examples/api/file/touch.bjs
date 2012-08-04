@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Assert.js");
+#include <Assert.js>
 
 var assert = new Assert();
 
@@ -31,4 +31,5 @@ $.println( "LM3: " + lastMod3 + " " + lastMod3.getTime()) ;
 
 
 assert.ok(lastMod2.getTime() - lastMod1.getTime() > 999 , "last mod not OK");
+
 

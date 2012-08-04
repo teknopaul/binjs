@@ -50,3 +50,4 @@ The following /bin/js Objects are added to the global scope.
 ## Functions
 
 Core JavaScript fucntions from v8 are available for example `parseInt()` and `parseFloat()`.
+

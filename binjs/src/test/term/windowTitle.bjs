@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Term.js");
+#include <Term.js>
 
 
 
@@ -7,3 +7,4 @@ new Term().setWindowTitle("Hello World");
 
 
 sleep 3;
+

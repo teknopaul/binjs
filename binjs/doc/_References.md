@@ -29,3 +29,4 @@ No bash references, just get the src code and read the man page.
 
 Did you know `man ascii` works, I found it writing this project.
 
+

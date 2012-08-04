@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../css/style.css" rel="stylesheet"/>
+	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="../toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="../api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="../tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="../_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>File</h1>
+
+<p>File operations, for simple synchronous I/O.</p>
+
+<p>The File API provides a simple JavaScript style way of manipulating files and directories, something that is missing from the core JavaScript spec since usually JavaScript runs in a browser.  The /bin/js API is not based on the w3c spec for File.</p>
+
+<p>The File Object provides facitlities to read write rename delete and query files in the file system.</p>
+
+<p>All calls are synchronous.</p>
+
+<p>File API is defined in <code>src/v8/file.cpp</code> and <code>src/js/File.js</code>.</p>
+
+<hr />
+
+<h2>Include</h2>
+
+<p>You do not have to include this library it is included by default.</p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>File</li>
+</ul>
+
+<hr />
+
+<pre><code>#!/bin/js
+
+var f = new File("file.txt");
+</code></pre>
+
+<p>N.B. The File API is provided as a convenience, but in many cases bash syntax is much more convenient.</p>
+
+<p>For example to print the files the current directory in JavaScript ...</p>
+
+<pre><code>var dir = new File(".");
+var arr = dir.list();
+for ( var i = 0 ; i &lt; arr.length ; i++ {
+    $.println(arr[i]);
+}
+</code></pre>
+
+<p>is much more verbose that simply writing</p>
+
+<pre><code>ls -1
+</code></pre>
+
+<p>Similarly reading a files ...</p>
+
+<pre><code>var data = new File("skin.dat").read();
+</code></pre>
+
+<p>can be simpler in bash</p>
+
+<pre><code>DATA=`cat skin.dat`
+</code></pre>
+
+<hr />
+
+<h2>Constructor</h2>
+
+<h3>Example</h3>
+
+<pre><code>var f = new File("./file.txt");
+
+var f = new File("~/bin");
+</code></pre>
+
+<p>The constructor takes a single, not optional, String argument that is the path to the file.  The path may or may not exist, upon creation the <code>stat()</code> method is called and the <code>name</code> is determined from the provided path.</p>
+
+<p>The path may be absolute or relative and is copied directly to the <code>path</code> attribute of the constructed object.</p>
+
+<p>Tilde expansion is supported as in bash and will modify the <code>path</code> of the constructed object.</p>
+
+<p>N.B. relative paths are relative to the current directory which can change throughout the life of the Object.</p>
+
+<pre><code>cd
+var f = new File("."); // path points to users home
+cd ..   
+// f.path is still "." which now represents /home
+</code></pre>
+
+<p>The methods <code>getAbsolutePath()</code> and <code>getAbsoluteFile()</code> can be used to resolve relative paths.</p>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<p>Attributes are set during construction and reset if <code>stat()</code> is called.</p>
+
+<h3>path</h3>
+
+<p>Type : String</p>
+
+<p>The absolute or relative path to which the file points.</p>
+
+<h3>name</h3>
+
+<p>Type : String</p>
+
+<p>The name of the file or last path component.</p>
+
+<h3>exists</h3>
+
+<p>Type : Boolean</p>
+
+<p>true if the file exists at the time the File was constructed or after stat() has been called.</p>
+
+<h3>uid</h3>
+
+<p>Type : Number</p>
+
+<p>The user ID of the owner of the file.</p>
+
+<h3>gid</h3>
+
+<p>Type : Number</p>
+
+<p>The group ID of the owner of the file.</p>
+
+<h3>size</h3>
+
+<p>Type : Number</p>
+
+<p>The size of the file when the File object was constructed or last time stat() was called, if the file exists.</p>
+
+<h3>lastAccessDate</h3>
+
+<p>Type : Date</p>
+
+<p>The time of last access of the file when the File object was constructed or last time stat() was called, if the file exists.</p>
+
+<h3>lastModifiedDate</h3>
+
+<p>Type : Date</p>
+
+<p>The time of last modification of the file when the File object was constructed or last time stat() was called, if the file exists.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>stat()</h3>
+
+<p>Calling stat() updates all the attributes of the current instance.</p>
+
+<h3>isFile()</h3>
+
+<p>Returns true if the File points to a file that exists and is a normal file at the time the File object was constructed or last time stat() was called.</p>
+
+<h3>isDir()</h3>
+
+<p>Returns true if the File points to a directory that exists at the time the File object was constructed or last time stat() was called.</p>
+
+<h3>isSymLink()</h3>
+
+<p>Returns true if the File points to a symbolik link that exists and is a normal file at the time the File object was constructed or last time stat() was called.</p>
+
+<h3>isRoot()</h3>
+
+<p>Returns true if this File points to the root directory <code>/</code>.  The path is typically <code>/</code> but other paths may also point to root such as <code>..</code> depending on the current directory.</p>
+
+<h3>touch()</h3>
+
+<p>Set the last modified time of the File to now, and call <code>stat()</code>.</p>
+
+<p>Returns this.</p>
+
+<h3>rename()</h3>
+
+<p>Takes a single String argument that is a new path,  a path must be provide not a file name.  The internal path attribute is updated name is updated and <code>stat()</code> is called.</p>
+
+<p>Returns this.</p>
+
+<h3>delete()</h3>
+
+<p>Deletes the file and calls <code>stat()</code> on the current instance so that <code>exists</code> will be false if the file was successfully deleted.</p>
+
+<p>Returns true if the file was deleted.</p>
+
+<h3>getAbsolutePath()</h3>
+
+<p>Returns a String with the file's path made absolute and cananocalized.  The File itself is not updated.</p>
+
+<h3>getAbsoluteFile()</h3>
+
+<p>Returns a New instance of a file with the file's path made absolute and cananocalized.</p>
+
+<p>Typical usage would be </p>
+
+<pre><code>f = f.getAbsoluteFile();
+</code></pre>
+
+<h3>list()</h3>
+
+<p>Returns an Array of Strings if this File is a direcotry and the contents of the direcotry can be read.  The whole contents of the directory is read and can not be filtered.</p>
+
+<h3>listFiles()</h3>
+
+<p>Returns an Array of File objects if this File is a direcotry and the contents of the direcotry can be read. <br />
+If no arguments are provided the whole contents of the directory is read.</p>
+
+<p>If a file name filter function is provided as an argument, the function is called for each file name found in the directory and if the function returns false the file is excluded from the list of returned objects.</p>
+
+<p>If a String is provided as an argument <code>/bin/ls -1Ad</code> plus the String is called to list the files, so the String can be any glob that the bash regonises.</p>
+
+<pre><code>f.listFiles()
+
+f.listFiles( function(name) { return name.indexOf('.') == 0; } );
+
+f.listFiles( "*.txt" );
+</code></pre>
+
+<h3>read()</h3>
+
+<p>Read the whole contents of the file to memory as a JavaScript String, data is assumed to be UTF-8.</p>
+
+<h3>write()</h3>
+
+<p>This method takes a single argument that must be a string and the data is written to the file as UTF-8.</p>
+
+<h3>ext()</h3>
+
+<p>Get or set the file extension.</p>
+
+<p>The file extension is defined here as the bit after the last dot
+e.g. for the file mycode.tar.gz  <code>gz</code> is the extension not <code>tar.gz</code>.
+The getter does not return a dot, if the file ends in a dot the empty string is returned if the file has no dot like /etc/hosts the getter returns null. Hidden files (that start with dot) are not handled and this method returns null for the getter.</p>
+
+<p>If a single String argument is provided his method sets the file extension.
+When setting the ext the File object is NOT changed a new instance of file is returned. The setter does not mind if you provide a dot or not, if you do it is ignored. If you pass the empty string "" to the setter the extension with its dot is removed.
+You can not change the extension of a directory or a symlink with this method even if it has one. </p>
+
+<p>There is no requirement that the file exists this method just does string manipulation of the path based on the name.</p>
+
+<h3>getParent()</h3>
+
+<p>Returns the parent file as a String or null if this file points to the root directory.</p>
+
+<h3>getParentFile()</h3>
+
+<p>Returns the parent file as a File object or null if this file points to the root directory.</p>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 #!/bin/js
 
-binjs_import("~lib/tui/Progress.js");
+#include <tui/Progress.js>
 
 var progress = new tui.Progress("Downloading...   " , "Done.");
 
@@ -15,4 +15,5 @@ for ( var i = 0 ; i < max ; i++) {
 	progress.tick();
 }
 progress.done();
+
 

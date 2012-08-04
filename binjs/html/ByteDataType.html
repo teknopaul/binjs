@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="./css/style.css" rel="stylesheet"/>
+	<link href="./img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="./toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="./api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="./tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="./_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Representing Bytes</h1>
+
+<p>Node.js represents streams of bytes very efficiently with a class called Buffer. The approach /bin/js takes for streams of bytes is to return JavaScript arrays of integers.  Where a single byte would be returned a normal JavaScript integer is returned.
+The approach /bin/js takes is much simpler, much easier for the user, but much less efficient interms of performance and use of memory. </p>
+
+<p>For example</p>
+
+<pre><code>var b = new Term().readByte();
+</code></pre>
+
+<p>returns a positive integer between 0 and 255.</p>
+
+<pre><code>var esc = term.consumeAnsiEscape();
+</code></pre>
+
+<p>returns an array of integers, for example <code>[27, 78, 99]</code></p>
+
+<p>The numbers returned can be treated like any JavaScript number using syntax like ++b or b + 65 and is therefor very convenient. Code to read and write bytes in this way is typically much simpler to loook at that code using Buffers.</p>
+
+<p>These methods should not be used for processing large(gigabyte) binary arrrays of data such as image or video files because the internal representation uses far more memory that the file on disk does.  Approximatly 4 times as much memory is used and the file size.  JavaScript it self has a maximum array size but generally main memory will be the limit (time of writing 2012).
+Reading a byte at a time from C++`into JavaScript is also not very efficient, in terms of CPU usage.</p>
+
+<h2>Pipes</h2>
+
+<p>Processing large files this way in a pipe should not consume excessive memory so /bin/js can be used to create quick binary filters which is often an important use for scripts.  /bin/js has some convenient features for processing pipes and JavaScript and bash syntax can be mashed-up to create simple parsers that benefit from sed and awk and other piped Linux tools and then augmented with JavaScript.  The syntax of the code should be simple. The user must remember that it is possible to read a byte as an integer increment it above 255 and thus not be able to write it back out as a byte, there is no reason a valid program should want to do that. 
+But the user is responsible for ensuring that numbers do not overflow where as in C code the unsigned byte types are available in JavaScript they are not.</p>
+
+<p>If a program needs to load very large binary files to main memory and process them consider another language like C or C++.</p>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

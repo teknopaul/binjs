@@ -136,6 +136,7 @@ Some tokens are reserved by the /bin/js interpreter and strictly speaking are ne
 should never be used at the start of a line.
    
  * #!/bin/js	- The first line is treated as a shebang, it is NOT optional, and it must be the first line.
+ * #include		- When the first caracters of the line, parses to binjs_include statements.
  * exit		- `exit` performs a bespoke exit in C (neither JS nor bash) and is covered separatly.
  * binjs_	- Any token that starts `binjs_` is reserved for current or future use. Technically, in some versions, you can write `binjs_exec("ls -l");`  but this defeats the object of scripting in /bin/js and is not guaranteied to be compatible with future versions.
  * \		- Lines may not start with a forward slash `\`.
@@ -172,7 +173,7 @@ As you should know by now, each line is processed as one language or the other s
 
 ### Comments
 
- * #	- Lines starting with `#` are re-commented with `//`, the JavaScript comment, by the preparser. Thus lines starting with `#` are niether JavaScript nor bash.
+ * #	- Lines starting with `#` are re-commented with `//`, the JavaScript comment, by the preparser. Thus lines starting with `#` are niether JavaScript nor bash.  # comments should start with # then whitespace to distinguish them from C style preparser directives.
  * //	- JavaScript line comments are treated as JavaScript.
  * /**/ - Multiline comments are treated as JavaScript, but not recomended, code is less error prone if each line
 	  individually expresses itself.
@@ -445,5 +446,6 @@ Because `att1` is not known to the preparser it wil be treated as Bash. It may b
     { att1 : true
       cp fil2 file2
     }
+
 
 

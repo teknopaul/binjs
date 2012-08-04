@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Sax.js");
+#include <Sax.js>
 
 cd `dirname $0`
 
@@ -18,4 +18,5 @@ parser.onopentag = function (node) {
 parser.write(text).close();
 
 $.println("Xml version is: " + xmlVer);
+
 

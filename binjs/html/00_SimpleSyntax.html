@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="./css/style.css" rel="stylesheet"/>
+	<link href="./img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="./toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="./api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="./tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="./_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Simple Syntax</h1>
+
+<p>A quick introduction to /bin/js syntax.</p>
+
+<p>/bin/js scripts are a mash-up of JavaScript and bash.</p>
+
+<p>Simple bash code is valid</p>
+
+<pre><code>#!/bin/js
+#
+#  My first /bin/js script
+#
+
+echo Hello World
+</code></pre>
+
+<p>Simple JavaScript code is valid.</p>
+
+<pre><code>#!/bin/js
+//
+// If you prefer use JS style comments
+//
+
+for (var i = 0 ; i &lt; 23 ; i++) {
+
+    $.println("Hello World");
+
+}
+</code></pre>
+
+<p>And you can mash-up both.</p>
+
+<pre><code>#!/bin/js
+/**
+ * Another comment style
+ */
+
+for (var i = 0 ; i &lt; 23 ; i++) {
+
+    echo Hello World
+
+}
+</code></pre>
+
+<p>Pipes and redirects and all the wonders of bash one-liners are available.</p>
+
+<pre><code>#!/bin/js
+
+cat "${HOME}/apache.log" | tail -20 | awk ' {print $7}' | tee.tail.log
+</code></pre>
+
+<p>All the beauty(ehem) of C style syntax from JavaScript is available.</p>
+
+<pre><code>#!/bin/js
+
+...
+
+switch (opt) {
+
+    case 1 : {
+        doThing();
+        break;
+    case 2 :
+        echo found a wrongun &gt;&gt; errs.log
+        break;
+    default :
+        $.error(10, "Unknown option");
+}
+</code></pre>
+
+<p><code>switch</code> statements, <code>if/else</code>, <code>while</code> loops, <code>do/while</code> loops, <code>try/catch/finally</code> and others from JavaScirpt are used, since the bash ones are ugly.  </p>
+
+<p>The pipes and redirects and the trailing <code>&amp;</code> from bash are used.</p>
+
+<h2>Simple Usage</h2>
+
+<p>/bin/js syntax should be pretty straight forward if you write JavaScript and are used to working with Linux. 
+The goal is that syntax should be completely natural for developers who are comfortable with C style languages such as JavaScript, C, C++, C# or Java, and work on the bash command line.</p>
+
+<p>The general rule with /bin/js syntax is that each line of the file is interpreted as either JavaScript OR a SINGLE line of bash, but not both.</p>
+
+<p>Thus you can not write</p>
+
+<pre><code>if (true) echo Hello World
+</code></pre>
+
+<p>You have to write the statements on separate line</p>
+
+<pre><code>if (true) {
+  echo Hello World
+}
+</code></pre>
+
+<p>Var statements and functions must be written on a single line.</p>
+
+<pre><code>var myVal = new Object();
+
+function myFunc() {
+
+    echo Hello World
+
+}
+</code></pre>
+
+<p>Variable defined this way with <code>function</code> or <code>var</code> are then known to the parser and can be called as JavaScript</p>
+
+<pre><code>myVal.attribute = 23;
+myFunc();
+</code></pre>
+
+<p>Dropping the <code>var</code> statement is NOT supported</p>
+
+<pre><code>globalVar = 23;  // wrong, missing vars
+</code></pre>
+
+<p>Mutli-line vars are NOT supported</p>
+
+<pre><code>var i,j,k;       // wrong only i is known
+</code></pre>
+
+<p>In short if you dont create a <code>var</code> or a <code>function</code> with the <code>var</code> and <code>function</code> statements at the start of the line you can not call them.</p>
+
+<pre><code>if (true) var funk = function() {return true;}
+
+funk();   // wrong, parser does not know about "funk" so it is interpreted as bash
+</code></pre>
+
+<p>Just remember, each line is interpreted as EITHER JavaScript OR Bash by a preparser which sends the lines to the correct interpreter.  The preparser never compiles the code, it just peaks at the front of the line to see weather v8 or bash should compile it.</p>
+
+<p>Full details of the parser rules are in the <code>ParserRules.md</code> file.</p>
+
+<p>You can always call</p>
+
+<pre><code>cat myScript.bjs | binjs_preparser
+</code></pre>
+
+<p>To see what the preparser is outputting.</p>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

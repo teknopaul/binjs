@@ -1,12 +1,16 @@
 /**
- * JavaScript launcher based heavily on example code from Google v8 installation and shell.cc
+ * JavaScript launcher based heavily on example code from Google v8 installation and shell.cc.
  *
- * This class has the following roles
+ * This is where most of the initialization of v8 and the JavaScript objects takes place.
+ * 
+ * This file has the following roles
  *
  * - init libbash
  * - init buildin JavaScript objects and methods (global)
  * - find and load libraries, including ~lib/binjs.js
- * - launch JavaScript files or JacaScript data passed in a pipe
+ * - launch JavaScript files or JavaScript data passed in a pipe
+ * - Run core methods like println 
+ * - handles uncouaght exceptions
  *
  * @author teknopaul and others
  */
@@ -38,18 +42,26 @@ using namespace v8;
 
 // forward declarations
 
-// the two main methods
+// The two main methods made available to C
+/**
+ * Execute a JavaScript file, exported to C as runjs_runjs.
+ */
 int RunJS(char* script_text);
+/**
+ * Execute JavaScript piped from the binjs C program. Exported to C as runjs_pipejs.
+ */
 int RunPipedJS(int pipe, int argc, char* argv[]);
 
-// core methods made available to JavaScript
+
+// Forward declarations of methods made available to JavaScript.
 Handle<Value> Print(const Arguments& args);
 Handle<Value> PrintLine(const Arguments& args);
 Handle<Value> Flush(const Arguments& args);
-Handle<Value> Load(const Arguments& args);
+Handle<Value> Include(const Arguments& args);
 Handle<Value> Sleep(const Arguments& args);
 Handle<Value> Exit(const Arguments& args);
 
+// Forward declarations of methods used to initialise the v8 instance.
 Handle<String> ReadFile(const char* name);
 Handle<String> ReadLibFile(const char* library);
 Handle<String> ReadPipe(int pipe);
@@ -63,11 +75,14 @@ void ReportException(TryCatch* try_catch);
 
 static bool IsLoaded(const char* library);
 
-// constants TODO must comf from autoconf
+// constants TODO must come from autoconf
 static const char* JS_LIBRARY_PATH = "/usr/lib/binjs/lib";
 
+// Vector of libraries that have already been loaded.
 static std::vector<const char*> *loadedLibraries = new std::vector<const char*>(); 
+
 static bool bashInitialized = false;
+
 
 // functions exported to C
 
@@ -91,7 +106,7 @@ extern "C" int runjs_pipejs(int pipe, int argc, char* argv[]) {
 }
 
 /**
- * exit from a signal i.e. SIGINT; i.e. Ctrl + C was called
+ * Exit from a signal i.e. SIGINT; i.e. Ctrl + C was called
  */
 extern "C" void runjs_exit(int status) {
 
@@ -106,14 +121,20 @@ extern "C" void runjs_exit(int status) {
 	exit(128 + status);
 
 }
-// Extracts a C string from a V8 Utf8Value.
+
+
+/**
+ *  Extracts a C string from a V8 Utf8Value.
+ */
 static const char* ToCString(const String::Utf8Value& value) {
 	return *value ? *value : "<string conversion failed>";
 }
 
 void SetSignalHandler() {
+
 	//	signal(SIGPIPE, runjs_exit);
 	signal(SIGINT,  runjs_exit);
+
 }
 
 /**
@@ -161,7 +182,7 @@ int RunJS(char* scriptText) {
 }
 
 /**
- * Execute JavaScriped piped on a stream.
+ * Execute JavaScript piped on a stream.
  */
 int RunPipedJS(int pipe, int argc, char* argv[]) {
 
@@ -209,7 +230,8 @@ int RunPipedJS(int pipe, int argc, char* argv[]) {
 
 /*
 This would be nice but introduces cyclical dependencies so would need to 
-fix the Makefiles before implementing
+fix the Makefiles before implementing.
+Ideas it to be able to execute *.bjs files.
 /
   Execute a bjs script, using the existing v8 instance.
  /
@@ -285,7 +307,7 @@ Handle<Value> RunBinJS(const Arguments& args) {
 }
 */
 
-// TODO
+// TODO v8 debugging
 void DebuggerCallback(DebugEvent event,
                         Handle<Object> exec_state,
                         Handle<Object> event_data,
@@ -315,8 +337,12 @@ Handle<Value> ScopeDump(const Arguments& args) {
 	return Integer::New(0);
 }
 
+
 /**
  * Creates a new execution environment containing the built-in functions and Objects.
+ * 
+ * Sets up the binjs_* functions into the global context and the File and Job Objects.
+ * 
  */
 Persistent<Context> CreateShellContext() {
 	Handle<ObjectTemplate> global = ObjectTemplate::New();
@@ -325,7 +351,8 @@ Persistent<Context> CreateShellContext() {
 	global->Set(String::New("binjs_print"),		FunctionTemplate::New(Print));
 	global->Set(String::New("binjs_println"),	FunctionTemplate::New(PrintLine));
 	global->Set(String::New("binjs_flush"),		FunctionTemplate::New(Flush));
-	global->Set(String::New("binjs_import"),	FunctionTemplate::New(Load));
+	global->Set(String::New("binjs_import"),	FunctionTemplate::New(Include));
+	global->Set(String::New("binjs_include"),	FunctionTemplate::New(Include));
 	global->Set(String::New("binjs_sleep"),		FunctionTemplate::New(Sleep));
 	global->Set(String::New("binjs_exit"),		FunctionTemplate::New(Exit));
 	global->Set(String::New("binjs_trim"),		FunctionTemplate::New(Trim));
@@ -373,7 +400,8 @@ Persistent<Context> CreateShellContext() {
 }
 
 /**
- * Process command line arguments, set argc and argv and errno and pid
+ * Process command line arguments, sets the "magic" vars argc and argv and errno and pid
+ * and lastpid into the global scope.
  */
 void ProcessArgs(Handle<Object> global, int argc , char* argv[]) {
 	// program argc and argv
@@ -399,7 +427,7 @@ void ProcessArgs(Handle<Object> global, int argc , char* argv[]) {
 }
 
 /**
- * Print a string to stdout, something JavaScript cant normally do.
+ * Print a string to stdout, something JavaScript can't normally do.
  */
 Handle<Value> Print(const Arguments& args) {
 	HandleScope handle_scope;
@@ -432,7 +460,7 @@ Handle<Value> PrintErr(const Arguments& args) {
 	
 }
 /**
- * Print a string to stdout, something JavaScript cant normally do.
+ * Print a string to stdout terminated with a \n newline and flush stdout.
  */
 Handle<Value> PrintLine(const Arguments& args) {
 
@@ -446,7 +474,7 @@ Handle<Value> PrintLine(const Arguments& args) {
 	
 }
 /**
- * Print a string to stdout, something JavaScript cant normally do.
+ * Flush stdout buffers.
  */
 Handle<Value> Flush(const Arguments& args) {
 
@@ -457,7 +485,7 @@ Handle<Value> Flush(const Arguments& args) {
 }
 
 /**
- * We are single threaded so we need a sleep method not setTimeout and friends.
+ * We are single threaded, so we need a sleep method not setTimeout and friends.
  */
 Handle<Value> Sleep(const Arguments& args) {
 	if (args.Length() == 1 && args[0]->IsNumber()) {
@@ -466,8 +494,9 @@ Handle<Value> Sleep(const Arguments& args) {
 	}
 	return Undefined();
 }
+
 /**
- * Exit the app
+ * Exit the application, calls the C function exit().
  */
 Handle<Value> Exit(const Arguments& args) {
 	if (args.Length() == 1 && args[0]->IsNumber()) {
@@ -476,14 +505,15 @@ Handle<Value> Exit(const Arguments& args) {
 	}
 	return Undefined();
 }
+
 /**
- * The callback that is invoked by v8 whenever the JavaScript 'binjs_import'
- * function is called.	Loads, compiles and executes its argument
- * JavaScript file.
+ * The callback that is invoked by v8 whenever the JavaScript 'binjs_include'
+ * function is called.	Compiles and executes its argument which is a file containg
+ * JavaScript code.
  * If the file has the ~lib/ prefix it is loaded from the JS_LIBRARY_PATH location
- * otherwise normal filesystem rules apply
+ * otherwise normal filesystem rules apply.
  */
-Handle<Value> Load(const Arguments& args) {
+Handle<Value> Include(const Arguments& args) {
 
 	for (int i = 0; i < args.Length(); i++) {
 	
@@ -527,6 +557,7 @@ Handle<Value> Load(const Arguments& args) {
  * Reads a file into a v8 string.
  */
 Handle<String> ReadFile(const char* name) {
+	
 	FILE* file = fopen(name, "rb");
 	if (file == NULL) return Handle<String>();
 
@@ -541,6 +572,7 @@ Handle<String> ReadFile(const char* name) {
 		i += read;
 	}
 	fclose(file);
+	
 	Handle<String> result = String::New(chars, size);
 	delete[] chars;
 	return result;
@@ -596,20 +628,27 @@ Handle<String> ReadPipe(int pipe) {
 	while ( true ) {
 
 		int bytesRead = read(pipe, &buffer, bufferSize);
+		
 		if (bytesRead == 0) {
 
 			chars[byteCount] = 0; // terminate the string
 
 			Handle<String> result = String::New(chars, byteCount);
 			delete[] chars;
+			
 			return result;
+			
 		}
 		else if (bytesRead < 0) {
+			
 			fprintf(stderr, "Error reading pipe\n");
 			delete[] chars;
+			
 			return Handle<String>();
+			
 		}
 		else {
+			
 			if ( bytesRead > memorySize - byteCount) { // grow the chars array
 				char* tmp = chars;
 				memorySize *= 2;
@@ -620,11 +659,12 @@ Handle<String> ReadPipe(int pipe) {
 			}
 			memcpy(chars + byteCount, buffer, bytesRead);
 			byteCount += bytesRead;
+			
 		}
 	}
-	
 
 }
+
 /**
  * Executes a string within the current v8 context.
  */
@@ -715,7 +755,6 @@ void ReportException(TryCatch* try_catch) {
 	}
 }
 
-
 /**
  * Keeps track of loaded libraries.
  *
@@ -730,13 +769,16 @@ static bool IsLoaded(const char* library) {
 		if (strcmp(next, library) == 0) {
 			
 			return true;
+			
 		}
 	}
 
 	char * copy = new char[strlen(library) + 1 ];
 	strcpy(copy, library);
 	loadedLibraries->push_back(copy);
+	
 	return false;
+	
 }
 
 

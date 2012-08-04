@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Assert.js");
+#include <Assert.js>
 #
 #  CommonJS spec assert library, copied from NodeJS and (and abused)
 #
@@ -52,4 +52,5 @@ catch(err) {
   assert.equal(err.message, "the error message");
   
 }
+
 

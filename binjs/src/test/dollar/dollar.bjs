@@ -2,7 +2,7 @@
 #
 # Tester for the $. functions
 #
-binjs_import("~lib/Assert.js");
+#include <Assert.js>
 var assert = new Assert();
 
 
@@ -29,3 +29,4 @@ BASH_VIEW=`echo "$someVar"`
 assert.equal($.env.BASH_VIEW, "2");
 
 $.println("Done.", 'green');
+

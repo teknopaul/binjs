@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/tui/SpinnerInput.js");
+#include <tui/SpinnerInput.js>
 
 
 var options = ["start ", "one", "two" , "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven" , "twelve" , "thirteen", "fourteen"];  // N.B: all on one line!
@@ -27,4 +27,5 @@ var spinner = new tui.SpinnerInput(options);
 
 var selected = spinner.select();
 $.println("You selected : " + selected , 'green');
+
 

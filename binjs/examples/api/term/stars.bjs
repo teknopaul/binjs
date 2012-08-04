@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Term.js");
+#include <Term.js>
 #
 # Starfield effect text mode stlyee.
 #
@@ -53,4 +53,5 @@ for (var t = 0 ; t < 250; t++) {
 }
 
 term.cursorOn();
+
 

@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/tui/FileInput.js");
+#include <tui/FileInput.js>
 #
 # How mmany times have I wished I had this feature!
 #
@@ -23,6 +23,7 @@ fileInput.requireDir();
 $.println("Enter any existing directory");
 var path = fileInput.readline();
 $.println("path : " + path, 'green');
+
 
 
 

@@ -1,7 +1,8 @@
 #!/bin/js
 
-binjs_import("~lib/Markdown.js");
+#include <Markdown.js>
 
 cd `dirname $0`
 
 new Markdown().printFile("eg.md");
+

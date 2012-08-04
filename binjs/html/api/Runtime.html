@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../css/style.css" rel="stylesheet"/>
+	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="../toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="../api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="../tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="../_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Runtime</h1>
+
+<p>Runtime allows the script to interface with the environment in which it is running.</p>
+
+<hr />
+
+<h2>Include</h2>
+
+<p><code>#include &lt;Runtime.js&gt;</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>Runtime</li>
+</ul>
+
+<hr />
+
+<h2>Constructor</h2>
+
+<p><code>var runtime = new Runtime();</code></p>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<h3>binjsVersion</h3>
+
+<p>Returns a String for the /bin/js version. 
+e.g. 0.1</p>
+
+<h3>bashVersion</h3>
+
+<p>Returns a String for the bash version. 
+e.g. 4.2</p>
+
+<h3>javaScriptVersion</h3>
+
+<p>Returns the v8 version a String as returned by v8::V8::GetVersion
+e.g. 3.11.9 (candidate)</p>
+
+<h3>isatty</h3>
+
+<p>Returns true if both standard in and standard out are TTYs, stderr is not checked.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

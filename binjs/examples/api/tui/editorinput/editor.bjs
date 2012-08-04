@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/tui/EditorInput.js");
+#include <tui/EditorInput.js>
 #
 # EditorInput just fires up the system text editor to accept input.
 #
@@ -20,4 +20,5 @@ if (typeof text === 'string') {
 else {
 	$.println("I really wanted a comment, not going to submit now", 'yellow');
 }
+
 

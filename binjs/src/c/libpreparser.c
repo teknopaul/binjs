@@ -22,8 +22,8 @@
 
 int BINJS_MAX_LINE_LENGTH = 2048;
 
-static const char * HEADER = "binjs_import(\"~lib/binjs.js\");\n";
-static const int HEADER_LEN = 31;
+static const char * HEADER = "binjs_include(\"~lib/binjs.js\");\n";
+static const int HEADER_LEN = 32;
 
 static const int ERROR = 1;
 static const int WARN = 2;
@@ -180,8 +180,6 @@ static void wrap_binjs_exec(int out, char * current_line) {
  * write binjs_exit() statement.
  */
 static void wrap_binjs_exit(int out, char * current_line) {
-	
-	
 
 	while (*current_line == ' ' || *current_line == '\t') {
 		current_line++;
@@ -196,6 +194,53 @@ static void wrap_binjs_exit(int out, char * current_line) {
 	write(out, "binjs_exit( ", 12);
 	write(out, current_line - end, end - 1);
 	write(out, " );\n" , 4);
+}
+
+/**
+ * write binjs_include() statement.
+ */
+static int wrap_binjs_include(int out, char * current_line, struct binjs_parsed_doc* doc) {
+
+	current_line += 8; // "#include";
+	while (*current_line == ' ' || *current_line == '\t') {
+		current_line++;
+	}
+	char* start = current_line;
+	int end = 0;
+	
+	while (*current_line++ != 0 ) {
+		end++;
+	}
+	
+	int is_lib = 0;
+
+	write(out, "binjs_include(", 14);
+	// write binjs_include converting <a.js> to "~lib/a.js" en route
+	// write(out, current_line - end, end - 1);
+	int i;
+	for (i = 0 ; i < end ; i++) {
+		char c = *start++;
+		if (c == '<') {
+			write(out, "\"~lib/", 6);
+			is_lib++;
+		}
+		else if (c == '>') {
+			write(out, "\"", 1);
+			is_lib--;
+		}
+		else {
+			write(out, &c, 1);
+		}
+	}
+	write(out, ");\n" , 3);
+	
+	if (is_lib == 1) {
+		doc->error = "missing trailing >";
+		return ERROR;
+	}
+
+	return 0;
+	
 }
 /**
  * return true if bash line continuation is detected i.e. a \ at the end of the line
@@ -349,15 +394,23 @@ static int process_line(int out, char * current_line, struct binjs_parsed_doc* d
 	
 	// # comments
 	else if (current_line[0] == '#') {
-		write(out, "//" , 2);
-		write(out, current_line , strlen(current_line));
-		write(out, "\n" , 1);
-		return 0;
+		if (strncmp(current_line, "#include", 8) == 0) {
+			int ret = wrap_binjs_include(out, current_line, doc);
+			if ( ! ret ) doc->error = "error with #include";
+			return ret;
+		}
+		else {
+			write(out, "//" , 2);
+			write(out, current_line , strlen(current_line));
+			write(out, "\n" , 1);
+			return 0;
+		}
 	}
 	
 	// preparser syntax errors
 	else if ( is_error(current_line, doc)) {
 		doc->err = ERROR;
+		doc->error = "syntax error";
 		return ERROR;
 	}
 	

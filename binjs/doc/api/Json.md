@@ -6,9 +6,9 @@ Syntactic sugar around v8's native JSON parser and a pretty printer.
 
 ----------------------------
 
-## Import
+## Include
 
-`binjs_import("~lib/Json.js")`
+`#include <Json.js>`
 
 -----------------------
 
@@ -48,3 +48,4 @@ Prints a colourised output of the Json object to the console.  The arguments sho
 ### prettyPrintObject
 
 Prints a colourised output of the Json object to the console.  The arguments should be a JavaScript Object.
+

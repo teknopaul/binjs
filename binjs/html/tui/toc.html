@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../css/style.css" rel="stylesheet"/>
+	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="../toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="../api/toc.html">API index</a>
+				</div>
+				<div class="tab selected" id="tui-index-tab">
+				  <a class="vertical" href="../tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="../_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Table of contents</h1>
+<ul class="markbooktoc">
+<li class="idx"><a href="BooleanInput.html"> BooleanInput </a> - 
+ Sublasses <code>tui.Input</code> and only permits <code>y</code> or <code>n</code> to be entered by the user.
+ </li>
+<li class="idx"><a href="ComboInput.html"> ComboInput </a> - 
+ Provides similar functionality to a combo box widget.
+ </li>
+<li class="idx"><a href="DateInput.html"> DateInput </a> - 
+ Sublasses tui.Input and only permits date to be entered in various forms. 
+ </li>
+<li class="idx"><a href="EditorInput.html"> EditorInput </a> - 
+ A class that follows the tui style but launches vi or the users preferred text editor to fetch input.
+ </li>
+<li class="idx"><a href="FileInput.html"> FileInput </a> - 
+ Sublasses tui.Input and accepts any text but additionally provides tab completion for files and directories.
+ </li>
+<li class="idx"><a href="FloatInput.html"> NumberInput </a> - 
+ Sublasses tui.Input and only permits digits and decimal points to be entered by the user.
+ </li>
+<li class="idx"><a href="Input.html"> Input </a> - 
+ Base class for various Text input types, which accept user input from the console.
+ </li>
+<li class="idx"><a href="NumberInput.html"> NumberInput </a> - 
+ Sublasses <code>tui.Input</code> and only permits digits to be entered by the user.
+ </li>
+<li class="idx"><a href="Popup.html"> Popup </a> - 
+ Popup text, a text bubble with some additional info for the user.
+ </li>
+<li class="idx"><a href="Progress.html"> Progress </a> - 
+ A progress bar, to indicate progress in an on-going operation.
+ </li>
+<li class="idx"><a href="SpinnerInput.html"> SpinnerInput </a> - 
+ Maeks a list of options selectable  with upa nd down keys without the use of a cursor, display is only on one line, as the navigation keys are pressed the list is scrolled through.
+ </li>
+<li class="idx"><a href="Table.html"> Table </a> - 
+ Renders a table of data.
+ </li>
+<li class="idx"><a href="Throbber.html"> Throbber </a> - 
+ A Spinning throbber, ala Firefox, to indicate an on-going operation.
+ </li>
+<li class="idx"><a href="TimeInput.html"> TimeInput </a> - 
+ Sublasses tui.Input and only permits time to be entered in the form <code>00:00</code>.
+ </li>
+<li class="idx"><a href="ValidatedTextInput.html"> ValidatedTextInput </a> - 
+ Sublasses <code>tui.Input</code> to accept text entered by the user but validated by a function provided by a script.
+ </li>
+</ul>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

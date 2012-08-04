@@ -56,7 +56,7 @@ Use UPPERCASE variable names in bash, this is pretty much the standard and all e
 UPPER_CASE variables in the global JavaScript scope are copied to the bash environment if they are Strings.  So declare all such variables at the start of the script as Strings in JavaScript and avoid putting other data types into variables with Uppercase first letters. Avoid completely variables with UpperCase CamelCase since it will be confusing when these are transferred to the bash environment.  Use uppercase JavaScript variables only for global variables that will be used bash.
 
     #!/bin/js
-    // imports ...
+    // includes ...
     
     var FILE_NAME = "";
     var DIR_NAME = "";
@@ -108,7 +108,7 @@ By declaring uppercase strings at the start of the file, such confusion is avoid
 
 ## Don't write JavaScript if bash will suffice
 
-/bin/js allows you to call all the wonderful tools of Linux with zero effort. There is no need to rewrite these tools in JavaScript. With nodejs and other JavaScript tools you would need to create a library to interface with a tool such as sqlite. With /bin/js you just use the command line directly inside your scripts.
+/bin/js allows you to call all the wonderful CLI tools of Linux with zero effort. There is no need to rewrite these tools in JavaScript. With nodejs and other JavaScript tools you would need to create a library to interface with a tool such as sqlite. With /bin/js you just use the command line directly inside your scripts.
 
     #!/bin/js
     # import nothing at all
@@ -122,6 +122,7 @@ If you plan to make a lot of use of sqlite you might wish to create a library an
 
 You will see in the test code and example use of `if (true) ...`  and  `echo "" &&` to force the preparser to interpret a line as JavaScript or bash.  This is only useful for example code to illustrate a point, generally it should be avoided.  If you declare your variables with var early, use the global scope and Prototype Object syntax you will rarely find situations where this is needed.
 
-# Style guild for libraries
+# Style guide for libraries
     
-See [Importing JavaScript](ImportJavaScript.html)
+See [Including JavaScript](IncludeJavaScript.html)
+

@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Assert.js");
+#include <Assert.js>
 #
 # Test Bash return codes,  /bin/js sets the global errno value after
 # each execution, kinda C stylee
@@ -24,6 +24,7 @@ echo Hello World Again
 $.println("after again: " + errno);
 
 assert.equal(0, errno);
+
 
 
 

@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/tui/Throbber.js");
+#include <tui/Throbber.js>
 #
 #  a Firefox style tui throbber/spinner
 #
@@ -17,4 +17,5 @@ throbber.render( function() {
 new File("file.flag").delete();
 
 $.println("flag deleted")
+
 

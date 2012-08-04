@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Assert.js");
+#include <Assert.js>
 
 var assert = new Assert();
 
@@ -8,5 +8,6 @@ assert.equal("a",  " a".trim());
 assert.equal("a",  "a ".trim());
 assert.equal("",  " ".trim());
 assert.equal("",  "  ".trim());
+
 
 

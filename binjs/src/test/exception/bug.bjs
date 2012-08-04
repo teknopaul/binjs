@@ -1,9 +1,11 @@
 #!/bin/js
 #
-#  String with a big fat bug in it
+#  String with a big fat bug in it.
+#  This should output a readable debuggable error message
 #
 
 echo "bug script"
 
 var forceToBeJS = 0 ; noneExistingVar.broke();
+
 

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="./css/style.css" rel="stylesheet"/>
+	<link href="./img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="./toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="./api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="./tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="./_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Including JavaScript</h1>
+
+<p>A preparser directive #include that is very similar to the C directive can be used to execute entire JavaScript files.</p>
+
+<pre><code>#include "./myscript.js"
+</code></pre>
+
+<p>The included files must contain valid JavaScript, not /bin/js syntax files.  The files will be executed in the same context as the rest of /bin/js/ so you should respect the existing global variables which are all prefixed <code>binjs_</code> and the <code>$</code> variable is used by binjs.</p>
+
+<p>The preparser converts this syntax to a v8 method call <code>binjs_include("./myscript.js");</code></p>
+
+<h2>Library locations</h2>
+
+<p>The global script location is hardcoded as <code>/lib/binjs/lib</code>. If you want a different default lib dir you need to create symlinks.</p>
+
+<p>C style syntax using angle brackets is used to load files from the default library location.</p>
+
+<pre><code>#include &lt;Assert.js&gt;
+</code></pre>
+
+<p>Your own libraries can be loaded from anywhere on the file system from the current directory or with an absolute path.  </p>
+
+<p>Currently there is no module system like nodejs.</p>
+
+<p>The <code>binjs_include()</code> method will not include a script with the same name twice, to avoid infinite recursion in the init process, however it does not (currently) check the inode of the script for equality it simply check to see if the string argument supplied to <code>binjs_include()</code> has been used before.</p>
+
+<h1>Library code style</h1>
+
+<p>Because there is no module scope when loading JavaScript files it is important not to populate the global scope with variables in included JavaScript that might break code from other includes.  The prefered method for creating libraries is to make available JavaScript objects by defining a prototype and not to instantiate any objects.</p>
+
+<p>for example in a file <code>MyLib.js</code></p>
+
+<pre><code>MyLib = function() {
+    this.attribute1;
+    this.attribute2;
+}
+
+Mylib.prototype.myFunction = function() {
+    ...
+    return this.attribute1;
+}
+</code></pre>
+
+<p>This code can be used as follows</p>
+
+<pre><code>binjs_include("MyLib.js");
+
+var lib = new MyLib();
+</code></pre>
+
+<p>Any JavaScript is valid in the library file so there is nothing to stop you creating functions and objects direclty in the  global scope.</p>
+
+<p>The following code works as expected but this is not considered good style.</p>
+
+<pre><code>var obj = new Object();
+function  prettyPrinter() {
+    ...
+</code></pre>
+
+<p>A variable <code>obj</code> and a global function <code>prettyPrinter</code> would be created and since the module code is not visible users of the code could be supprised by its existence.</p>
+
+<p>When including a file <code>MyObject.js</code> it should not be suprising to find <code>new MyObject()</code> in later code.</p>
+
+<p>This style of creating libraries makes the library usage indistinguisable from Objects provided by native C++ code such as the File object.</p>
+
+<h2>~lib/</h2>
+
+<p>The <code>~lib/</code> prefix is used to load libraries from the default lib dir (as <code>#include &lt;MyLib.js&gt;</code> does)</p>
+
+<p>In JavaScript library code the JavaScript syntax must be used.</p>
+
+<pre><code>binjs_include("~lib/Assert.js");
+</code></pre>
+
+<p>In /bin/js scripts use the preparser syntax can be used.</p>
+
+<pre><code>#include &lt;Assert.js&gt;
+</code></pre>
+
+<h3>Including /bin/js scripts</h3>
+
+<p>There is currently no way to include /bin/js files. You can execute /bin/js files with just </p>
+
+<pre><code>./myscript.bjs
+</code></pre>
+
+<p>The script will run as expected, but vars and functions are not exported. We aim to add this feature in a later version.</p>
+
+<p>If you need that feature now, call the preparser directly</p>
+
+<pre><code>cat myscript.bjs | /lib/binjs/bin/binjs_preparser &gt; /tmp/bjs.tmp
+binjs_include("/tmp/bjs.tmp");
+</code></pre>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

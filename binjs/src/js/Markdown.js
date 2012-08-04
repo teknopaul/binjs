@@ -14,20 +14,16 @@
  * TODO rewrap wrapped text
  * TODO correctly handle entities
  */
-binjs_import("~lib/Term.js");
+binjs_include("~lib/Term.js");
 
 /**
  * @constructor
  */
 var Markdown = function(){
 	this.padding = "";
-	for (var i = 0 ; i < Markdown.lineLength / 2 ; i++) this.padding += " ";
+	this.lineLength = new Term().getWidth();
+	for (var i = 0 ; i < this.lineLength / 2 ; i++) this.padding += " ";
 };
-
-/**
- *  Wordwrap width
- */
-Markdown.lineLength = new Term().getWidth();
 
 /**
  * Symbols used for list markers
@@ -130,7 +126,7 @@ Markdown.prototype.list = function(text, listChar) {
 }
 
 Markdown.prototype.center = function(text) {
-	var indent = (Markdown.lineLength - text.length) / 2;
+	var indent = (this.lineLength - text.length) / 2;
 	return this.padding.substring(0, indent) + text;
 }
 
@@ -140,7 +136,7 @@ Markdown.prototype.wordWrap = function(indent, text, rightMargin, processFonts) 
 
 Markdown.prototype.doWordWrap = function(indent, text, rightMargin, processFonts) {
 	var buffer = "";
-	var width = Markdown.lineLength - indent - (typeof rightMargin === 'number' ? rightMargin : 0);
+	var width = this.lineLength - indent - (typeof rightMargin === 'number' ? rightMargin : 0);
 
 	//text = processFonts ? this.doCodeFont(text) : text;
 	
@@ -212,7 +208,7 @@ Markdown.prototype.doOutput = function(mdString) {
 			while ( mdata[i].charAt(startpos) == '>' || mdata[i].charAt(startpos) == ' ') {
 				startpos++;
 			}
-			buffer += Color.DARKGREY;
+			buffer += Color.DARK_GREY;
 			buffer += this.wordWrap(4, mdata[i].substring(startpos), 4);
 			buffer += Color.COLOR_OFF;
 		}

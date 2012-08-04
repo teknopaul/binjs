@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/tui/ValidatedTextInput.js");
+#include <tui/ValidatedTextInput.js>
 #
 # validated text input will not return untill the inptu is valid
 #
@@ -16,5 +16,6 @@ $.println("Enter a Gmail addressi (xxx@gmail.com)");
 var text = tinp.readline(); 
 
 $.println("Cheers, expect SPAM", 'green');
+
 
 

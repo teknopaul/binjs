@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Xml.js");
+#include <Xml.js>
 #
 #  Example Script
 #
@@ -77,3 +77,4 @@ catch(err) {
   $.error(1,"Error installing http://code.abnoctus.com/untar-1.0.tar.gz", err.toString());
   throw err;
 }
+

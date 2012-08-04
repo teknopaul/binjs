@@ -541,6 +541,7 @@ uninstall:
 	(test -g $(prefix) && rm -f $(prefix) 2>/dev/null) || echo not a symlink
 	(test -d $(prefix) && rm -rf $(prefix) 2>/dev/null) || echo not a dir
 	cd $(exec_prefix) && rm libv8.so.1 libv8.so
+	rm -r /bin/js
 #
 # Symlink output binjs-@PACKAGE_VERSION@ for easy developing
 # After this is run you can just run make in binjs directory

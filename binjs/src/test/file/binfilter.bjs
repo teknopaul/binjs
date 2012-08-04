@@ -1,0 +1,8 @@
+#!/bin/js
+
+cd `dirname $0`
+
+echo -e '\0101\0102\0103' | tee orig.dat | ./binfilter > filtered.dat
+
+od orig.dat
+od filtered.dat

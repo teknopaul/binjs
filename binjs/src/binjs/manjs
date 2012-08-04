@@ -1,0 +1,86 @@
+#!/bin/js
+#include <Markdown.js>
+#include <Term.js>
+#include <tui/ComboInput.js>
+#
+#
+#
+var DOCS = "/usr/lib/binjs/doc"
+
+var DATA = "";
+
+var term = new Term();
+
+function render(path) {
+	
+	DATA = new Markdown().parseFile(path);
+
+	echo "$DATA"  | more
+}
+
+function listMDfiles(dir) {
+	
+	switch (dir) {
+                case DOCS + '/api' : {
+                        $.println("\nCore API docs\n", true);  break;
+                }
+		case DOCS + '/api/tui' : {
+                        $.println("\nText UI API docs\n", true);  break;
+                }
+                case DOCS : {
+                        $.println("\nLanguage documentation\n", true);  break;
+                }
+	}
+
+	var mds = new File(dir).listFiles("*.md");
+	var opts = [];
+	for (md in mds) {
+		var name = mds[md].name;
+		if (name.indexOf('_') != 0) opts.push(name);
+	}
+	opts.push("« Back");
+
+	var menu = new tui.ComboInput(opts);
+	var opt = menu.select();
+
+	if (opt === '« Back') mainMenu();
+	else {
+		render(dir + "/" + opt)
+		term.anyKey();
+		listMDfiles(dir);
+	}
+	
+}
+
+function mainMenu() {
+	$.println("\n#!/bin/js Documentation \n", true);
+
+	var mainMenu = new tui.ComboInput(["Core api", "Tui api", "Documentation", "⊠ References", "⊠ Exit"]);
+	var opt = mainMenu.select();
+	switch (opt) {
+		case 'Core api' : {
+			listMDfiles(DOCS + "/api");
+		}
+		case 'Tui api' : {
+			listMDfiles(DOCS + "/api/tui");
+		}	
+		case 'Documentation' : {
+			listMDfiles(DOCS);
+		}
+		case '⊠ References' : {
+			render(DOCS + "/_References.md");
+			// mainMenu();
+		}
+		case '⊠ Exit' : {
+			exit 0
+		}
+
+	}
+}
+
+
+
+mainMenu();
+
+
+

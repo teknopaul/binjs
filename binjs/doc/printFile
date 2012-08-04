@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Markdown.js");
+#include <Markdown.js>
 
 var data = new Markdown().parseFile(argv[1]);
 

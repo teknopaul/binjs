@@ -35,3 +35,4 @@ Simple XML and JSON support, something traditionally tricky in Bash scripts.
 Simple utils for colored command line output and output of Markdown files to the console.
 
 Open source code written in C / C++ and JavaScript.
+

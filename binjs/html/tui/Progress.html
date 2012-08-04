@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../css/style.css" rel="stylesheet"/>
+	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="../toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="../api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="../tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="../_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Progress</h1>
+
+<p>A progress bar, to indicate progress in an on-going operation.</p>
+
+<p>The Object should be constructed and used only once, create a new Progress with the <code>new</code> keyword
+to start the progress again.</p>
+
+<hr />
+
+<h2>Include</h2>
+
+<p><code>#include &lt;tui/Progress.js&gt;</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li><p>tui.Progress</p>
+
+<p><code>Downloading...    [****      ]</code></p></li>
+</ul>
+
+<h2>Constructor</h2>
+
+<p>The constructor takes two arguments, the text displayed when the progress is ongoing and the text displayed when progress has fiinished, or the <code>done()</code> method is called.</p>
+
+<pre><code>var progress = new tui.Progress(progressText, doneText);
+</code></pre>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<h3>max</h3>
+
+<p>The maximum value, default <code>10</code>.</p>
+
+<h3>min</h3>
+
+<p>The minimum value, default <code>0</code>.</p>
+
+<h3>bar</h3>
+
+<p>The caracter used for the progress bar, default <code>*</code>.</p>
+
+<h3>space</h3>
+
+<p>The character used for the background of the progress bar, default a space character <code>" "</code>.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>render</h3>
+
+<p>Draw the progressbar to the console.</p>
+
+<h3>tick</h3>
+
+<p>Move the progress on one point, from min towards max.</p>
+
+<h3>done</h3>
+
+<p>Mark the progress as finished. This method iscalled when <code>tick()</code> has been called (max - min) times, but can be called earlier if desired.</p>
+
+<h3>readline</h3>
+
+<p>Call <code>readline()</code> to get the user input. A String is returned that may be null in error conditions, otherwsie cane be parsed to a positive or negative integer.</p>
+
+<hr />
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

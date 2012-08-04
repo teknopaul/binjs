@@ -3,7 +3,7 @@
  * A popup that prints a help buuble off somewhere where the
  * user is not currently entering text
  */
-binjs_import("~lib/Term.js");
+binjs_include("~lib/Term.js");
 
 if (typeof tui === 'undefined') tui = {};
 

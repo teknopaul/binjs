@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Term.js");
+#include <Term.js>
 
 var t = new Term();
 
@@ -36,5 +36,6 @@ t.cursorDown();
 t.cursorDown();
 $.println();
 $.println("pretty pointless but you get the idea", true);
+
 
 

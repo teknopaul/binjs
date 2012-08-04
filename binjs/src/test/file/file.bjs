@@ -42,3 +42,4 @@ $.println(JSON.stringify(new File("/foo/bar/quxx")));
 
 $.println("ISDIR? " + new File(".").isDir() );
 $.println("ISDIR? " + new File("~").isDir() );
+

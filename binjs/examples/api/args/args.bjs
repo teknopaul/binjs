@@ -16,3 +16,4 @@ for (var i = 0; i < argc ; i++ ) {
 
 echo "Args according to bash"
 echo "0=$0 1=$1 2=$2 3=$3 4=$4"
+

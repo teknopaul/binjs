@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Term.js");
+#include <Term.js>
 #
 # Read stuff from the terminal
 #
@@ -29,4 +29,5 @@ var pos = term.getCursorPosition();
 $.print("POS"); debugEsc(pos);
 
 $.println("Cursor pos, x=" + pos[1] + "y=" + pos[0]);
+
 

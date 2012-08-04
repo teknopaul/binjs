@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../css/style.css" rel="stylesheet"/>
+	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="../toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="../api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="../tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="../_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>$ the Dollar</h1>
+
+<p>The <code>$</code> Object is instantiated as an object in the global scope to provide some core utilities such as <code>$.println()</code> and <code>$.getEnv()</code>.</p>
+
+<p>Referencing this object must always be performed with <code>$.</code> which the preparser regonises as an indicator the line is JavaScript.</p>
+
+<hr />
+
+<h2>Include</h2>
+
+<p>You do not have to include this library it is included by default.</p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>$  (A single instance)</li>
+</ul>
+
+<hr />
+
+<h2>Constructor</h2>
+
+<p>It is not possible to construct an instance of <code>$</code>, it is not designed that way, but notice that <code>$()</code> will be treated as bash.   </p>
+
+<p><code>$HOME/bin/thing</code>  will execute as bash as you would expect.</p>
+
+<hr />
+
+<h2>Attributes</h2>
+
+<h3>env</h3>
+
+<p>The <code>$.env</code> Object contains a all the bash environment vairables that begin with an UPPERCASE letter.</p>
+
+<pre><code>var homeDir = $.env.HOME;
+</code></pre>
+
+<p>Environment variables that begin with a lower case letter, underscore or other character can be fetched with <code>$.getEnv()</code>.</p>
+
+<h3>watch</h3>
+
+<p>The <code>$.watch</code> list contains an Array of Strings defining which global variables from Javascript global context shall be copied tot to the bash environment when executing commands.
+By default it contains <code>["g1","gj","gk"]</code> but it can be manipulated.</p>
+
+<p>See <a href="../../html/EnvironmentVariables.html">Environment Variables</a> for more details.</p>
+
+<hr />
+
+<h2>Methods</h2>
+
+<h3>print</h3>
+
+<p><code>$.print()</code> accepts a String argument and prints it to the console.</p>
+
+<p>A second argument is also accepted.</p>
+
+<p>If the second argument is boolean true the text is printed in bold.</p>
+
+<p>If the second argument is a String the text is printed in colour. The colour can be chosen from black, white, grey, darkgrey, blue, green, red, yellow, cyan, magenta or orange.</p>
+
+<h3>println</h3>
+
+<p><code>$.println()</code> is the same as <code>$.print()</code> and adds a <code>\n</code> character and flushes the output.</p>
+
+<h3>sleep</h3>
+
+<p>sleep the process for a configurable number of milliseconds.</p>
+
+<p>Takes a single Integer argument.</p>
+
+<h3>setEnv</h3>
+
+<p>Takes two arguments, the first of which must be a String and sets the named environment variable to the bash environment.</p>
+
+<h3>getEnv</h3>
+
+<p>Takes a single String argument and returns a variable from the bash environment or null.</p>
+
+<h3>error</h3>
+
+<p><code>$.error()</code>  takes 3 arguments, an Integer, a simple string and a complex string.</p>
+
+<pre><code>$.error(10, "file not found", f.path);
+</code></pre>
+
+<p>Prints </p>
+
+<p><span style="color:red">ERR10</span>:file_not_found /foo/bar/quxx</p>
+
+<p>The idea is to encourage numbering errors in scripts so that scripts that use the scripts can parse the output and take action based on numbered errors. Future versions on /bin/js intend to provide internationalization of the second argument via properties files with the underlined text as keys so it is advisable not to use and punctuation of non-letter characters in the text of the second argument.</p>
+
+<h3>warn</h3>
+
+<p>Same as <code>$.error()</code> with an orange prefix <code>WARN</code>.</p>
+
+<h3>info</h3>
+
+<p>Same as <code>$.error()</code> with a blue prefix <code>INFO</code>.</p>
+
+<h3>getJobs</h3>
+
+<p>Returns a list o the background Jobs executed by bash.</p>
+
+<p>See <a href="../../html/Jobs.html">Job Control</a> for more details.</p>
+
+<p><code>$.getJobs()</code> returns an Array of JavaScript <code>Job</code> objects which have the following signature.</p>
+
+<pre><code>{
+  id : Integer,
+  pid : Integer,
+  command : String,
+  running : Boolean,
+  state : Integer
+}
+</code></pre>
+
+<ul>
+<li>id is the ID of the job, for use with <code>kill %1</code></li>
+<li>pid is the process ID of the job for use with <code>kill -9 pid</code></li>
+<li>command is the executed command</li>
+<li>running is true if the job was running when <code>$.getJobs()</code> was called.</li>
+<li>state is an integer state from the <code>JOB</code> struct in bash, read the bash source for more details.</li>
+</ul>
+
+<h3>inherits</h3>
+
+<p><code>$.inherits()</code> is a copy of nodejs's <code>inherits</code> which is a copy of <code>Function.prototype.inherits</code> from <code>lang.js</code> it is used for generating Object heirarchies.</p>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

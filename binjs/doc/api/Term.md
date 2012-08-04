@@ -6,9 +6,9 @@ This Object provides access to the terminal via ESC codes wrapped as JavaScript 
 
 ----------------------------
 
-## Import
+## Include
 
-`binjs_import("~lib/Term.js")`
+`#include <Term.js>`
 
 ------------------------
 
@@ -68,13 +68,13 @@ Write text to the console that is twice as big as normal, this only works in DEC
 
 ### setWindowTitle
 
-Set the title window of the terminal, Konsole by defautl does not show this, change the window title or the tabl tile to %w and scripts are able to set the title. Double click on the tab to change the settings.
+Set the title window of the terminal, Konsole by default does not show this, change the window title or the tabl tile to %w and scripts are able to set the title. Double click on the tab to change the settings.
 
 ### cursorOff
 
 Hide the cursor.
 
-## cursorOn
+### cursorOn
 
 Show the cursor.
 
@@ -85,6 +85,7 @@ Programatically move the cursor.  This can be sued to move the cursor to any scr
 ### cursorPosition
 
 Move the curson to a position on screen, accepts two arguments row and col. This is counter-intuitive, one would expect x and y but the args are reversed and expressed as the line to move to vertically and then column to move horizontally.
+
 
 
 

@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/tui/BooleanInput.js");
+#include <tui/BooleanInput.js>
 
 
 var bInp = new tui.BooleanInput();
@@ -11,4 +11,5 @@ var ok = bInp.ok();
 
 if ( ok ) $.println("cool",'green');
 else $.println("grrrrr", 'red');
+
 

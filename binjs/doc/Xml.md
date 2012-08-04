@@ -13,7 +13,7 @@ For validating XML use `xmllint`.
 
 The following header is needed to import the xml libraries.  This imports both `Sax` and `Dom` parsers, Dom uses Sax.
 
-    binjs_import("~lib/Xml.js");
+    #include <Xml.js>
 
 To parse a document to a dom first read it as a JavaScript String then pass it to the Dom parser.
 
@@ -31,11 +31,11 @@ The object can be modified and written back out with `dom.toXml()`
 
 To parse with Sax the same import is needed, or you can just import `Sax.js`.
 
-    binjs_import("~lib/Xml.js");
+     #include <Xml.js>
     
 or 
 
-    binjs_import("~lib/Sax.js");
+     #include <Sax.js>
 
 Parsing with Sax requires passing callback functions which is nodejs's style of working. The Sax nodejs parser can be used as synchronous code by passing the whole XML document as one string to the `write` method, as follows.
 
@@ -44,7 +44,7 @@ Parsing with Sax requires passing callback functions which is nodejs's style of 
 
     var xmlVer = "";
     parser.onopentag = function (node) {
-        if (node.name == "abc") 
+        i (node.name == "abc") 
           xmlVer = node.attributes["version"];
     };
 
@@ -52,3 +52,4 @@ Parsing with Sax requires passing callback functions which is nodejs's style of 
 
     $.println("Xml version is: " + xmlVer);
     
+

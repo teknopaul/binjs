@@ -1,6 +1,6 @@
 #!/bin/js
 
-binjs_import("~lib/Term.js");
+#include <Term.js>
 
 
 var term = new Term();
@@ -28,3 +28,4 @@ for ( var i = 0; i < 100 ; i++) {
 }
 
 echo A wandering cursor thats eventually comes home
+

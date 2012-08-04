@@ -20,7 +20,7 @@ background2();
 
 // before sleeping lets print whats going on in the background
 
-var jobsArray = binjs_getJobs();
+var jobsArray = $.getJobs();
 
 for (var j = 0 ; j < jobsArray.length ; j++ ) {	
 //	$.println("[" + jobsArray[j].id +"] pid=" + jobsArray[j].pid)
@@ -41,3 +41,4 @@ for (var j = 0 ; j < jobsArray.length ; j++ ) {
 	
 
 }
+

@@ -2,7 +2,7 @@
  * Spinner displays a list of strings to select on of them using up and down keys.
  */
 
-binjs_import("~lib/Term.js");
+binjs_include("~lib/Term.js");
  
 if (typeof tui === 'undefined') tui = {};
 

@@ -4,9 +4,9 @@ Runtime allows the script to interface with the environment in which it is runni
 
 ----------------------------
 
-## Import
+## Include
 
-`binjs_import("~lib/Runtime.js")`
+`#include <Runtime.js>`
 
 ------------------------
 
@@ -48,4 +48,5 @@ Returns true if both standard in and standard out are TTYs, stderr is not checke
 ------------------------
 
 ## Methods
+
 

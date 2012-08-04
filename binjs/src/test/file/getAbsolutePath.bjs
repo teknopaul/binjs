@@ -13,3 +13,4 @@ try {
 } catch(err) {
 	$.info(0,"invalid_path_expected", err);
 }
+

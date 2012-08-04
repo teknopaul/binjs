@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title> /bin/js</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="../css/style.css" rel="stylesheet"/>
+	<link href="../img/binjs_16x16.png" rel="shortcut icon"/>
+	<script type="text/javascript">
+		load = function() {
+			document.getElementById("header").onclick = function(){
+				document.location.href = "index.html";
+			}
+		}
+		document.addEventListener("DOMContentLoaded", load, false)
+	</script>
+  </head>
+	<body id="pw-body">
+		<div id="tab-container">
+			<nav id="tabs">
+				<div class="tab @index_toc_css@" id="doc-index-tab">
+				  <a class="vertical" href="../toc.html">Doc index</a>
+				</div>
+				<div class="tab @api_css@" id="api-index-tab">
+				  <a class="vertical" href="../api/toc.html">API index</a>
+				</div>
+				<div class="tab @tui_css@" id="tui-index-tab">
+				  <a class="vertical" href="../tui/toc.html">TUI index</a>
+				</div>
+				<div class="tab @_References.md_css@" id="references-index-tab">
+				  <a class="vertical" href="../_References.html">References</a>
+				</div>
+			</nav>
+			<div id="container">
+				<div id="header"><span class="title">/bin/js handbook</span></div>
+				<div id="content">
+				<div id="main">
+<h1>Assert</h1>
+
+<p>Assert is a CommonJS like library for unit testing.  </p>
+
+<p>The library closely conforms to the CommonJS spec, but is not identical, code is copied and modified from nodejs.</p>
+
+<hr />
+
+<h2>Include</h2>
+
+<p><code>#include &lt;Assert.js&gt;</code></p>
+
+<hr />
+
+<h2>Provides</h2>
+
+<ul>
+<li>Assert</li>
+<li>AssertionError extends Error</li>
+</ul>
+
+<hr />
+
+<h2>Constructor</h2>
+
+<p>The constructor takes no arguments.</p>
+
+<pre><code>var assert = new Assert();
+</code></pre>
+
+<p>This import method is not as CommonJS specifies, CommonJS specifies the use of <code>require()</code> which is not, currently, available in /bin/js, apart from that, the code for Assert follows the CommonJS spec.</p>
+
+<p>Functions and methods as per CommonJS specifications.</p>
+
+<p><a href="http://wiki.commonjs.org/wiki/Unit_Testing/1.0">http://wiki.commonjs.org/wiki/Unit_Testing/1.0</a></p>
+
+<p>The most commonly used methods of Assert are as follows.</p>
+
+<ul>
+<li>ok(bool, message)</li>
+<li>equal(actual, expect, message)</li>
+<li>fail()</li>
+</ul>
+
+<h3>/bin/js Usage</h3>
+
+<pre><code>var assert = new Assert();
+assert.ok(someTest());
+assert.equals(someFunc(), "Hello World", "got some incorrect text from someFunc()");
+</code></pre>
+
+					<br/><br/>
+				</div>
+			</div>
+			<footer> by  teknopaul </footer>
+		</div>
+		<br/><br/>
+	</div>
+  </body>
+</html>

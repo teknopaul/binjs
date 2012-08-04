@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Term.js");
+#include <Term.js>
 
 var term = new Term();
 
@@ -8,3 +8,4 @@ term.writeDoubleHeight("Big and juicy");
 
 
  
+

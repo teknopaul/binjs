@@ -1,4 +1,4 @@
-binjs_import("./doubledep.js");
+$.include("./doubledep.js");
 /**
  * this is a dep
  */

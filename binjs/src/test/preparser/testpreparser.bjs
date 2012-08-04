@@ -1,0 +1,16 @@
+#!/bin/js
+#
+#
+#
+cd `dirname $0`
+
+echo shebang
+cat shebang.txt |  /usr/lib/binjs/bin/binjs_preparser | grep 'binjs_include("~lib/binjs.js");' || throw "shebang failed"
+
+echo cinclude
+cat cinclude.txt |  /usr/lib/binjs/bin/binjs_preparser | grep 'binjs_include("~lib/Assert.js");' || throw "include failed"
+
+echo cincludefile
+cat cincludefile.txt |  /usr/lib/binjs/bin/binjs_preparser | grep 'binjs_include("MyAssert.js");' || throw "include file failed"
+
+

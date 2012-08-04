@@ -1,8 +1,8 @@
 /**
  * Required libraries for /bin/js scripts
  */ 
-binjs_import("~lib/Dollar.js");
-binjs_import("~lib/File.js");
+binjs_include("~lib/Dollar.js");
+binjs_include("~lib/File.js");
 
 
 /**
@@ -13,5 +13,6 @@ binjs_import("~lib/File.js");
  *  - errno - Exit value of the last command executed by Bash
  *  - pid
  *  - lastpid
+ *  - gi, gj, gk
  */
 

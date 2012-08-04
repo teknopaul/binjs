@@ -1,0 +1,16 @@
+#!/bin/js
+#
+#  Read unicode chars from stdin and print to stdout with new lines
+#
+var stdin = new File(File.STDIN);
+
+var char;
+
+while (true) {
+
+	char = stdin.readChar();
+	if (char == null) break;
+	$.println(char);
+}
+
+

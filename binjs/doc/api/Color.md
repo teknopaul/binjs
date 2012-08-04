@@ -12,9 +12,9 @@ The `$.println()` method uses constants from this class, accepts strings and is 
     
 ----------------------------
 
-## Import
+## Include
 
-You do not have to import this library it is included by default.
+You do not have to include this library it is included by default.
 
 ---------------------------
 
@@ -38,7 +38,7 @@ Color.WHITE   = "\033[97m";
 
 Color.GREY    = "\033[37m";
 
-Color.DARKGREY= "\033[90m";
+Color.DARK_GREY= "\033[90m";
 
 Color.BLUE    = "\033[94m";
 

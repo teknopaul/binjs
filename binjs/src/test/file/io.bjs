@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Assert.js");
+#include <Assert.js>
 
 var assert = new Assert();
 
@@ -34,8 +34,14 @@ file.close();
 var stdout = new File(1);
 stdout.writeString("oioi");
 
-stdout.stat();
+try {
+	stdout.stat();
+} catch(err) {
+	$.info(1, "stat() not allowed on streams",  err);
+}
+
 stdout.isFile();
 
 
 echo 1234
+

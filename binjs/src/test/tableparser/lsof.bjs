@@ -1,6 +1,6 @@
 #!/bin/js
-binjs_import("~lib/util/TableParser.js");
-binjs_import("~lib/Json.js");
+#include <util/TableParser.js>
+#include <Json.js>
 #
 #
 #
@@ -14,4 +14,5 @@ var table = tableParser.parseFixedSpacedTable($.env.LSOF);
 
 
 new Json().prettyPrintObject(table);
+
 

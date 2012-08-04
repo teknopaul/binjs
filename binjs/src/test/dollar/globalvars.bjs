@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/Assert.js");
+#include <Assert.js>
 var assert = new Assert();
 
 
@@ -32,4 +32,5 @@ $.watch.push("gx");
 BASH_VIEW=`echo "X$gx"`
 
 assert.equal("X23", $.env.BASH_VIEW);
+
 

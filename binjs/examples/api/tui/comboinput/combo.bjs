@@ -1,5 +1,5 @@
 #!/bin/js
-binjs_import("~lib/tui/ComboInput.js");
+#include <tui/ComboInput.js>
 #
 #  Combo box type widget select froa  list of options
 #
@@ -12,3 +12,4 @@ var selected = combo.select();
 
 
 $.println("Selected : " + selected);
+
