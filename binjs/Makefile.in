@@ -8,25 +8,23 @@ BUILD_OUTPUT=$(CURDIR)/binjs-@PACKAGE_VERSION@
 .PHONY: clean all package
 
 # copys everything to ./build then renames to binjs-0.1
-all : ../bash-4.2/Makefile
+all : ../bash-4.3/Makefile
 
 	rm -rf $(BUILD_PREP)
 	mkdir -p $(BUILD_PREP)
 	cd $(BUILD_PREP) && mkdir -p bin lib examples doc
 
-	cd ../bash-4.2 && make CFLAGS=-fPIC -s
-	cd ../bash-4.2 && make CFLAGS=-fPIC -s test_libbash
-	cd ../bash-4.2 && make CFLAGS=-fPIC -s binjs_preparser
+	cd ../bash-4.3 && make CFLAGS=-fPIC -s
+	cd ../bash-4.3 && make CFLAGS=-fPIC -s test_libbash
+	cd ../bash-4.3 && make CFLAGS=-fPIC -s binjs_preparser
 	cp src/c/binjs_preparser $(BUILD_PREP)/bin
 
 	cd src/v8 && make
 
-	cd ../bash-4.2 && make CFLAGS=-fPIC -s binjs
+	cd ../bash-4.3 && make CFLAGS=-fPIC -s binjs
 	cp src/c/binjs $(BUILD_PREP)/bin
 
 	cd src/js && cp -R --archive * $(BUILD_PREP)/lib
-	
-	cd contrib && cp *.so.1 $(BUILD_PREP)/lib
 
 	cd examples && cp -R * $(BUILD_PREP)/examples
 
@@ -37,8 +35,8 @@ all : ../bash-4.2/Makefile
 
 	echo -e "\033[32mDone.\033[0m"
 
-../bash-4.2/Makefile : 
-	cd ../bash-4.2 && ./configure
+../bash-4.3/Makefile : 
+	cd ../bash-4.3 && ./configure
 	
 package: all
 	echo "Making binjs-@PACKAGE_VERSION@.tar.gz"
@@ -51,5 +49,5 @@ clean:
 	rm -rf binjs-@PACKAGE_VERSION@ 2>/dev/null
 	rm -f  binjs-@PACKAGE_VERSION@.tar.gz 2>/dev/null
 	rm -f examples/*~ 2>/dev/null
-	cd ../bash-4.2 && make clean
+	cd ../bash-4.3 && make clean
 	cd src/v8 && make clean

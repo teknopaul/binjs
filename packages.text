@@ -1,24 +1,22 @@
 Ubuntu12 package listings
 
 git
-subversion
 make
 libglib2.0-0
 libglib2.0-0-dev
-python2.7
 pkg-config
 gcc
 g++
 libstdc++-dev
-automake
+automake1.11
+libv8-dev
 
-Package names keep changing in ubuntu but this worked in 12
-sudo apt-get install git subversion make libglib2.0-dev python2.7 pkg-config gcc g++ libstdc++6-4.5-dev
+Package names keep changing in ubuntu but this worked in 15.04
+sudo apt-get install git make libglib2.0-dev pkg-config gcc g++ libstdc++6-4.5-dev automake libv8-dev
 
-Fedora17 package listings
+Fedora17 package listings (untested in this version)
 
 git
-subversion
 make
 glibc
 glibc-devel
@@ -28,7 +26,7 @@ libglib2.0
 pkgconfig
 python > 2.7
 automake
-
+libv8-devel ??
 
 
 

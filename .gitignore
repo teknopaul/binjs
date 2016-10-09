@@ -1,5 +1,6 @@
 *.log
 *.o
+*.so.1
 *.a
 *.out
 *.rpm
@@ -8,6 +9,7 @@
 Makefile
 autom4te.cache
 config.status
+config.log
 stamp-h1
 .svn
 *~
@@ -15,4 +17,19 @@ stamp-h1
 *.kate-swp
 binjs.kdev4
 .kdev4
+.build
+.made
+aclocal.m4
+binjs/config/compile
+bash-4.3/bash
+bash-4.3/bashbug
+bash-4.3/bashversion
+bash-4.3/test_libbash
+bash-4.3/version.h
+bash-4.3/syntax.c
+bash-4.3/signames.h
+bash-4.3/mksyntax
+bash-4.3/mksignames
+bash-4.3/lsignames.h
+bash-4.3/aclocal.m4
 

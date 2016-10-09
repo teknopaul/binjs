@@ -36,10 +36,10 @@ AC_DEFUN([AX_PREFIX_DEFAULT],
 ])
 
 # why  does this faile grrr autoconf can not be configured
-#AC_INIT([binjs], m4_esyscmd([ cat ./binjs/version | tr -d 'a-zA-Z= \n' ]) , [me@teknopaul.com], [binjs], [http://code.abnoctus.com/binjs/])
+#AC_INIT([binjs],[m4_esyscmd( cat ./binjs/version | tr -d 'a-zA-Z= \n' ) ],[me@teknopaul.com],[binjs],[http://binjs.tp23.org])
 
 # this is thus the golden source of the /bin/js version 
-AC_INIT([binjs],[0.9.HEAD],[me@teknopaul.com],[binjs],[http://code.abnoctus.com/binjs/])
+AC_INIT([binjs],[1.0.HEAD],[me@teknopaul.com],[binjs],[http://binjs.tp23.org])
 
 # copy to something more readable
 echo "export VERSION=${PACKAGE_VERSION}" > ./binjs/version
@@ -47,7 +47,10 @@ echo "export VERSION=${PACKAGE_VERSION}" > ./binjs/version
 # this seems to reduce the amount of junk automake creates in ./
 AC_CONFIG_AUX_DIR([binjs/config])
 
-AM_INIT_AUTOMAKE([1.10 no-define foreign])
+# Seems this breaks in 16.04
+#AM_INIT_AUTOMAKE([no-define foreign])
+AM_INIT_AUTOMAKE
+
 
 AC_PROG_CC
 AC_PROG_CXX
@@ -81,6 +84,9 @@ AC_SUBST(EPREFIX)
 
 AC_CHECK_LIB(glib, g_hash_table_new)
 AC_CHECK_HEADERS(glib.h)
+AC_LANG_PUSH([C++])
+AC_CHECK_HEADERS(v8.h)
+AC_LANG_POP([C++])
 
 
 AM_CONFIG_HEADER([binjs/src/binjs_config.h])

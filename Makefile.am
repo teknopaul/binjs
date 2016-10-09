@@ -1,31 +1,13 @@
 
 
 
-.PHONY: clean all doc install develop buildrpm builddeb
+.PHONY: clean all install develop buildrpm builddeb
 
 all:
 
-	test -f v8/build/gyp/gyp || ( cd v8 && make dependencies )
-	
-	cd v8 && make -s -j4 library=shared native
-
-	mkdir -p binjs/contrib/include
-	
-	cp v8/out/native/lib.target/libv8.so  binjs/contrib/libv8.so.1
-
-	cp v8/include/*.h binjs/contrib/include
-
-	cd binjs/contrib && ln -sf libv8.so.1 libv8.so
-	ls -l binjs/contrib/libv8*
+# since ver 1.0 v8 deps removed use the once installed with  sudo aptitude install libv8-dev
 
 	cd binjs && make -s
-
-#
-# Make HTML files form the Markdown input
-#
-doc:
-	cd binjs/doc && ./toHtml.bjs
-	echo file://$(CURDIR)/binjs/doc/CoverPage.html
 
 #
 # Install by copying files to /usr/lib/binjs and symlinking
@@ -83,8 +65,8 @@ deb:
 	cd binjs/deploy && ./builddeb.sh
 	
 clean:
-	cd v8 && make clean
 	cd binjs && make clean
-	cd bash-4.2 && make clean
-	rm bash-4.2/test_libbash
+	cd bash-4.3 && make clean
+	rm bash-4.3/test_libbash
+	
 

@@ -11,7 +11,7 @@ Welcome to /bin/js scripting the way you always wanted it. A fine mashup of bash
     #
     for (gi = 0 ; gi <  10; gi++ ) {
 
-        echo Printed with Bash 4.2 : $gi
+        echo Printed with Bash : $gi
 
     }
 

@@ -4,7 +4,7 @@
 # TODO some of this config should come from autoconf
 #
 
-CONTINCS=-I../../contrib/include -I../../../bash-4.2 -I.
+CONTINCS=-I../../contrib/include -I../../../bash-4.3 -I.
 DEPS = file.h util.h term.h bashexec.h runtime.h librunjs.h
 OBJS = file.o util.o term.o bashexec.o runtime.o librunjs.o
 GINCS=`pkg-config --cflags glib-2.0`
