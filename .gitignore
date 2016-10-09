@@ -1,3 +1,4 @@
+.git/
 *.log
 *.o
 *.so.1
@@ -20,7 +21,6 @@ binjs.kdev4
 .build
 .made
 aclocal.m4
-binjs/config/compile
 bash-4.3/bash
 bash-4.3/bashbug
 bash-4.3/bashversion
